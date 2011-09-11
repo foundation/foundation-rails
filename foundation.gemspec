@@ -7,9 +7,9 @@ Gem::Specification.new do |s|
   s.version     = Foundation::VERSION
   s.authors     = ["ZURB"]
   s.email       = ["mark@zurb.com"]
-  s.homepage    = ""
+  s.homepage    = "http://foundation.zurb.com"
   s.summary     = %q{Get up and running with Foundation in seconds}
-  s.description = %q{Sets up your rails (3.1+) application with everything needed to make an awesome website}
+  s.description = %q{An easy to use, powerful, and flexible framework for building prototypes and production code on any kind of device.}
 
   s.rubyforge_project = "foundation"
 
