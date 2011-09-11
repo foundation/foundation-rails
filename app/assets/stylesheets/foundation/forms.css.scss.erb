@@ -45,7 +45,7 @@
 	   Nicer Forms
 	----------------------------------------- */
 	form.nice input.input-text, form.nice textarea { border: solid 1px #bbb; border-radius: 2px; -webkit-border-radius: 2px; -moz-border-radius: 2px; }
-	form.nice input.input-text, form.nice textarea { font-size: 13px; padding: 6px 3px 4px; outline: none !important; background: url(../images/misc/input-bg.png) #fff; }
+	form.nice input.input-text, form.nice textarea { font-size: 13px; padding: 6px 3px 4px; outline: none !important; background: url(<%= asset_path "foundation/misc/input-bg.png" %>) #fff; }
 	form.nice input.input-text:focus, form.nice textarea:focus { background-color: #f9f9f9; }
 	
 	form.nice fieldset { border-radius: 3px; -webkit-border-radius: 3px; -moz-border-radius: 3px; }
@@ -60,7 +60,7 @@
 	   Custom Forms
 	----------------------------------------- */
 
-	form.custom span.custom { display: inline-block; width: 14px; height: 14px; position: relative; top: 2px; border: solid 1px #ccc; background: url(../images/misc/custom-form-sprites.png) 0 0 no-repeat; }
+	form.custom span.custom { display: inline-block; width: 14px; height: 14px; position: relative; top: 2px; border: solid 1px #ccc; background: url(<%= asset_path "foundation/misc/custom-form-sprites.png" %>) 0 0 no-repeat; }
 	form.custom span.custom.radio { border-radius: 7px; -webkit-border-radius: 7px; -moz-border-radius: 7px; }
 	form.custom span.custom.radio.checked { background-position: 0px -14px; }
 	form.custom span.custom.checkbox.checked { background-position: 0px -28px; }
@@ -73,7 +73,7 @@
 	
 	form.custom div.custom.dropdown ul { position: absolute; width: auto; display: none; margin: 0; left: 0px; top: 27px; margin: 0; padding: 0; background: rgba(255,255,255,0.9); border: solid 1px #ddd; z-index: 10; }
 	form.custom div.custom.dropdown ul li { cursor: pointer; padding: 3px 38px 3px 6px; margin: 0; }
-	form.custom div.custom.dropdown ul li.selected { background: url(../images/misc/custom-form-sprites.png) right -52px no-repeat; }
+	form.custom div.custom.dropdown ul li.selected { background: url(<%= asset_path "foundation/misc/custom-form-sprites.png" %>) right -52px no-repeat; }
 	form.custom div.custom.dropdown ul li:hover { background-color: #2a85e8; color: #fff; }
 	form.custom div.custom.dropdown ul li.selected:hover { background: url(<%= asset_path "foundation/misc/custom-form-sprites.png" %>) #2a85e8 right -78px no-repeat; }
 	form.custom div.custom.dropdown ul.show { display: block; }
