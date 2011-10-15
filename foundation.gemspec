@@ -3,7 +3,7 @@ $:.push File.expand_path("../lib", __FILE__)
 require "foundation/version"
 
 Gem::Specification.new do |s|
-  s.name        = "foundation"
+  s.name        = "zurb-foundation"
   s.version     = Foundation::VERSION
   s.authors     = ["ZURB"]
   s.email       = ["foundation@zurb.com"]
