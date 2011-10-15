@@ -6,7 +6,7 @@ Gem::Specification.new do |s|
   s.name        = "foundation"
   s.version     = Foundation::VERSION
   s.authors     = ["ZURB"]
-  s.email       = ["mark@zurb.com"]
+  s.email       = ["foundation@zurb.com"]
   s.homepage    = "http://foundation.zurb.com"
   s.summary     = %q{Get up and running with Foundation in seconds}
   s.description = %q{An easy to use, powerful, and flexible framework for building prototypes and production code on any kind of device.}
