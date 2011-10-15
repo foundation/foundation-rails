@@ -2,7 +2,7 @@ USAGE
 =====
 1. Inside your Gemfile add the following:
 
-  gem "zurb-foundation"
+  `gem "zurb-foundation"`
 
 1. Run `bundle install`
 1. Run `rails g foundation:install`
