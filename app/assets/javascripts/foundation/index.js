@@ -1,6 +1,6 @@
-//= require ./jquery.reveal
-//= require ./jquery.orbit-1.2.3
-//= require ./jquery.orbit-1.2.3
-//= require ./forms.jquery.js
-//= require ./jquery.customforms
-//= require ./app
+//=require ./jquery.reveal.js
+//=require ./jquery.orbit-1.3.0.js
+//=require ./forms.jquery.js
+//=require ./jquery.customforms.js
+//=require ./jquery.placeholder.js
+//=require ./app.js
