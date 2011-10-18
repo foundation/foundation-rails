@@ -8,14 +8,14 @@
  
 /* PUT IN YOUR SLIDER ID AND SIZE TO MAKE LOAD BEAUTIFULLY
    ================================================== */
-#featured { 
-	width: 940px;
-	height: 450px;
-	background: #000 url(<%= asset_path "foundation/orbit/loading.gif" %>) no-repeat center center;
+#caseStudies { 
+	width: 1000px;
+	height: 210px;
+	background: #fff url(<%= asset_path "foundation/orbit/loading.gif" %>) no-repeat center center;
 	overflow: hidden; }
-#featured>img,  
-#featured>div,
-#featured>a { display: none; }
+#caseStudies>img,  
+#caseStudies>div,
+#caseStudies>a { display: none; }
 
 
 
@@ -199,3 +199,12 @@ div.slider-nav span.left {
 .orbit-bullets li.active.has-thumb {
     background-position: 0 0;
     border-top: 2px solid #000; }
+    
+/* FLUID LAYOUT
+   ================================================== */
+.orbit .fluid-placeholder {
+  visibility: hidden;
+  position: static;
+  display: block;
+  width: 100%;
+}
