@@ -18,10 +18,12 @@
 	:: Global Reset & Standards
 	-------------------------------------------------- */
 	
-	/* http://meyerweb.com/eric/tools/css/reset/ 
-	   v2.0b1 | 201101 
-	   NOTE: WORK IN PROGRESS
-	   USE WITH CAUTION AND TEST WITH ABANDON */
+	/* 
+		Eric Meyer's CSS Reset
+		http://meyerweb.com/eric/tools/css/reset/ 
+		v2.0 | 20110126
+   		License: none (public domain)
+	*/
 	
 	html, body, div, span, applet, object, iframe,
 	h1, h2, h3, h4, h5, h6, p, blockquote, pre,
@@ -32,33 +34,46 @@
 	dl, dt, dd, ol, ul, li,
 	fieldset, form, label, legend,
 	table, caption, tbody, tfoot, thead, tr, th, td,
-	article, aside, canvas, details, figcaption, figure, 
-	footer, header, hgroup, menu, nav, section, summary,
-	time, mark, audio, video { 
-		margin: 0; padding: 0; border: 0; outline: 0; font-size: 100%; font: inherit; vertical-align: baseline;
+	article, aside, canvas, details, embed, 
+	figure, figcaption, footer, header, hgroup, 
+	menu, nav, output, ruby, section, summary,
+	time, mark, audio, video {
+		margin: 0;
+		padding: 0;
+		border: 0;
+		font: inherit;
+		vertical-align: baseline;
 	}
-	html { font-size: 62.5%; -webkit-text-size-adjust:none; -ms-text-size-adjust:none; -webkit-tap-highlight-color: rgba(0,0,0,0); }
-	
+	html {
+		font-size: 62.5%; 
+	}
 	/* HTML5 display-role reset for older browsers */
 	article, aside, details, figcaption, figure, 
-	footer, header, hgroup, menu, nav, section { display: block; }
-	body { line-height: 1; }
-	ol, ul { list-style: none; }
-	
-	audio[controls], canvas, video { display: inline-block; *display: inline; *zoom: 1; }
-	
-	blockquote, q { quotes: none; }
+	footer, header, hgroup, menu, nav, section {
+		display: block;
+	}
+	body {
+		line-height: 1;
+	}
+	ol, ul {
+		list-style: none;
+	}
+	blockquote, q {
+		quotes: none;
+	}
 	blockquote:before, blockquote:after,
-	q:before, q:after { content: ''; content: none; }
-	:focus { outline: none; }
+	q:before, q:after {
+		content: '';
+		content: none;
+	}
+	table {
+		border-collapse: collapse;
+		border-spacing: 0;
+	}
 	
-	ins { text-decoration: none; }
-	del { text-decoration: line-through; }
-	table { border-collapse: collapse; border-spacing: 0; }
 	
 	
-	
-	body { background: #fff; font-family: "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; font-size: 13px; line-height: 18px; color: #555; position: relative; -webkit-font-smoothing: antialiased; }
+	body { background: #fff; font-family: "Helvetica Neue", "HelveticaNeue", Helvetica, Arial, "Lucida Grande", sans-serif; font-size: 13px; line-height: 18px; color: #555; position: relative; -webkit-font-smoothing: antialiased; }
 	
 
 /*	--------------------------------------------------
@@ -77,7 +92,7 @@
 
 	p { line-height: 17px; margin: 0 0 18px; }
 	p img { margin: 0; }
-	p.lead { font-size: 1.8rem; font-size: 18px; line-height: 24px;  }
+	p.lead { font-size: 18px; font-size: 1.8rem; line-height: 24px;  }
 	
 		/* Mobile */
 		
@@ -96,7 +111,7 @@
 	blockquote { margin: 0 0 18px; padding: 9px 20px 0 19px; border-left: 1px solid #ddd; }
 	blockquote cite { display: block; font-size: 12px; font-size: 1.2rem; color: #555; }
 	blockquote cite:before { content: "\2014 \0020"; }
-	blockquote cite a, blockquote cite a:visited, blockquote cite a:visited { color: #555; }
+	blockquote cite a, blockquote cite a:visited { color: #555; }
 	
 	hr { border: solid #ddd; border-width: 1px 0 0; clear: both; margin: 12px 0 18px; height: 0; }
 	
@@ -215,11 +230,18 @@
 		
 	
 	/* Clear the columns automagically */
-	 .row:after, .clearfix:after { content: "."; display: block; height: 0; clear: both; visibility: hidden; }
+	/*
+ .row:after, .clearfix:after { content: "."; display: block; height: 0; clear: both; visibility: hidden; }
 	 .row:last-child:after { content: ""; }
 	 * html .row, * html .clearfix { height: 1%; }
 	 .row, .clearfix { display: inline-block; }
 	 .row, .clearfix { display: block; }
+*/
+	 
+	 /* Testing Nicolas Gallagher's micro clearfix */
+	 .row:before, .row:after, .clearfix:before, .clearfix:after { content:""; display:table; }
+	 .row:after, .clearfix:after { clear: both; }
+	 .row, .clearfix { zoom: 1; }
 
 
 
