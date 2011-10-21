@@ -11,7 +11,7 @@
 #caseStudies { 
 	width: 1000px;
 	height: 210px;
-	background: #fff url(<%= asset_path "foundation/orbit/loading.gif" %>) no-repeat center center;
+	background: #fff image-url('foundation/orbit/loading.gif') no-repeat center center;
 	overflow: hidden; }
 #caseStudies>img,  
 #caseStudies>div,
@@ -79,7 +79,7 @@ span.rotator {
     position: absolute;
     top: 0;
     left: -20px;
-    background: url(<%= asset_path "foundation/orbit/rotator-black.png" %>) no-repeat;
+    background: image-url('foundation/orbit/rotator-black.png') no-repeat;
     z-index: 3; }
 
 span.mask {
@@ -98,7 +98,7 @@ span.rotator.move {
 span.mask.move {
     width: 40px;
     left: 0;
-    background: url(<%= asset_path "foundation/orbit/timer-black.png" %>) repeat 0 0; }
+    background: image-url('foundation/orbit/timer-black.png') repeat 0 0; }
 
 span.pause {
     display: block;
@@ -107,12 +107,12 @@ span.pause {
     position: absolute;
     top: 0;
     left: 0;
-    background: url(<%= asset_path "foundation/orbit/pause-black.png" %>) no-repeat;
+    background: image-url('foundation/orbit/pause-black.png') no-repeat;
     z-index: 4;
     opacity: 0; }
 
 span.pause.active {
-    background: url(<%= asset_path "foundation/orbit/pause-black.png" %>) no-repeat 0 -40px }
+    background: image-url('foundation/orbit/pause-black.png') no-repeat 0 -40px }
 
 div.timer:hover span.pause,
 span.pause.active {
@@ -157,11 +157,11 @@ div.slider-nav span {
     cursor: pointer; }
 
 div.slider-nav span.right {
-    background: url(<%= asset_path "foundation/orbit/right-arrow.png" %>);
+    background: image-url('foundation/orbit/right-arrow.png');
     right: 0; }
 
 div.slider-nav span.left {
-    background: url(<%= asset_path "foundation/orbit/left-arrow.png" %>);
+    background: image-url('foundation/orbit/left-arrow.png');
     left: 0; }
 
 /* BULLET NAV
@@ -182,7 +182,7 @@ div.slider-nav span.left {
     cursor: pointer;
     color: #999;
     text-indent: -9999px;
-    background: url(<%= asset_path "foundation/orbit/bullets.jpg" %>) no-repeat 4px 0;
+    background: image-url('foundation/orbit/bullets.jpg') no-repeat 4px 0;
     width: 13px;
     height: 12px;
     overflow: hidden; }

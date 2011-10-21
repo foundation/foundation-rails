@@ -20,7 +20,7 @@
 		left: 50%;
 		margin-left: -300px;
 		width: 520px;
-		background: #eee url(<%= asset_path "foundation/misc/modal-gloss.png" %>) no-repeat -200px -80px;
+		background: #eee image-url('foundation/misc/modal-gloss.png') no-repeat -200px -80px;
 		position: absolute;
 		z-index: 101;
 		padding: 30px 40px 34px;
