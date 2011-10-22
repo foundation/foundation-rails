@@ -13,7 +13,7 @@ Installation
 
 Inside your Gemfile add the following line:
 
-  `gem "zurb-foundation"`
+  `gem "zurb-foundation", :group => :assets`
 
 Then run `bundle install` to install the gem.
 
@@ -38,6 +38,38 @@ Or add `require "foundation"` to your sprockets files like so:
 
 **in application.js**  
 `//= require "foundation"`
+
+Using foundation in production
+==============================
+
+Before pushing your application to production, you'll need to determine how you want your assets served.  You can either compile them on-the-fly or precompile them (recommended).  Before continuing you'll want to check your Rails application Gemfile and ensure that `gem "zurb-foundation"` is included in the `assets` group.
+
+To compile on-the-fly
+---------------------
+In your Rails application edit `config/application.rb` and change:
+
+`Bundler.require(*Rails.groups(:assets => %w(development test)))`
+
+to:
+
+`Bundler.require(:default, :assets, Rails.env)`
+
+Then in `config/environments/production.rb` make sure the following setting exists:
+
+`config.assets.compile = true`
+
+Now all your assets will be compiled the first time someone visits your site, which can cause some delay.  Kind of like the first time Passenger spins up your application after it has been idle for some time.
+
+To precompile assets using Capistrano
+-------------------------------------
+
+In your Rails application edit `Capfile` and add the following line after `load 'deploy'`:
+
+`load 'deploy/assets'`
+
+Now when you run `cap deploy` the `deploy:assets:precompile` task will be run which takes care of running `bundle exec rake assets:precompile` for you.
+
+By default assets that are precompiled will be located in the `public/assets/` folder of your application.
 
 Why use this gem?
 -----------------
