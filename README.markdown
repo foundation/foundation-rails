@@ -39,10 +39,13 @@ Or add `require "foundation"` to your sprockets files like so:
 
 ### Set the viewport
 
-Finally you'll also want to add the following line to the `<head>` section in your layout file (i.e. `app/views/application.html.erb`) so the design will scale for mobile devices:
+Finally you'll also want to add the following line to the `<head>` section in your layout file (i.e. `app/views/layouts/application.html.erb`) so the design will scale for mobile devices:
 
 `<meta name="viewport" content="width=device-width, initial-scale=1.0" />`
 
+You can also use the included generator to accomplish the same thing:
+
+`rails g foundation:layout`
 
 # Using foundation in production
 
