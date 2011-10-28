@@ -1,5 +1,7 @@
 /*
 *= require ./globals.css
+*= require ./typography.css
+*= require ./grid.css
 *= require ./ui.css     
 *= require ./forms.css  
 *= require ./orbit.css  
