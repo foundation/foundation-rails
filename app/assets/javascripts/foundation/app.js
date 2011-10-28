@@ -5,33 +5,27 @@ $(document).ready(function() {
 	/* TABS --------------------------------- */
 	/* Remove if you don't need :) */
 	
-	var tabs = $('dl.tabs');
-		tabsContent = $('ul.tabs-content')
-	
-	tabs.each(function(i) {
-		//Get all tabs
-		var tab = $(this).children('dd').children('a');
-		tab.click(function(e) {
+
+	$('dl.tabs dd a').live("click", function(e) {
+		
+		//Get Location of tab's content
+		var contentLocation = $(this).attr("href")
+		contentLocation = contentLocation + "Tab";
+		
+		//Let go if not a hashed one
+		if(contentLocation.charAt(0)=="#") {
+		
+			e.preventDefault();
+		
+			//Make Tab Active
+			$(this).parents("dl.tabs").find("dd a").removeClass('active');
+			$(this).addClass('active');
 			
-			//Get Location of tab's content
-			var contentLocation = $(this).attr("href")
-			contentLocation = contentLocation + "Tab";
+			//Show Tab Content
+			$(contentLocation).parent('.tabs-content').children('li').css({"display":"none"});
+			$(contentLocation).css({"display":"block"});
 			
-			//Let go if not a hashed one
-			if(contentLocation.charAt(0)=="#") {
-			
-				e.preventDefault();
-			
-				//Make Tab Active
-				tab.removeClass('active');
-				$(this).addClass('active');
-				
-				//Show Tab Content
-				$(contentLocation).parent('.tabs-content').children('li').css({"display":"none"});
-				$(contentLocation).css({"display":"block"});
-				
-			} 
-		});
+		} 
 	});
 	
 	
