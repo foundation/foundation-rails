@@ -19,15 +19,6 @@ module Foundation
         end
       end
       
-      def setup_viewport
-        erb_viewport = '<meta name="viewport" content="width=device-width, initial-scale=1.0" />\n'
-        haml_viewport = '    %meta{:name=>"viewport",:content=>"width=device-width, initial-scale=1.0"}\n'
-        
-        # Need to selectively add this depending on which file is present
-        insert_into_file "app/views/layouts/application.html.erb", erb_viewport, :after => "<head>\n"
-        insert_into_file "app/views/layouts/application.html.haml", haml_viewport, :after => "%head\n"
-      end
-      
       private
         def file_name
           layout_name.underscore.downcase
