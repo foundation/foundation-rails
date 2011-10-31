@@ -1,4 +1,6 @@
 module Foundation
-  VERSION = "2.0.2"
-  FOUNDATION_COMMIT = "69c6ccc4b4775e32c31a8a392ef272ec978ae853"
+  COMMIT = "82881ec476590e01cfdf207851427f55807712db"
+  module Rails
+    VERSION = "2.0.3"
+  end
 end
