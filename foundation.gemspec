@@ -4,7 +4,7 @@ require "foundation/version"
 
 Gem::Specification.new do |s|
   s.name        = "zurb-foundation"
-  s.version     = Foundation::Rails::VERSION
+  s.version     = Foundation::VERSION
   s.authors     = ["ZURB"]
   s.email       = ["foundation@zurb.com"]
   s.homepage    = "http://foundation.zurb.com"
