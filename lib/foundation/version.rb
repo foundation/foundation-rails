@@ -1,4 +1,4 @@
 module Foundation
-  COMMIT = "82881ec476590e01cfdf207851427f55807712db"
-  VERSION = "2.0.3.1"
+  COMMIT = "9eb616dd93ef53409c930bd1e8f5b61890a5d21c"
+  VERSION = "2.0.3.2"
 end

@@ -1,4 +1,4 @@
-/* Arfully Masterminded by ZURB */
+/* Artfully Masterminded by ZURB */
 
 /* -------------------------------------------------- 
     Table of Contents
@@ -152,8 +152,8 @@
 			body, p {  font-size: 15px; font-size: 1.5rem; line-height: 1.4; }
 		}
 	
-	em { font-style: italic; line-height: inherit; }
-	strong { font-weight: bold; line-height: inherit; }
+	em, i { font-style: italic; line-height: inherit; }
+	strong, b { font-weight: bold; line-height: inherit; }
 	small { font-size: 60%; line-height: inherit; }
 	
 	h1 small, h2 small, h3 small, h4 small, h5 small { color: #777; }
@@ -236,7 +236,9 @@
 	.row .offset-by-ten 	{ margin-left: 91.4%;  }
 	/*.row .offset-by-eleven 	{ margin-left: 95.7%;  }*/
 	
-	.row .one.centered { margin-left: 47.9%; }
+	.row .centered { float: none; margin: 0 auto; }
+	
+	/*.row .one.centered { margin-left: 47.9%; }
 	.row .two.centered { margin-left: 43.5%; }
 	.row .three.centered { margin-left: 39.2%; }
 	.row .four.centered { margin-left: 34.8%; }
@@ -246,7 +248,7 @@
 	.row .eight.centered { margin-left: 17.4%; }
 	.row .nine.centered { margin-left: 13.1%; }
 	.row .ten.centered { margin-left: 8.7%; }
-	.row .eleven.centered { margin-left: 4.3%; }
+	.row .eleven.centered { margin-left: 4.3%; }*/
 
 	.row .offset-by-one:first-child 	{ margin-left: 8.7%;  }
 	.row .offset-by-two:first-child 	{ margin-left: 17.4%;  }
@@ -401,6 +403,10 @@
 	.white.button:hover		{ background-color: #dadada; color: #333; }
 	.black.button:hover	{ background-color: #000; }
 	
+	
+	/* Disabled ---------- */
+	.button.disabled, .button[disabled] { opacity: 0.6; cursor: default; }
+	
 
 
 /*	--------------------------------------------------
@@ -461,53 +467,7 @@
     ul.nice, ol.nice { list-style: none; margin: 0; }
     ul.nice li, ol.nice li { padding-left: 13px; position: relative }
     ul.nice li span.bullet, ol.nice li span.number { position: absolute; left: 0px; top: 0px; color: #ccc; }
-    
-
-/* -------------------------------------------------- 
-   Notices/Alerts
----------------------------------------------------*/
-/* Alerts cannot be closed and notices can */
-
-	.notice, .alert { 
-		position: relative;
-	    background: #222 image-url("foundation/misc/button-overlay.png") repeat-x bottom;
-	    width: 100%;
-	    margin: 10px 0;
-	    -moz-border-radius: 3px;
-	    -webkit-border-radius: 3px;
-	    border-radius: 3px;
-	    color: #fff;
-	    text-shadow: 0 -1px 1px rgba(0,0,0,0.25);
-	    font-weight: bold;
-	}
-	.notice>span, .alert>span {
-	    display: block;
-	    padding: 5px 10px 6px;
-	}
-	.notice a.close {
-	    font-size: 20px;
-	    line-height: .5;
-	    color: #fff;
-	    text-shadow: 0 -1px 1px rbga(0,0,0,.25);
-	    font-weight: bold; 
-	    cursor: pointer;
-	    position: absolute; 
-	    right: 10px; 
-	    top: 6px; 
-	} 
-	
-	/*  NOTES
-	
-	Close button entity is &#215; 
-	Sample Markup: 
-	<div class="notice"><span>
-		This is awesome
-		<a class="close" href="#">&#215;</a>
-	</span></div>
-
-*/
-
-
+   
 
 /*	--------------------------------------------------
 	Panels
@@ -652,6 +612,10 @@ div.orbit {
     height: 1px;
     position: relative;
     overflow: hidden }
+    
+div.orbit.with-bullets {
+    margin-bottom: 40px;
+}
 
 div.orbit>img {
     position: absolute;
@@ -834,7 +798,7 @@ div.slider-nav span.left {
     position: absolute;
     z-index: 1000;
     list-style: none;
-    bottom: -40px;
+    bottom: -50px;
     left: 50%;
 	margin-left: -50px;
     padding: 0; }
@@ -845,7 +809,7 @@ div.slider-nav span.left {
     cursor: pointer;
     color: #999;
     text-indent: -9999px;
-    background: image-url("foundation/orbit/orbit/bullets.jpg") no-repeat 4px 0;
+    background: image-url("foundation/orbit/bullets.jpg") no-repeat 4px 0;
     width: 13px;
     height: 12px;
     overflow: hidden; }
@@ -982,7 +946,8 @@ div.slider-nav span.left {
 	-------------------------------------------------- */	
 	
 	@media only screen and (max-width: 767px) {
-		.block-grid.mobile li { float: none; width: 100%; }
+		.block-grid.mobile { margin-left: 0%; }
+		.block-grid.mobile li { float: none; width: 100%; margin-left: 0%; }
 	}
 	
 	

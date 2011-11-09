@@ -491,6 +491,7 @@
       this.$bullets = $(this.bulletHTML);
     	this.$wrapper.append(this.$bullets);
     	this.$slides.each(this.addBullet);
+    	this.$element.addClass('with-bullets');
     	if (this.options.centerBullets) this.$bullets.css('margin-left', -this.$bullets.width() / 2);
     },
     
@@ -853,6 +854,8 @@ jQuery(document).ready(function ($) {
 
     input.checked = ((input.checked) ? false : true);
     $element.toggleClass('checked');
+    
+    $input.trigger('change');
   }
   
   function toggleRadio($element) {
@@ -864,6 +867,8 @@ jQuery(document).ready(function ($) {
     });
     input.checked = ((input.checked) ? false : true);
     $element.toggleClass('checked');
+    
+    $input.trigger('change');
   }
   
   $('form.custom span.custom.checkbox').live('click', function (event) {
@@ -941,6 +946,8 @@ jQuery(document).ready(function ($) {
       
     });
     $select[0].selectedIndex = selectedIndex;
+    
+    $select.trigger('change');
   });
 })(jQuery);
 
@@ -950,9 +957,6 @@ jQuery(document).ready(function ($) {
 $(document).ready(function() {
 
 	/* Use this js doc for all application specific JS */
-  $(window).resize(function() {
-    console.log($(window).width());
-  });
 
 	/* TABS --------------------------------- */
 	/* Remove if you don't need :) */
@@ -991,6 +995,11 @@ $(document).ready(function() {
 	/* Remove this and jquery.placeholder.min.js if you don't need :) */
 	
 	$('input, textarea').placeholder();
+	
+	
+	/* DISABLED BUTTONS ------------- */
+	/* Gives elements with a class of 'disabled' a return: false; */
+	
 	
 });
 
