@@ -337,6 +337,9 @@
 		border: none;
 	}
 	
+  /* Don't use native buttons on iOS */
+	input[type=submit].button { -webkit-appearance: none; }
+	
 	.button.nice { 
 		background: #00a6fc image-url("foundation/misc/button-gloss.png") repeat-x 0 -34px;
 		-moz-box-shadow: inset 0 1px 0 rgba(255,255,255,.5);
@@ -966,7 +969,7 @@ div.slider-nav span.left {
 	.hide-on-desktops { display: none; }
 	
 	
-	@media only screen and (max-device-width: 800px), only screen and (device-width: 800px) {
+	@media only screen and (max-device-width: 800px), only screen and (device-width: 1024px) and (device-height: 600px), only screen and (width: 1280px) and (orientation: landscape), only screen and (device-width: 800px) {
 		.hide-on-phones { display: block !important; }
 		.hide-on-tablets { display: none !important; }
 		.hide-on-desktops { display: block !important; }
@@ -988,6 +991,25 @@ div.slider-nav span.left {
 	}
 	
 	/* only screen and (device-width: 1280px), only screen and (max-device-width: 1280px),  /*
+	/* Keeping this in as a reminder to address support for other tablet devices like the Xoom in the future */
+	
+	/* Specific overrides for elements that require something other than display: block */
+	
+	table.show-on-desktops { display: table !important; }
+	table.hide-on-phones { display: table !important; }	
+	table.hide-on-tablets { display: table !important; }
+	
+	@media only screen and (max-device-width: 800px), only screen and (device-width: 1024px) and (device-height: 600px), only screen and (width: 1280px) and (orientation: landscape), only screen and (device-width: 800px) {
+		table.hide-on-phones { display: block !important; }
+		table.hide-on-desktops { display: block !important; }
+		table.show-on-tablets { display: block !important; }
+	}
+	
+	@media only screen and (max-width: 767px) {
+		table.hide-on-tablets { display: block !important; }
+		table.hide-on-desktops { display: block !important; }
+		table.show-on-phones { display: block !important; }
+	}
 	
 	
 /* -------------------------------------------------- 
