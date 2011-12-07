@@ -1,0 +1,6 @@
+//= require 'foundation/jquery.reveal'
+//= require 'foundation/jquery.orbit-1.3.0'
+//= require 'foundation/forms.jquery'
+//= require 'foundation/jquery.customforms'
+//= require 'foundation/jquery.placeholder.min'
+//= require 'foundation/app'

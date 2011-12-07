@@ -18,7 +18,7 @@ FileUtils.mkdir_p ASSET_PATH.join("javascripts", "foundation")
 FileUtils.mkdir_p ASSET_PATH.join("images", "foundation")
 
 # Create SCSS file, so we can usage image-url() helper
-File.open(ASSET_PATH.join("stylesheets", "foundation", "index.css.scss"), "w") do |file|
+File.open(ASSET_PATH.join("stylesheets", "foundation", "index.css"), "w") do |file|
   file << "/*\n"
   FOUNDATION_CSS.each do |filename|
     file << "*= require 'foundation/#{filename.gsub('.css','')}'\n"
