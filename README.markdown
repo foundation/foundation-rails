@@ -12,7 +12,9 @@ Foundation is MIT-licensed and absolutely free to use. Foundation wouldn't be po
 
 Inside your Gemfile add the following line:
 
-  `gem "zurb-foundation", :group => :assets`
+```ruby
+gem "zurb-foundation", :group => :assets
+```
 
 Then run `bundle install` to install the gem.
 
@@ -20,11 +22,13 @@ Then run `bundle install` to install the gem.
 
 If you want to include Foundation on all of your application pages (and why wouldn't you!) then run the following to append `foundation` to your application sprockets files:
 
-`rails g foundation:install`
+```bash
+rails g foundation:install
+```
 
 You can also manually include `foundation` on specific pages using:
 
-```
+```ruby
 stylesheet_link_tag "foundation"
 javascript_include_tag "foundation"
 ```
@@ -32,20 +36,72 @@ javascript_include_tag "foundation"
 Or add `require "foundation"` to your sprockets files like so:
 
 **in application.css**  
-`/*= require "foundation" */`
+
+```css
+/*= require "foundation" */
+```
 
 **in application.js**  
-`//= require "foundation"`
+
+```javascript
+//= require "foundation"
+```
+
+### Advanced
+
+If you wish to be more selective about which Foundation files you'd like to use in your project that's possible too!  So instead of using `require "foundation"` you can selectively add stylesheets and javascripts to your project like so:
+
+**in application.css**
+
+```css
+/*
+*= require "foundation/globals"
+*= require "foundation/typography"
+*/
+```
+
+**in application.js**
+
+```javascript
+//= require "foundation/forms.jquery"
+//= require "foundation/jquery.customforms"
+//= require "foundation/app"
+```
+This gem contains the same files as the corresponding Foundation release, which currently is:
+
+**Stylesheets**
+
+  * globals
+  * typography
+  * grid
+  * ui
+  * forms
+  * orbit
+  * reveal
+  * mobile
+
+**JavaScripts**
+
+  * jquery.reveal
+  * jquery.orbit-1.3.0
+  * forms.jquery
+  * jquery.customforms
+  * jquery.placeholder.min
+  * app
 
 ### Set the viewport
 
 Finally you'll also want to add the following line to the `<head>` section in your layout file (i.e. `app/views/layouts/application.html.erb`) so the design will scale for mobile devices:
 
-`<meta name="viewport" content="width=device-width, initial-scale=1.0" />`
+```html
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+```
 
 You can also use the included generator to accomplish the same thing:
 
-`rails g foundation:layout`
+```bash
+rails g foundation:layout
+```
 
 # Using foundation in production
 
@@ -55,15 +111,21 @@ Before pushing your application to production, you'll need to determine how you 
 
 In your Rails application edit `config/application.rb` and change:
 
-`Bundler.require(*Rails.groups(:assets => %w(development test)))`
+```ruby
+Bundler.require(*Rails.groups(:assets => %w(development test)))
+```
 
 to:
 
-`Bundler.require(:default, :assets, Rails.env)`
+```ruby
+Bundler.require(:default, :assets, Rails.env)
+```
 
 Then in `config/environments/production.rb` make sure the following setting exists:
 
-`config.assets.compile = true`
+```ruby
+config.assets.compile = true
+```
 
 Now all your assets will be compiled the first time someone visits your site, which can cause some delay.  Kind of like the first time Passenger spins up your application after it has been idle for some time.
 
@@ -71,7 +133,9 @@ Now all your assets will be compiled the first time someone visits your site, wh
 
 In your Rails application edit `Capfile` and add the following line after `load 'deploy'`:
 
-`load 'deploy/assets'`
+```ruby
+load 'deploy/assets'
+```
 
 Now when you run `cap deploy` the `deploy:assets:precompile` task will be run which takes care of running `bundle exec rake assets:precompile` for you.
 
