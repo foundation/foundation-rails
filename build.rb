@@ -5,7 +5,7 @@ require "pathname"
 FOUNDATION_REPO_PATH = Pathname.new("/Users/mark/Projects/foundation")
 
 # Specify which files need to be concatenated and in what order
-FOUNDATION_CSS = %w(globals.css typography.css grid.css ui.css forms.css orbit.css reveal.css mobile.css)
+FOUNDATION_CSS = %w(globals.css typography.css grid.css ui.css forms.css orbit.css reveal.css mobile.css ie.css)
 FOUNDATION_JS = %w(jquery.reveal.js jquery.orbit-1.3.0.js forms.jquery.js jquery.customforms.js jquery.placeholder.min.js app.js)
 
 # Clean out vendor/assets
@@ -21,7 +21,9 @@ FileUtils.mkdir_p ASSET_PATH.join("images", "foundation")
 File.open(ASSET_PATH.join("stylesheets", "foundation", "index.css"), "w") do |file|
   file << "/*\n"
   FOUNDATION_CSS.each do |filename|
-    file << "*= require 'foundation/#{filename.gsub('.css','')}'\n"
+    unless %w(ie.css).include?(filename.downcase)
+      file << "*= require 'foundation/#{filename.gsub('.css','')}'\n"
+    end
     css_file = File.open(FOUNDATION_REPO_PATH.join("stylesheets", filename))
     File.open(ASSET_PATH.join("stylesheets", "foundation", "#{filename}.scss"), "w") do |include_file|
       include_file << css_file.read.gsub(/url\('?\.\.\/images\/([^\)']+)'?\)/, 'image-url("foundation/\1")')
