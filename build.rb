@@ -6,7 +6,7 @@ FOUNDATION_REPO_PATH = Pathname.new("/Users/mark/Projects/foundation")
 
 # Specify which files need to be concatenated and in what order
 FOUNDATION_CSS = %w(globals.css typography.css grid.css ui.css forms.css orbit.css reveal.css mobile.css ie.css)
-FOUNDATION_JS = %w(jquery.reveal.js jquery.orbit-1.3.0.js forms.jquery.js jquery.customforms.js jquery.placeholder.min.js app.js)
+FOUNDATION_JS = %w(jquery.reveal.js jquery.orbit-1.3.0.js jquery.customforms.js jquery.placeholder.min.js app.js)
 
 # Clean out vendor/assets
 ASSET_PATH = Pathname.new(File.dirname(__FILE__)).join("vendor", "assets")
