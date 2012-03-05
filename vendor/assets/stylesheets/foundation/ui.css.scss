@@ -44,7 +44,7 @@
 	}
 	
   	/* Don't use native buttons on iOS */
-	input[type="submit"].button, button.button { -webkit-appearance: none; }
+	input[type=submit].button, button.button { -webkit-appearance: none; }
 	
 	/* Hide inner focus effect in Firefox */
 	button::-moz-focus-inner, input[type="reset"]::-moz-focus-inner, input[type="button"]::-moz-focus-inner, input[type="submit"]::-moz-focus-inner, input[type="file"] > input[type="button"]::-moz-focus-inner {
@@ -133,11 +133,11 @@
 	
 	/* Correct FF button padding */
 	@-moz-document url-prefix("http://") {
-		input[type="submit"].button::-moz-focus-inner, button.button::-moz-focus-inner { border: 0; padding: 0; }
-		input[type="submit"].tiny.button		{ padding: 5px 14px 7px; }
-		input[type="submit"].small.button		{ padding: 7px 20px 8px; }
-		input[type="submit"].medium.button	{ padding: 8px 34px 9px; }
-		input[type="submit"].large.button		{ padding: 9px 48px 10px; }
+		input[type=submit].button::-moz-focus-inner, button.button::-moz-focus-inner { border: 0; padding: 0; }
+		input[type=submit].tiny.button		{ padding: 5px 14px 7px; }
+		input[type=submit].small.button		{ padding: 7px 20px 8px; }
+		input[type=submit].medium.button	{ padding: 8px 34px 9px; }
+		input[type=submit].large.button		{ padding: 9px 48px 10px; }
 	}
 
 
@@ -196,7 +196,8 @@
 		.nice.tabs.vertical dd:first-child a.active { margin: 0; }
     
     ul.tabs-content { margin: 0; display: block; }
-    ul.tabs-content>li { display:none; }
+    ul.tabs-content>li { display: none; }
+    .no-js ul.tabs-content>li { display: block; }
     ul.tabs-content>li.active { display: block; }
     
     dl.contained, dl.nice.contained { margin-bottom: 0; }
@@ -279,39 +280,13 @@
 /*	--------------------------------------------------
    	Sub Navs
    	http://www.zurb.com/article/292/how-to-create-simple-and-effective-sub-na
-   	
 	-------------------------------------------------- */
-
-  dl.sub-nav {
-  	display: block;
-    width: auto;
-    overflow: hidden;
-    margin: -4px 0 18px -9px;
-    padding-top: 4px;
-  }
-
-  dl.sub-nav dt, dl.sub-nav dd {
-    float: left;
-    display: inline;
-    margin-left: 9px;
-    margin-bottom: 4px;
-  }
-
-  dl.sub-nav dt {
-    color: #999;
-    font-weight: normal;
-  }
-
-  dl.sub-nav dd a {
-    text-decoration: none;
-    -webkit-border-radius: 12px;
-    -moz-border-radius: 12px;
-  }
-  dl.sub-nav dd.active a {
-    background: #00A6FC;
-    color: #fff;
-    padding: 3px 9px;
-  }
+	
+	dl.sub-nav { display: block; width: auto; overflow: hidden; margin: -4px 0 18px -9px; padding-top: 4px; }
+	dl.sub-nav dt, dl.sub-nav dd { float: left; display: inline; margin-left: 9px; margin-bottom: 4px; }
+	dl.sub-nav dt { color: #999; font-weight: normal; }
+	dl.sub-nav dd a { text-decoration: none; border-radius: 12px; }
+	dl.sub-nav dd.active a { background: #00A6FC; color: #fff; padding: 3px 9px; }
 
 /*	--------------------------------------------------
    	Video
