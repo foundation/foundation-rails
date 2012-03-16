@@ -1,4 +1,4 @@
-$(document).ready(function () {
+jQuery(document).ready(function ($) {
 
 	/* Use this js doc for all application specific JS */
 
@@ -16,7 +16,7 @@ $(document).ready(function () {
     	//Show Tab Content
 	    if (contentLocation.charAt(0) == "#") {
 		$(contentLocation).closest('.tabs-content').children('li').hide();
-		$(contentLocation).show();
+		$(contentLocation).css('display', 'block');
 	    }
 	}
 
@@ -46,6 +46,9 @@ $(document).ready(function () {
 
 	$('input, textarea').placeholder();
 
+	/* TOOLTIPS ------------ */
+	$(this).tooltips();
+
 
 
 	/* UNCOMMENT THE LINE YOU WANT BELOW IF YOU WANT IE6/7/8 SUPPORT AND ARE USING .block-grids */
@@ -58,39 +61,37 @@ $(document).ready(function () {
 
 	/* DROPDOWN NAV ------------- */
 
-	var currentFoundationDropdown = null;
-	$('.nav-bar li a').each(function() {
-		$(this).data('clicks', 0);
-	});
-	$('.nav-bar li a').on('click', function(e) {
+	var lockNavBar = false;
+	$('.nav-bar a.flyout-toggle').live('click', function(e) {
 		e.preventDefault();
-		if (currentFoundationDropdown !== $(this).index() || currentFoundationDropdown === null) {
-			$(this).data('clicks', 0);
-			currentFoundationDropdown = $(this).index();
+		var flyout = $(this).siblings('.flyout');
+		if (lockNavBar === false) {
+			$('.nav-bar .flyout').not(flyout).slideUp(500);
+			flyout.slideToggle(500, function(){
+				lockNavBar = false;
+			});
 		}
-		$(this).data('clicks', ($(this).data('clicks') + 1));
-		var f = $(this).siblings('.flyout');
-		if (!f.is(':visible') && $(this).parent('.has-flyout').length > 1) {
-			$('.nav-bar li .flyout').hide();
-			f.show();
-		} else if (($(this).data('clicks') > 1) || ($(this).parent('.has-flyout').length < 1)) {
-			window.location = $(this).attr('href');
-		}
+		lockNavBar = true;
 	});
-	$('.nav-bar').on('click', function(e) {
-		e.stopPropagation();
-		if ($(e.target).parents().is('.flyout') || $(e.target).is('.flyout')) {
-			e.preventDefault();
-		}
-	});
-	// $('body').bind('touchend', function(e) {
-	// 	if (!$(e.target).parents().is('.nav-bar') || !$(e.target).is('.nav-bar')) {
-	// 		$('.nav-bar li .flyout').is(':visible').hide();
-	// 	}
-	// });
+  if (Modernizr.touch) {
+    $('.nav-bar>li.has-flyout>a.main').css({
+      'padding-right' : '75px'
+    });
+    $('.nav-bar>li.has-flyout>a.flyout-toggle').css({
+      'border-left' : '1px dashed #eee'
+    });
+  } else {
+    $('.nav-bar>li.has-flyout').hover(function() {
+      $(this).children('.flyout').show();
+    }, function() {
+      $(this).children('.flyout').hide();
+    })
+  }
+
 
 	/* DISABLED BUTTONS ------------- */
 	/* Gives elements with a class of 'disabled' a return: false; */
+  
 
 });
 
