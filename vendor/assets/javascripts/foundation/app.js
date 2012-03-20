@@ -14,8 +14,10 @@ jQuery(document).ready(function ($) {
 		$tab.addClass('active');
 
     	//Show Tab Content
+	    if (contentLocation.charAt(0) == "#") {
 		$(contentLocation).closest('.tabs-content').children('li').hide();
 		$(contentLocation).css('display', 'block');
+	    }
 	}
 
 	$('dl.tabs').each(function () {
