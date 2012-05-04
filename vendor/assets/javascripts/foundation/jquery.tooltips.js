@@ -10,7 +10,8 @@
   var attributes = {
     bodyHeight : 0,
     pollInterval : 1000
-  };
+  },
+  poll = false;
 
   var methods = {
     init : function( options ) {
@@ -20,13 +21,15 @@
         tips = $('.tooltip'),
         tipTemplate = function(target, content) {
           return '<span data-id="' + target + '" class="tooltip">' + content + '<span class="nub"></span></span>';
-        },
-        poll = setInterval(methods.isDomResized, attributes.pollInterval);
-        if (tips.length < 1) {
-          targets.each(function(i){
-            var target = $(this),
-            id = 'foundationTooltip' + i,
-            content = target.attr('title'),
+        };
+        if (!poll) {
+          poll = setInterval(methods.isDomResized, attributes.pollInterval);
+        }
+        targets.each(function(i){
+          var target = $(this),
+          id = 'foundationTooltip' + i;
+          if (!target.data('id')) {
+            var content = target.attr('title'),
             classes = target.attr('class');
             target.data('id', id);
             var tip = $(tipTemplate(id, content));
@@ -36,8 +39,8 @@
             }
             methods.reposition(target, tip, classes);
             tip.fadeOut(150);
-          });
-        }
+          }
+        });
         $(window).resize(function() {
           var tips = $('.tooltip');
           tips.each(function() {
