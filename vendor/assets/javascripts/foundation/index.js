@@ -1,6 +1,6 @@
 //= require 'foundation/modernizr.foundation'
 //= require 'foundation/jquery.reveal'
-//= require 'foundation/jquery.orbit-1.4.0'
+//= require 'foundation/jquery.orbit'
 //= require 'foundation/jquery.customforms'
 //= require 'foundation/jquery.placeholder.min'
 //= require 'foundation/jquery.tooltips'
