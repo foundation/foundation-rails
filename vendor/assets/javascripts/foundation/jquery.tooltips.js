@@ -1,5 +1,5 @@
 /*
- * jQuery Foundation Tooltip Plugin 1.0.1
+ * jQuery Foundation Tooltip Plugin 2.0.1
  * http://foundation.zurb.com
  * Copyright 2012, ZURB
  * Free to use under the MIT license.
@@ -7,101 +7,87 @@
 */
 
 ;(function($) {
-  var attributes = {
+  'use strict';
+  var settings = {
     bodyHeight : 0,
-    pollInterval : 1000
+    targetClass : '.has-tip',
+    tooltipClass : '.tooltip',
+    tipTemplate : function (selector, content) {
+      return '<span data-selector="' + selector + '" class="' + settings.tooltipClass.substring(1) + '">' + content + '<span class="nub"></span></span>';
+    }
   },
   methods = {
-    init : function(options) {
-
-      return this.each(function() {
-        var targets, tips, tipTemplate, poll;
-
-        $(window).data('tooltips', 'init');
-
-        targets = $('.has-tip');
-        tips = $('.tooltip');
-        tipTemplate = function(target, content) {
-          return '<span data-id="' + target + '" class="tooltip">' + content + '<span class="nub"></span></span>';
-        };
-        poll = setInterval(methods.isDomResized, attributes.pollInterval);
-        if (tips.length < 1) {
-          targets.each(function(i){
-            var target, tip, id, content, classes;
-
-            target = $(this);
-            id = 'foundationTooltip' + i;
-            content = target.attr('title');
-            classes = target.attr('class');
-            target.data('id', id);
-            tip = $(tipTemplate(id, content));
-            tip.addClass(classes).removeClass('has-tip').appendTo('body');
-            if (Modernizr.touch) tip.append('<span class="tap-to-close">tap to close </span>');
-            methods.reposition(target, tip, classes);
-            tip.fadeOut(150);
-          });
-        }
-        $(window).on('resize.tooltip', function() {
-          var tips = $('.tooltip');
-          tips.each(function() {
-            var data, target, tip, classes;
-
-            data = $(this).data();
-            target = targets = $('.has-tip');
-            tip = $(this);
-            classes = tip.attr('class');
-            targets.each(function() {
-              ($(this).data().id == data.id) ? target = $(this) : target = target;
-            });
-            methods.reposition(target, tip, classes);
-          });
-
-        });
+    init : function (options) {
+      return this.each(function () {
+        var $body = $('body'),
+          self = this;
 
         if (Modernizr.touch) {
-          $('.tooltip').on('click.tooltip touchstart.tooltip touchend.tooltip', function(e) {
+          $body.delegate('click.tooltip touchstart.tooltip touchend.tooltip', settings.targetClass, function (e) {
+            e.preventDefault();
+            var $this = $(this);
+            $(settings.tooltipClass).hide();
+            methods.showOrCreateTip($this);
+          });
+          $(settings.tooltipClass).on('click.tooltip touchstart.tooltip touchend.tooltip', function (e) {
             e.preventDefault();
             $(this).fadeOut(150);
           });
-          targets.on('click.tooltip touchstart.tooltip touchend.tooltip', function(e){
-            e.preventDefault();
-            $('.tooltip').hide();
-            $('span[data-id=' + $(this).data('id') + '].tooltip').fadeIn(150);
-            targets.attr('title', "");
-          });
         } else {
-          targets.hover(function() {
-            $('span[data-id=' + $(this).data('id') + '].tooltip').fadeIn(150);
-            targets.attr('title', "");
-          }, function() {
-            $('span[data-id=' + $(this).data('id') + '].tooltip').fadeOut(150);
+          $body.on('mouseover.tooltip mouseout.tooltip', settings.targetClass, function (e) {
+            var $this = $(this);
+            if (e.type === 'mouseover') {
+              methods.showOrCreateTip($this);
+            } else if (e.type === 'mouseout') {
+              methods.hide($this);
+            }
           });
         }
 
       });
     },
-    reload : function() {
-      var $self = $(this);
-      return ($self.data('tooltips')) ? $self.tooltips('destroy').tooltips('init') : $self.tooltips('init');
+    showOrCreateTip : function ($target) {
+      var $tip = methods.getTip($target);
+      if ($tip && $tip.length > 0) {
+        methods.show($target);
+      } else {
+        methods.create($target);
+      }
     },
-    destroy : function() {
-       return this.each(function(){
-         $(window).unbind('.tooltip');
-         $('.has-tip').unbind('.tooltip');
-         $('.tooltip').each(function(i){
-          $($('.has-tip').get(i)).attr('title', $(this).text());
-         }).remove();
-       });
+    getTip : function ($target) {
+      var selector = methods.selector($target),
+        tip = null;
+      if (selector) tip = $('span[data-selector=' + selector + ']' + settings.tooltipClass);
+      return (tip) ? tip : false;
     },
-    reposition : function(target, tip, classes) {
+    selector : function ($target) {
+      var id = $target.attr('id'),
+        dataSelector = $target.data('selector');
+      if (id === undefined && dataSelector === undefined) {
+        dataSelector = 'tooltip' + Math.random().toString(36).substring(7);
+        $target.attr('data-selector', dataSelector);
+      }
+      return (id) ? id : dataSelector;
+    },
+    create : function ($target) {
+      var $tip = $(settings.tipTemplate(methods.selector($target), $target.attr('title'))),
+          classes = methods.inheritable_classes($target);
+      $tip.addClass(classes).appendTo('body');
+      if (Modernizr.touch) $tip.append('<span class="tap-to-close">tap to close </span>');
+      $target.removeAttr('title');
+      methods.show($target);
+    },
+    reposition : function (target, tip, classes) {
       var width, nub, nubHeight, nubWidth, row, objPos;
+
+      tip.css('visibility', 'hidden').show();
 
       width = target.data('width');
       nub = tip.children('.nub');
       nubHeight = nub.outerHeight();
       nubWidth = nub.outerWidth();
 
-      objPos = function(obj, top, right, bottom, left, width) {
+      objPos = function (obj, top, right, bottom, left, width) {
         return obj.css({
           'top' : top,
           'bottom' : bottom,
@@ -110,7 +96,6 @@
           'width' : (width) ? width : 'auto'
         }).end();
       };
-
 
       objPos(tip, (target.offset().top + target.outerHeight() + 10), 'auto', 'auto', target.offset().left, width);
       objPos(nub, -nubHeight, 'auto', 'auto', 10);
@@ -134,27 +119,48 @@
           objPos(nub, (tip.outerHeight() / 2) - (nubHeight / 2), 'auto', 'auto', -nubHeight);
         }
       }
+      tip.css('visibility', 'visible').hide();
     },
-    isDomResized : function() {
-      $body = $('body');
-      if(attributes.bodyHeight != $body.height()) {
-        attributes.bodyHeight = $body.height();
-        $(window).trigger('resize');
-      }
+    inheritable_classes : function (target) {
+      var inheritables = ['tip-top', 'tip-left', 'tip-bottom', 'tip-right', 'noradius'],
+      filtered = target.attr('class').split(' ').map(function (el, i) {
+        if ($.inArray(el, inheritables) !== -1) {
+          return el;
+        }
+      }).join(' ');
+      return $.trim(filtered);
+    },
+    show : function ($target) {
+      var $tip = methods.getTip($target);
+      methods.reposition($target, $tip, $target.attr('class'));
+      $tip.fadeIn(150);
+    },
+    hide : function ($target) {
+      var $tip = methods.getTip($target);
+      $tip.fadeOut(150);
+    },
+    reload : function () {
+      var $self = $(this);
+      return ($self.data('tooltips')) ? $self.tooltips('destroy').tooltips('init') : $self.tooltips('init');
+    },
+    destroy : function () {
+      return this.each(function () {
+        $(window).off('.tooltip');
+        $(settings.targetClass).off('.tooltip');
+        $(settings.tooltipClass).each(function(i) {
+          $($(settings.targetClass).get(i)).attr('title', $(this).text());
+        }).remove();
+      });
     }
   };
 
-  $.fn.tooltips = function( method ) {
-
-    if ( methods[method] ) {
-      return methods[ method ].apply( this, Array.prototype.slice.call( arguments, 1 ));
-    } else if ( typeof method === 'object' || ! method ) {
-      return methods.init.apply( this, arguments );
+  $.fn.tooltips = function (method) {
+    if (methods[method]) {
+      return methods[method].apply(this, Array.prototype.slice.call(arguments, 1));
+    } else if (typeof method === 'object' || ! method) {
+      return methods.init.apply(this, arguments);
     } else {
-      $.error( 'Method ' +  method + ' does not exist on jQuery.tooltips' );
+      $.error('Method ' +  method + ' does not exist on jQuery.tooltips');
     }
-
   };
 })(jQuery);
-
-
