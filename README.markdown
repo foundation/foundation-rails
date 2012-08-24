@@ -1,3 +1,7 @@
+# NOTICE
+
+This is for Foundation 2.X.  The current zurb-foundation gem is now hosted at: https://github.com/zurb/foundation
+
 # WELCOME TO FOUNDATION
 
 Foundation is a rock-solid, responsive framework for rapidly prototyping and iterating into production code. It includes a 12-column, future-friendly grid and tons of great tools and elements that'll get you up and running in no time.
