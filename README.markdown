@@ -14,13 +14,16 @@ Foundation is MIT-licensed and absolutely free to use. Foundation wouldn't be po
 # Installation
 
 
-Inside your Gemfile add the following line:
+Inside your Gemfile add the following lines:
 
 ```ruby
-gem "zurb-foundation", :group => :assets
+group :assets do
+  gem "compass-rails"
+  gem "zurb-foundation"
+end
 ```
 
-Then run `bundle install` to install the gem.
+Then run `bundle install` to install the gems.
 
 ## What now?
 
