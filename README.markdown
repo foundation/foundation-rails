@@ -17,7 +17,9 @@ Foundation is MIT-licensed and absolutely free to use. Foundation wouldn't be po
 Inside your Gemfile add the following line:
 
 ```ruby
-gem "zurb-foundation", :group => :assets
+group :assets do
+  gem 'zurb-foundation', '~> 2.2'
+end
 ```
 
 Then run `bundle install` to install the gem.
