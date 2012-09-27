@@ -6,7 +6,7 @@ This is for Foundation 2.X.  The current zurb-foundation gem is now hosted at: h
 
 Foundation is a rock-solid, responsive framework for rapidly prototyping and iterating into production code. It includes a 12-column, future-friendly grid and tons of great tools and elements that'll get you up and running in no time.
 
-Homepage:      http://foundation.zurb.com  
+Homepage:      http://foundation.zurb.com
 Documentation: http://foundation.zurb.com/docs
 
 Foundation is MIT-licensed and absolutely free to use. Foundation wouldn't be possible without the support of the entire ZURB team, our friends and colleagues who gave feedback, and some luminaries who did some heavy lifting that we took advantage of (thanks guys).
@@ -41,13 +41,13 @@ javascript_include_tag "foundation"
 
 Or add `require "foundation"` to your sprockets files like so:
 
-**in application.css**  
+**in application.css**
 
 ```css
 /*= require "foundation" */
 ```
 
-**in application.js**  
+**in application.js**
 
 ```javascript
 //= require "foundation"
@@ -78,22 +78,24 @@ This gem contains the same files as the corresponding Foundation release, which 
 **Stylesheets**
 
   * globals
-  * typography
-  * grid
-  * ui
   * forms
+  * grid
+  * ie (IE hacks)
+  * mobile
   * orbit
   * reveal
-  * mobile
+  * typography
+  * ui
 
 **JavaScripts**
 
-  * jquery.reveal
-  * jquery.orbit-1.3.0
-  * forms.jquery
-  * jquery.customforms
-  * jquery.placeholder.min
   * app
+  * jquery.customforms
+  * jquery.orbit
+  * jquery.placeholder.min
+  * jquery.reveal
+  * jquery.tooltips
+  * modernizr.foundation
 
 ### Set the viewport
 
@@ -153,7 +155,7 @@ By default assets that are precompiled will be located in the `public/assets/` f
 * Easy to setup: Start using Foundation in mere seconds, like a boss
 * Paths: All images will work regardless of if you deploy to a sub-uri or not
 * Clean: Don't clutter up your assets directory
-  
+
 # Dependencies
 
 * rails (~> 3.1)
