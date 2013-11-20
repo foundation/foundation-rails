@@ -6,11 +6,11 @@ require 'foundation/rails/version'
 Gem::Specification.new do |spec|
   spec.name          = "foundation-rails"
   spec.version       = Foundation::Rails::VERSION
-  spec.authors       = ["Mark Hayes"]
-  spec.email         = ["mark@zurb.com"]
-  spec.description   = %q{Write a gem description}
-  spec.summary       = %q{Write a gem summary}
-  spec.homepage      = ""
+  spec.authors       = ["ZURB"]
+  spec.email         = ["foundation@zurb.com"]
+  spec.description   = %q{ZURB Foundation on Sass/Compass}
+  spec.summary       = %q{ZURB Foundation on Sass/Compass}
+  spec.homepage      = "http://foundation.zurb.com"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files`.split($/)
@@ -19,5 +19,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_development_dependency "bundler", "~> 1.3"
+  spec.add_dependency "sass", [">= 3.2.0"]
+  spec.add_dependency "railties", [">= 3.1.0"]
   spec.add_development_dependency "rake"
 end
