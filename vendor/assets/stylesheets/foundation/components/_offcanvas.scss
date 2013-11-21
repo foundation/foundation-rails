@@ -133,7 +133,7 @@ $menu-slide: "transform 500ms ease" !default;
 
   // make sure it's below the .exit-offcanvas link
   position: relative;
-  z-index: 999;
+  // z-index: 999;
 
   // Typography
   h1,h2,h3,h4,h5,h6 {
@@ -253,6 +253,7 @@ $menu-slide: "transform 500ms ease" !default;
   @extend %kill-flicker;
   @extend %off-canvas-menu;
   @include translate3d(-100%,0,0);
+  * { @extend %kill-flicker; } 
 }
 @mixin right-off-canvas-menu {
   @extend %kill-flicker;

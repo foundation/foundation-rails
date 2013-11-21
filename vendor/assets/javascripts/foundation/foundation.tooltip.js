@@ -10,6 +10,7 @@
       additional_inheritable_classes : [],
       tooltip_class : '.tooltip',
       append_to: 'body',
+      touch_close_text: 'Tap To Close',
       disable_for_touch: false,
       tip_template : function (selector, content) {
         return '<span data-selector="' + selector + '" class="' 
@@ -99,7 +100,7 @@
 
       $tip.addClass(classes).appendTo(this.settings.append_to);
       if (Modernizr.touch) {
-        $tip.append('<span class="tap-to-close">'+this.settings.touchCloseText+'</span>');
+        $tip.append('<span class="tap-to-close">'+this.settings.touch_close_text+'</span>');
       }
       $target.removeAttr('title').attr('title','');
       this.show($target);
@@ -127,7 +128,7 @@
 
       objPos(tip, (target.offset().top + target.outerHeight() + 10), 'auto', 'auto', target.offset().left, width);
 
-      if ($(window).width() < 767) {
+      if (this.small()) {
         objPos(tip, (target.offset().top + target.outerHeight() + 10), 'auto', 'auto', 12.5, $(this.scope).width());
         tip.addClass('tip-override');
         objPos(nub, -nubHeight, 'auto', 'auto', target.offset().left);
@@ -151,6 +152,10 @@
       }
 
       tip.css('visibility', 'visible').hide();
+    },
+
+    small : function () {
+      return matchMedia(Foundation.media_queries.small).matches;
     },
 
     inheritable_classes : function (target) {
