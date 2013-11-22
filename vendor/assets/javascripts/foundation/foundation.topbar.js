@@ -4,7 +4,7 @@
   Foundation.libs.topbar = {
     name : 'topbar',
 
-    version: '5.0.0',
+    version: '5.0.1',
 
     settings : {
       index : 0,
@@ -90,7 +90,7 @@
           .css('height', '');
       }
 
-      if(settings.scrolltop) {
+      if (settings.scrolltop) {
         if (!topbar.hasClass('expanded')) {
           if (topbar.hasClass('fixed')) {
             topbar.parent().addClass('fixed');
@@ -285,7 +285,7 @@
     },
 
     breakpoint : function () {
-      return matchMedia(Foundation.media_queries['medium']).matches;
+      return !matchMedia(Foundation.media_queries['topbar']).matches;
     },
 
     assemble : function (topbar) {
