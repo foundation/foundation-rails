@@ -36,7 +36,9 @@
 
   // Enable FastClick
   if(typeof FastClick !== 'undefined') {
-    FastClick.attach(document.body);
+    $(document).ready(function() {
+      FastClick.attach(document.body);
+    });
   }
 
   // private Fast Selector wrapper,
