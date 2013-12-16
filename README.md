@@ -1,6 +1,10 @@
 # Foundation::Rails
 
-TODO: Write a gem description
+[Foundation](http://foundation.zurb.com/) is the first and most advanced responsive, front-end framework in the world.
+
+Millions of designers and engineers use Foundation in their workflows. It was the first framework to introduce the concepts of responsive design, semantics, mobile first and partials.
+
+The __foundation-rails__ Gem integrates Foundation CSS and JavaScript libraries for Rails.
 
 ## Installation
 
@@ -18,7 +22,15 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+Add the following to your `application.css.scss` (or equivalent):
+
+    *= require foundation
+    *= require normalize
+
+Add the following to your `application.js`:
+
+    //= require vendor/modernizr
+    //= require foundation
 
 ## Contributing
 
