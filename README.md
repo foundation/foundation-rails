@@ -16,17 +16,25 @@ Or install it yourself as:
 
     $ gem install foundation-rails
 
-## Configuration
+## Usage
 
-You can run the following command to add Foundation:
+Run the generator to add foundation to the asset pipeline:
 
-```
-rails g foundation:install
-```
+    $ rails g foundation:install [layout_name] [options]
 
-### Manual Installation
+    Options:
+      [--haml]  # Generate HAML layout instead of erb
+      [--slim]  # Generate Slim layout instead of erb
 
-#### Add Foundation to your CSS
+    Runtime options:
+      -f, [--force]    # Overwrite files that already exist
+      -p, [--pretend]  # Run but do not make any changes
+      -q, [--quiet]    # Suppress status output
+      -s, [--skip]     # Skip files that already exist
+
+## Custom configuration
+
+### Add Foundation to your CSS
 
 Append the following line to your `app/assets/stylesheets/application.css` file:
 
@@ -40,7 +48,7 @@ If you're planning on using Sass, then you'll want to rename `application.css` t
 @import "foundation_and_overrides"; /* Add imports of custom sass/scss files here */
 ```
 
-#### Add Foundation to your JS
+### Add Foundation to your JS
 
 Append the following lines to your `app/assets/javascripts/application.js` file:
 
@@ -48,7 +56,7 @@ Append the following lines to your `app/assets/javascripts/application.js` file:
 //= require foundation $(document).foundation();
 ```
 
-#### Add Modernizr
+### Add Modernizr
 
 Make sure that Modernizr is included in the `<head>` of your page:
 
@@ -56,17 +64,13 @@ Make sure that Modernizr is included in the `<head>` of your page:
 javascript_include_tag "vendor/modernizr"
 ```
 
-#### Set Viewport Width
+### Set Viewport Width
 
 Add the following line to the `<head>` of your page layout:
 
 ```html
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 ```
-
-## Usage
-
-TODO: Write usage instructions here
 
 ## Contributing
 
