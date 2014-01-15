@@ -57,8 +57,8 @@ Add the following line to the `head` of your page layout:
 ## Usage
 
 Run the generator to add foundation to the asset pipeline:
-		```
-		$ rails g foundation:install [layout_name] [options]
+
+		rails g foundation:install [layout_name] [options]
 		
 		Options:
      [--haml]  # Generate HAML layout instead of erb
@@ -69,7 +69,6 @@ Run the generator to add foundation to the asset pipeline:
 			-p, [--pretend]  # Run but do not make any changes
 			-q, [--quiet]    # Suppress status output
 			-s, [--skip]     # Skip files that already exist
-		```
 
 ## Contributing
 
