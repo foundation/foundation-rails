@@ -6,7 +6,7 @@ Foundation::Rails is a gem to make it super easy to use Foundation in your upcom
 
 Add this line to your application's Gemfile:
 
-    gem 'foundation-rails'
+    $ gem 'foundation-rails'
 
 And then execute:
 
@@ -20,7 +20,7 @@ Or install it yourself as:
 
 You can run the following command to add Foundation:
 
-		$ rails g foundation:install
+    $ rails g foundation:install
 
 ## Manual Installation
 
@@ -28,47 +28,46 @@ You can run the following command to add Foundation:
 
 Append the following line to your `app/assets/stylesheets/application.css` file:
 
-	$ /*= require foundation */
+    /*= require foundation */
 
 If you're planning on using Sass, then you'll want to rename `application.css` to `application.scss`. That file should then look like:
 
-		$ @import "foundation_and_overrides";
-		$ /* Add imports of custom sass/scss files here */
+    @import "foundation_and_overrides";
+    /* Add imports of custom sass/scss files here */
 
 ### Add Foundation to your JS
 
 Append the following lines to your `app/assets/javascripts/application.js` file:
 
-		$ //= require foundation
-		$ $(document).foundation();
+    //= require foundation
+    $(document).foundation();
 
 ### Add Modernizr
 
 Make sure that Modernizr is included in the `<head>` of your page layout:
 
-		$ javascript_include_tag "vendor/modernizr"
+    javascript_include_tag "vendor/modernizr"
 
 ### Set Viewport Width
 
 Add the following line to the `head` of your page layout:
 
-		$ <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
 ## Usage
 
 Run the generator to add foundation to the asset pipeline:
 
-		rails g foundation:install [layout_name] [options]
-		
-		Options:
-     [--haml]  # Generate HAML layout instead of erb
-     [--slim]  # Generate Slim layout instead of erb
-
-		Runtime options:
-			-f, [--force]    # Overwrite files that already exist
-			-p, [--pretend]  # Run but do not make any changes
-			-q, [--quiet]    # Suppress status output
-			-s, [--skip]     # Skip files that already exist
+    rails g foundation:install [layout_name] [options]
+    
+    Options:
+      [--haml]  # Generate HAML layout instead of erb
+      [--slim]  # Generate Slim layout instead of erb
+    Runtime options:
+      -f, [--force]    # Overwrite files that already exist
+      -p, [--pretend]  # Run but do not make any changes
+      -q, [--quiet]    # Suppress status output
+      -s, [--skip]     # Skip files that already exist
 
 ## Contributing
 
