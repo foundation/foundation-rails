@@ -1,6 +1,6 @@
 # Foundation::Rails
 
-TODO: Write a gem description
+Add Foundation Zurb to your rails app
 
 ## Installation
 
@@ -18,7 +18,7 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+    rails g foundation:install
 
 ## Contributing
 
