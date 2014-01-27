@@ -1,6 +1,6 @@
 # Foundation::Rails
 
-`Foundation::Rails` provides an easy way of integrating the [Foundation Framework](http://foundation.zurb.com/) into your rails application.
+TODO: Write a gem description
 
 ## Installation
 
@@ -18,9 +18,7 @@ Or install it yourself as:
 
 ## Usage
 
-After installing the gem, run the generator to install:
-
-    $ bundle exec rails generate foundation:install
+TODO: Write usage instructions here
 
 ## Contributing
 
