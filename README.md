@@ -1,6 +1,6 @@
 # Foundation::Rails
 
-TODO: Write a gem description
+The easiest way to use Foundation in your Rails app.
 
 ## Installation
 
@@ -18,7 +18,11 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+After Foundation has been added to your `Gemfile` you can install it into your project by running:
+
+```bash
+rails g foundation:install
+```
 
 ## Contributing
 
