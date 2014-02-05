@@ -13,3 +13,4 @@
 //= require foundation/foundation.tab
 //= require foundation/foundation.tooltip
 //= require foundation/foundation.topbar
+//= require foundation/foundation.equalizer
