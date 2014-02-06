@@ -31,3 +31,9 @@ rails g foundation:install
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create new Pull Request
+
+## Resources
+
+* [Foundation Docs](http://foundation.zurb.com/docs/)
+* [Foundation Forum](http://foundation.zurb.com/forum)
+* [Foundation Training](http://foundation.zurb.com/learn/training.html)
