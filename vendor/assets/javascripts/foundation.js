@@ -10,6 +10,7 @@
 //= require foundation/foundation.offcanvas
 //= require foundation/foundation.orbit
 //= require foundation/foundation.reveal
+//= require foundation/foundation.slider
 //= require foundation/foundation.tab
 //= require foundation/foundation.tooltip
 //= require foundation/foundation.topbar
