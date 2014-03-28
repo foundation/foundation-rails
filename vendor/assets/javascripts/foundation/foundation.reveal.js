@@ -152,6 +152,14 @@
       if (!modal.hasClass('open')) {
         var open_modal = self.S('[' + self.attr_name() + '].open');
 
+        if ( open_modal.length > 0 && !settings ) {
+            // If the open modal was loaded with ajax, and the new modal lives inside it,
+            // it doesn't get initialized properly.  The correct fix is to ensure proper
+            // initialization, but since I'm not clear on how to do that, I'll settle for
+            // getting the settings from the open modal.
+            settings = open_modal.data(self.attr_name(true) + '-init');
+        }
+
         if (typeof modal.data('css-top') === 'undefined') {
           modal.data('css-top', parseInt(modal.css('top'), 10))
             .data('offset', this.cache_offset(modal));
