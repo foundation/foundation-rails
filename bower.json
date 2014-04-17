@@ -2,6 +2,6 @@
   "name": "foundation-rails",
   "version": "5.2.2.0",
   "dependencies": {
-    "foundation": "5.2.2"
+    "foundation": "git://github.com/zurb/bower-foundation#master"
   }
 }

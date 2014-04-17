@@ -168,7 +168,7 @@
           'top' : (top) ? top : 'auto',
           'bottom' : (bottom) ? bottom : 'auto',
           'left' : (left) ? left : 'auto',
-          'right' : (right) ? right : 'auto',
+          'right' : (right) ? right : 'auto'
         }).end();
       };
 
@@ -269,4 +269,4 @@
 
     reflow : function () {}
   };
-}(jQuery, this, this.document));
+}(jQuery, window, window.document));
