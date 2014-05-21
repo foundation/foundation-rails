@@ -60,11 +60,11 @@
               var settings = $this.data(self.data_attr(true) + '-init') || self.settings;
               if (settings.is_hover) self.close.call(self, S('#' + $this.data(self.data_attr())));
             } else {
-              var target = S('[' + self.attr_name() + '="' + S(this).attr('id') + '"]'),
+              var target = S('[' + self.attr_name() + '="' + Sthis.attr('id') + '"]'),
                   settings = target.data(self.attr_name(true) + '-init') || self.settings;
               if (settings.is_hover) self.close.call(self, $this);
             }
-          }.bind(this), 150);
+          }, 150);
         })
         .on('click.fndtn.dropdown', function (e) {
           var parent = S(e.target).closest('[' + self.attr_name() + '-content]');
