@@ -27,6 +27,7 @@ $topbar-title-font-size: rem-calc(17) !default;
 $topbar-dropdown-bg: $oil !default;
 $topbar-dropdown-link-color: $white !default;
 $topbar-dropdown-link-bg: $oil !default;
+$topbar-dropdown-link-line-height: $topbar-height !default;
 $topbar-dropdown-link-weight: $font-weight-normal !default;
 $topbar-dropdown-toggle-size: 5px !default;
 $topbar-dropdown-toggle-color: $white !default;
@@ -561,7 +562,7 @@ $topbar-arrows: true !default; //Set false to remove the triangle icon from the 
           li {
             a {
               color: $topbar-dropdown-link-color;
-              line-height: $topbar-height;
+              line-height: $topbar-dropdown-link-line-height !important;
               white-space: nowrap;
               padding: 12px $topbar-link-padding;
               background: $topbar-dropdown-link-bg;
