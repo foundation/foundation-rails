@@ -26,6 +26,7 @@ $orbit-nav-arrow-color-hover: $white !default;
 // We use these to control the timer styles
 $orbit-timer-bg: rgba(255,255,255,0.3) !default;
 $orbit-timer-show-progress-bar: true !default;
+$orbit-timer-show-buttons: true !default; // Show Play/Pause button
 
 // We use these to control the bullet nav styles
 $orbit-bullet-nav-color: $iron !default;
@@ -231,10 +232,12 @@ $orbit-timer-hide-for-small: true !default;
           }
         }
       }
-      
-      
 
-      &:hover .orbit-timer > span { display: block; }
+      &:hover .orbit-timer > span { 
+        @if $orbit-timer-show-buttons {
+          display: block;
+        }
+      }
 
       // Let's get those controls to be right in the center on each side
       .orbit-prev,
