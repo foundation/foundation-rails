@@ -1,7 +1,7 @@
 {
   "name": "foundation-rails",
-  "version": "5.4.6.0",
+  "version": "5.4.7.0",
   "dependencies": {
-    "foundation": "5.4.6"
+    "foundation": "5.4.7"
   }
 }
