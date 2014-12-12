@@ -136,15 +136,15 @@
       }
       $handle.attr('aria-valuenow', value);
 
-      // if (settings.input_id != '') {
-      //   $(settings.display_selector).each(function(){
-      //     if (this.hasOwnProperty('value')) {
-      //       $(this).val(value);
-      //     } else {
-      //       $(this).text(value);
-      //     }
-      //   });
-      // }
+      if (settings.input_id != '') {
+        $(settings.display_selector).each(function(){
+          if (this.hasOwnProperty('value')) {
+            $(this).val(value);
+          } else {
+            $(this).text(value);
+          }
+        });
+      }
 
     },
 
@@ -204,7 +204,7 @@
 
     set_initial_position : function($ele) {
       var settings = $.data($ele.children('.range-slider-handle')[0], 'settings'),
-          initial = (!!settings.initial ? settings.initial : Math.floor((settings.end-settings.start)*0.5/settings.step)*settings.step+settings.start),
+          initial = ((typeof settings.initial == 'number' && !isNaN(settings.initial)) ? settings.initial : Math.floor((settings.end-settings.start)*0.5/settings.step)*settings.step+settings.start),
           $handle = $ele.children('.range-slider-handle');
       this.set_ui($handle, initial);
     },
