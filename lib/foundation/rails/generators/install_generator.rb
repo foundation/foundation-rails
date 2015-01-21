@@ -23,8 +23,11 @@ module Foundation
 
         def detect_js_format
           return ['.coffee', '#=', "\n() ->\n  $(document).foundation()\n"] if File.exist?('app/assets/javascripts/application.coffee')
+          return ['.coffee.erb', '#=', "\n() ->\n  $(document).foundation()\n"] if File.exist?('app/assets/javascripts/application.coffee.erb')
           return ['.js.coffee', '#=', "\n() ->\n  $(document).foundation()\n"] if File.exist?('app/assets/javascripts/application.js.coffee')
+          return ['.js.coffee.erb', '#=', "\n() ->\n  $(document).foundation()\n"] if File.exist?('app/assets/javascripts/application.js.coffee.erb')
           return ['.js', '//=', "\n$(function(){ $(document).foundation(); });\n"] if File.exist?('app/assets/javascripts/application.js')
+          return ['.js.erb', '//=', "\n$(function(){ $(document).foundation(); });\n"] if File.exist?('app/assets/javascripts/application.js.erb')
         end
 
         def detect_css_format
