@@ -29,10 +29,6 @@
       S('[' + this.attr_name() + '] > .active > a', this.scope).each(function () {
         self.default_tab_hashes.push(this.hash);
       });
-
-      // store the initial href, which is used to allow correct behaviour of the
-      // browser back button when deep linking is turned on.
-      self.entry_location = window.location.href;
     },
 
     events : function () {
@@ -108,8 +104,7 @@
      },
 
     toggle_active_tab: function (tab, location_hash) {
-      var self = this,
-          S = self.S,
+      var S = this.S,
           tabs = tab.closest('[' + this.attr_name() + ']'),
           tab_link = tab.find('a'),
           anchor = tab.children('a').first(),
@@ -162,16 +157,6 @@
             $('#' + $(document.activeElement).attr('href').substring(1))
               .attr('aria-hidden', null);
 
-          },
-          go_to_hash = function(hash) {
-            // This function allows correct behaviour of the browser's back button when deep linking is enabled. Without it
-            // the user would get continually redirected to the default hash.
-            var is_entry_location = window.location.href === self.entry_location,
-                default_hash = settings.scroll_to_content ? self.default_tab_hashes[0] : 'fndtn-' + self.default_tab_hashes[0].replace('#', '')
-
-            if (!(is_entry_location && hash === default_hash)) {
-              window.location.hash = hash;
-            }
           };
 
       // allow usage of data-tab-content attribute instead of href
@@ -183,10 +168,8 @@
       if (settings.deep_linking) {
 
         if (settings.scroll_to_content) {
-
           // retain current hash to scroll to content
-          go_to_hash(location_hash || target_hash);
-
+          window.location.hash = location_hash || target_hash;
           if (location_hash == undefined || location_hash == target_hash) {
             tab.parent()[0].scrollIntoView();
           } else {
@@ -195,9 +178,9 @@
         } else {
           // prefix the hashes so that the browser doesn't scroll down
           if (location_hash != undefined) {
-            go_to_hash('fndtn-' + location_hash.replace('#', ''));
+            window.location.hash = 'fndtn-' + location_hash.replace('#', '');
           } else {
-            go_to_hash('fndtn-' + target_hash.replace('#', ''));
+            window.location.hash = 'fndtn-' + target_hash.replace('#', '');
           }
         }
       }

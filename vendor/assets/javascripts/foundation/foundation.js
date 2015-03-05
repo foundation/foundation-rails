@@ -201,7 +201,7 @@
    * Licensed under the MIT license.
    */
 
-  (function(jQuery) {
+  (function($) {
 
   // requestAnimationFrame polyfill adapted from Erik Möller
   // fixes from Paul Irish and Tino Zijdel
@@ -267,7 +267,7 @@
 
   }
 
-  }( $ ));
+  }( jQuery ));
 
 
   function removeQuotes (string) {
