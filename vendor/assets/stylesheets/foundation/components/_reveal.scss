@@ -49,8 +49,8 @@ $close-reveal-modal-class: "close-reveal-modal" !default;
 
 // We use this to create the reveal background overlay styles
 @mixin reveal-bg( $include-z-index-value: true ) {
-  //position: fixed;
-  position: absolute; // allows modal background to extend beyond window position
+  position: fixed;
+  // position: absolute; // allows modal background to extend beyond window position
   top: 0;
   bottom: 0;
   left: 0;
@@ -197,27 +197,6 @@ $close-reveal-modal-class: "close-reveal-modal" !default;
       }
 
       .#{$close-reveal-modal-class} { @include reveal-close; }
-    }
-
-    dialog {
-      @extend .#{$reveal-modal-class};
-      display: none;
-
-      &::backdrop, & + .backdrop {
-        @include reveal-bg(false);
-      }
-
-      &[open]{
-        display: block;
-      }
-    }
-
-    // Reveal Print Styles: It should be invisible, adds no value being printed.
-    @media print {
-      dialog, .#{$reveal-modal-class} { 
-        display: none;
-        background: $white !important;
-      }
     }
   }
 }
