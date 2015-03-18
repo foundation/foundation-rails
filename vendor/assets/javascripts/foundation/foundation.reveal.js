@@ -292,6 +292,11 @@
             opacity: 1
           };
 
+          // you know, 0 is technically false in javascript, right?
+          if(centerTop == 0) {
+            end_css["top"] = "0px";
+          }
+
           return setTimeout(function () {
             return el
               .css(css)
@@ -305,6 +310,10 @@
 
         if (animData.fade) {
           css.top = centerTop || $(window).scrollTop() + el.data('css-top') + 'px';
+
+          if(centerTop == 0) {
+            css.top = "0px";
+          }
           var end_css = {opacity: 1};
 
           return setTimeout(function () {
