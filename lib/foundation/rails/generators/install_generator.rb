@@ -9,6 +9,7 @@ module Foundation
 
         class_option :haml, :desc => 'Generate HAML layout instead of erb', :type => :boolean
         class_option :slim, :desc => 'Generate Slim layout instead of erb', :type => :boolean
+        class_option :skip_layout, :desc => 'Skip generating the layout', :type => :boolean, default: false
 
         def add_assets
           # rails_ujs breaks, need to incorporate rails-behavior plugin for this to work seamlessly
@@ -39,12 +40,14 @@ module Foundation
         end
 
         def create_layout
-          if options.haml?||(defined?(Haml) && options.haml?)
-            template 'application.html.haml', "app/views/layouts/#{file_name}.html.haml"
-          elsif options.slim?||(defined?(Slim) && options.slim?)
-            template 'application.html.slim', "app/views/layouts/#{file_name}.html.slim"
-          else
-            template 'application.html.erb', "app/views/layouts/#{file_name}.html.erb"
+          if !options.skip_layout?
+            if options.haml?||(defined?(Haml) && options.haml?)
+              template 'application.html.haml', "app/views/layouts/#{file_name}.html.haml"
+            elsif options.slim?||(defined?(Slim) && options.slim?)
+              template 'application.html.slim', "app/views/layouts/#{file_name}.html.slim"
+            else
+              template 'application.html.erb', "app/views/layouts/#{file_name}.html.erb"
+            end
           end
         end
 
