@@ -1,2 +1,0 @@
-class StyleguideController < ApplicationController
-end
