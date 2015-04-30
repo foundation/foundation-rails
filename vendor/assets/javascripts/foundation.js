@@ -1,4 +1,3 @@
-//= require foundation/foundation
 //= require foundation/foundation.abide
 //= require foundation/foundation.accordion
 //= require foundation/foundation.alert
@@ -7,6 +6,7 @@
 //= require foundation/foundation.equalizer
 //= require foundation/foundation.interchange
 //= require foundation/foundation.joyride
+//= require foundation/foundation
 //= require foundation/foundation.magellan
 //= require foundation/foundation.offcanvas
 //= require foundation/foundation.orbit
