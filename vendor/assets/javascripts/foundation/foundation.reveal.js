@@ -319,12 +319,29 @@
         if (!animData.animate) {
           this.locked = false;
         }
+
+        if (animData.center) {
+          css.position = 'fixed';
+          var centerTop = Math.floor(($(window).height() - el.height())/2);
+          if (centerTop < el.data('css-top')) {
+            centerTop = el.data('css-top');
+          }
+          if (animData.pop) {
+            var startTop = -(el.data('offset')) + 'px';
+          }
+        }
+
         if (animData.pop) {
-          css.top = $(window).scrollTop() - el.data('offset') + 'px';
+          css.top = startTop || $(window).scrollTop() - el.data('offset') + 'px';
           var end_css = {
-            top: $(window).scrollTop() + el.data('css-top') + 'px',
+            top: centerTop || $(window).scrollTop() + el.data('css-top') + 'px',
             opacity: 1
           };
+
+          // you know, 0 is technically false in javascript, right?
+          if(centerTop == 0) {
+            end_css["top"] = "0px";
+          }
 
           return setTimeout(function () {
             return el
@@ -338,7 +355,11 @@
         }
 
         if (animData.fade) {
-          css.top = $(window).scrollTop() + el.data('css-top') + 'px';
+          css.top = centerTop || $(window).scrollTop() + el.data('css-top') + 'px';
+
+          if(centerTop == 0) {
+            css.top = "0px";
+          }
           var end_css = {opacity: 1};
 
           return setTimeout(function () {
@@ -480,19 +501,24 @@
   };
 
   /*
-   * getAnimationData('popAndFade') // {animate: true,  pop: true,  fade: true}
-   * getAnimationData('fade')       // {animate: true,  pop: false, fade: true}
-   * getAnimationData('pop')        // {animate: true,  pop: true,  fade: false}
-   * getAnimationData('foo')        // {animate: false, pop: false, fade: false}
-   * getAnimationData(null)         // {animate: false, pop: false, fade: false}
+   * getAnimationData('popAndFade')      // {animate: true,  pop: true,  fade: true, center: false}
+   * getAnimationData('fade')            // {animate: true,  pop: false, fade: true, center: false}
+   * getAnimationData('pop')             // {animate: true,  pop: true,  fade: false, center: false}
+   * getAnimationData('fadeFixed')       // {animate: true,  pop: false,  fade: true, center: true}
+   * getAnimationData('popFixed')        // {animate: true,  pop: true,  fade: false, center: true}
+   * getAnimationData('popFadeAndFixed') // {animate: true,  pop: true,  fade: false, center: true}
+   * getAnimationData('foo')             // {animate: false, pop: false, fade: false, center: true}
+   * getAnimationData(null)              // {animate: false, pop: false, fade: false, center: true}
    */
   function getAnimationData(str) {
     var fade = /fade/i.test(str);
     var pop = /pop/i.test(str);
+    var fixed = /fixed/i.test(str);
     return {
-      animate : fade || pop,
-      pop : pop,
-      fade : fade
+      animate: fade || pop,
+      pop: pop,
+      fade: fade,
+      center:fixed
     };
   }
 }(jQuery, window, window.document));
