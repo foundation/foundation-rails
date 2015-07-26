@@ -12,7 +12,9 @@ cp -R bower_components/foundation/scss/* vendor/assets/stylesheets/
 
 # create vendor/assets/javascripts/foundation.js (rails inclusions //=require foundation, ...)
 cd vendor/assets/javascripts
-for f in foundation/*.js; do echo "//= require $f" | sed 's/.js//' >> foundation.js ; done
+echo '//= require foundation/foundation' > foundation.js
+for f in foundation/*.*.js; do echo "//= require $f" | sed 's/.js//' >> foundation.js ; done
 
 # echo "Now update version.rb"
 
+cd -
