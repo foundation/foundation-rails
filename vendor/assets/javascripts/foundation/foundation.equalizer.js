@@ -1,104 +1,157 @@
-;(function ($, window, document, undefined) {
+!function(Foundation, $) {
   'use strict';
 
-  Foundation.libs.equalizer = {
-    name : 'equalizer',
+  /**
+   * Creates a new instance of Equalizer.
+   * @class
+   * @fires Equalizer#init
+   * @param {Object} element - jQuery object to add the trigger to.
+   * @param {Object} options - Overrides to the default plugin settings.
+   */
+  function Equalizer(element, options) {
+    this.$element = element;
+    this.options  = $.extend({}, Equalizer.defaults, this.$element.data(), options);
+    this.$window  = $(window);
+    this.name     = 'equalizer';
+    this.attr     = 'data-equalizer';
 
-    version : '5.5.3',
+    this._init();
+    this._events();
 
-    settings : {
-      use_tallest : true,
-      before_height_change : $.noop,
-      after_height_change : $.noop,
-      equalize_on_stack : false,
-      act_on_hidden_el: false
-    },
+    Foundation.registerPlugin(this);
+  }
 
-    init : function (scope, method, options) {
-      Foundation.inherit(this, 'image_loaded');
-      this.bindings(method, options);
-      this.reflow();
-    },
+  /**
+   * Default settings for plugin
+   */
+  Equalizer.defaults = {
+    /**
+     * Enable height equalization when stacked on smaller screens.
+     * @option
+     * @example true
+     */
+    equalizeOnStack: true,
+    /**
+     * Amount of time, in ms, to debounce the size checking/equalization. Lower times mean smoother transitions/less performance on mobile.
+     * @option
+     * @example 50
+     */
+    throttleInterval: 50
+  };
 
-    events : function () {
-      this.S(window).off('.equalizer').on('resize.fndtn.equalizer', function (e) {
-        this.reflow();
-      }.bind(this));
-    },
+  /**
+   * Initializes the Equalizer plugin and calls functions to get equalizer functioning on load.
+   * @private
+   */
+  Equalizer.prototype._init = function() {
+    this._reflow();
+  };
 
-    equalize : function (equalizer) {
-      var isStacked = false,
-          group = equalizer.data('equalizer'),
-          settings = equalizer.data(this.attr_name(true)+'-init') || this.settings,
-          vals,
-          firstTopOffset;
+  /**
+   * Initializes events for Equalizer.
+   * @private
+   */
+  Equalizer.prototype._events = function() {
+    var self = this;
 
-      if (settings.act_on_hidden_el) {
-        vals = group ? equalizer.find('['+this.attr_name()+'-watch="'+group+'"]') : equalizer.find('['+this.attr_name()+'-watch]');
+    this.$window
+      .off('.equalizer')
+      .on('resize.fndtn.equalizer', Foundation.util.throttle(function () {
+        self._reflow();
+      }, self.options.throttleInterval));
+  };
+
+  /**
+   * A noop version for the plugin
+   * @private
+   */
+  Equalizer.prototype._killswitch = function() {
+    return;
+  };
+  /**
+   * Calls necessary functions to update Equalizer upon DOM change
+   * @private
+   */
+  Equalizer.prototype._reflow = function() {
+    var self = this;
+
+    $('[' + this.attr + ']').each(function() {
+      var $eqParent       = $(this),
+          adjustedHeights = [],
+          $images = $eqParent.find('img');
+
+      if ($images.length) {
+        Foundation.onImagesLoaded($images, function() {
+          adjustedHeights = self.getHeights($eqParent);
+          self.applyHeight($eqParent, adjustedHeights);
+        });
       }
       else {
-        vals = group ? equalizer.find('['+this.attr_name()+'-watch="'+group+'"]:visible') : equalizer.find('['+this.attr_name()+'-watch]:visible');
+        adjustedHeights = self.getHeights($eqParent);
+        self.applyHeight($eqParent, adjustedHeights);
       }
-      
-      if (vals.length === 0) {
-        return;
-      }
-
-      settings.before_height_change();
-      equalizer.trigger('before-height-change.fndth.equalizer');
-      vals.height('inherit');
-
-      if (settings.equalize_on_stack === false) {
-        firstTopOffset = vals.first().offset().top;
-        vals.each(function () {
-          if ($(this).offset().top !== firstTopOffset) {
-            isStacked = true;
-            return false;
-          }
-        });
-        if (isStacked) {
-          return;
-        }
-      }
-
-      var heights = vals.map(function () { return $(this).outerHeight(false) }).get();
-
-      if (settings.use_tallest) {
-        var max = Math.max.apply(null, heights);
-        vals.css('height', max);
-      } else {
-        var min = Math.min.apply(null, heights);
-        vals.css('height', min);
-      }
-
-      settings.after_height_change();
-      equalizer.trigger('after-height-change.fndtn.equalizer');
-    },
-
-    reflow : function () {
-      var self = this;
-
-      this.S('[' + this.attr_name() + ']', this.scope).each(function () {
-        var $eq_target = $(this),
-            media_query = $eq_target.data('equalizer-mq'),
-            ignore_media_query = true;
-
-        if (media_query) {
-          media_query = 'is_' + media_query.replace(/-/g, '_');
-          if (Foundation.utils.hasOwnProperty(media_query)) {
-            ignore_media_query = false;
-          }
-        }
-
-        self.image_loaded(self.S('img', this), function () {
-          if (ignore_media_query || Foundation.utils[media_query]()) {
-            self.equalize($eq_target)
-          } else {
-            var vals = $eq_target.find('[' + self.attr_name() + '-watch]:visible');
-            vals.css('height', 'auto');
-          }
-        });
-      });
-    }
+    });
   };
-})(jQuery, window, window.document);
+  /**
+   * Finds the outer heights of children contained within an Equalizer parent and returns them in an array
+   * @param {Object} $eqParent A jQuery instance of an Equalizer container
+   * @returns {Array} heights An array of heights of children within Equalizer container
+   */
+  Equalizer.prototype.getHeights = function($eqParent) {
+    var eqGroupName = $eqParent.data('equalizer'),
+        eqGroup     = eqGroupName ? $eqParent.find('[' + this.attr + '-watch="' + eqGroupName + '"]:visible') : $eqParent.find('[' + this.attr + '-watch]:visible'),
+        heights;
+
+    eqGroup.height('inherit');
+    heights = eqGroup.map(function () { return $(this).outerHeight(false);}).get();
+    
+    return heights;
+  };
+  /**
+   * Changes the CSS height property of each child in an Equalizer parent to match the tallest
+   * @param {Object} $eqParent - A jQuery instance of an Equalizer container
+   * @param {array} heights - An array of heights of children within Equalizer container
+   * @fires Equalizer#preEqualized
+   * @fires Equalizer#postEqualized
+   */
+  Equalizer.prototype.applyHeight = function($eqParent, heights) {
+    var eqGroupName = $eqParent.data('equalizer'),
+        eqGroup     = eqGroupName ? $eqParent.find('['+this.attr+'-watch="'+eqGroupName+'"]:visible') : $eqParent.find('['+this.attr+'-watch]:visible'),
+        max         = Math.max.apply(null, heights);
+
+    /**
+     * Fires before the heights are applied
+     * @event Equalizer#preEqualized
+     */
+    $eqParent.trigger('preEqualized.zf.Equalizer');
+
+    // for now, apply the max height found in the array
+    for (var i = 0; i < eqGroup.length; i++) {
+      $(eqGroup[i]).css('height', max);
+    }
+
+    /**
+     * Fires when the heights have been applied
+     * @event Equalizer#postEqualized
+     */
+    $eqParent.trigger('postEqualized.zf.Equalizer');
+  };
+  /**
+   * Destroys an instance of Equalizer.
+   * @function
+   */
+  Equalizer.prototype.destroy = function(){
+    //TODO this.
+  };
+
+  Foundation.plugin(Equalizer, 'Equalizer');
+
+  // Exports for AMD/Browserify
+  if (typeof module !== 'undefined' && typeof module.exports !== 'undefined')
+    module.exports = Equalizer;
+  if (typeof define === 'function')
+    define(['foundation'], function() {
+      return Equalizer;
+    });
+
+}(Foundation, jQuery);

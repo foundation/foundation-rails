@@ -1,42 +1,86 @@
-// Foundation by ZURB
+// Foundation for Sites by ZURB
 // foundation.zurb.com
 // Licensed under MIT Open Source
 
-// Behold, here are all the Foundation components.
-@import 'foundation/components/grid';
+// Third-party libraries
+@import 'normalize';
+
+// Sass utilities
+@import 'foundation/util/util';
+
+// Global variables and styles
+@import 'global';
+
+// Components
+@import 'foundation/grid/grid';
+@import 'foundation/typography/typography';
+@import 'foundation/forms/forms';
+@import 'foundation/components/visibility';
+@import 'foundation/components/float';
+@import 'foundation/components/button';
+@import 'foundation/components/button-group';
+@import 'foundation/components/accordion-menu';
 @import 'foundation/components/accordion';
-@import 'foundation/components/alert-boxes';
-@import 'foundation/components/block-grid';
+@import 'foundation/components/badge';
 @import 'foundation/components/breadcrumbs';
-@import 'foundation/components/button-groups';
-@import 'foundation/components/buttons';
-@import 'foundation/components/clearing';
+@import 'foundation/components/callout';
+@import 'foundation/components/close-button';
+@import 'foundation/components/drilldown';
+@import 'foundation/components/dropdown-menu';
 @import 'foundation/components/dropdown';
-@import 'foundation/components/dropdown-buttons';
 @import 'foundation/components/flex-video';
-@import 'foundation/components/forms';
-@import 'foundation/components/icon-bar';
-@import 'foundation/components/inline-lists';
-@import 'foundation/components/joyride';
-@import 'foundation/components/keystrokes';
-@import 'foundation/components/labels';
-@import 'foundation/components/magellan';
+@import 'foundation/components/label';
+@import 'foundation/components/media-object';
+@import 'foundation/components/menu';
+@import 'foundation/components/off-canvas';
 @import 'foundation/components/orbit';
 @import 'foundation/components/pagination';
-@import 'foundation/components/panels';
-@import 'foundation/components/pricing-tables';
-@import 'foundation/components/progress-bars';
-@import 'foundation/components/range-slider';
+@import 'foundation/components/progress-bar';
 @import 'foundation/components/reveal';
-@import 'foundation/components/side-nav';
-@import 'foundation/components/split-buttons';
-@import 'foundation/components/sub-nav';
-@import 'foundation/components/switches';
-@import 'foundation/components/tables';
+@import 'foundation/components/slider';
+@import 'foundation/components/sticky';
+@import 'foundation/components/switch';
+@import 'foundation/components/table';
 @import 'foundation/components/tabs';
-@import 'foundation/components/thumbs';
-@import 'foundation/components/tooltips';
+@import 'foundation/components/title-bar';
 @import 'foundation/components/top-bar';
-@import 'foundation/components/type';
-@import 'foundation/components/offcanvas';
-@import 'foundation/components/visibility';
+@import 'foundation/components/thumbnail';
+@import 'foundation/components/tooltip';
+
+@mixin foundation-everything {
+  @include foundation-global-styles;
+  @include foundation-grid;
+  @include foundation-typography;
+  @include foundation-button;
+  @include foundation-forms;
+  @include foundation-visibility-classes;
+  @include foundation-float-classes;
+  @include foundation-accordion;
+  @include foundation-accordion-menu;
+  @include foundation-badge;
+  @include foundation-breadcrumbs;
+  @include foundation-button-group;
+  @include foundation-callout;
+  @include foundation-close-button;
+  @include foundation-drilldown-menu;
+  @include foundation-dropdown;
+  @include foundation-dropdown-menu;
+  @include foundation-flex-video;
+  @include foundation-label;
+  @include foundation-media-object;
+  @include foundation-menu;
+  @include foundation-off-canvas;
+  @include foundation-orbit;
+  @include foundation-pagination;
+  @include foundation-progress-bar;
+  @include foundation-slider;
+  @include foundation-sticky;
+  @include foundation-reveal;
+  @include foundation-switch;
+  @include foundation-table;
+  @include foundation-tabs;
+  @include foundation-thumbnail;
+  @include foundation-title-bar;
+  @include foundation-tooltip;
+  @include foundation-top-bar;
+}

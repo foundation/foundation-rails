@@ -1,142 +1,137 @@
-// Foundation by ZURB
+// Foundation for Sites by ZURB
 // foundation.zurb.com
 // Licensed under MIT Open Source
 
-@import 'global';
-@import 'grid';
+////
+/// @group tabs
+////
 
-//
-// @variables
-//
+/// Default margin of the tab bar.
+/// @type Number
+$tab-margin: 0 !default;
 
-$include-html-tabs-classes: $include-html-classes !default;
+/// Default background color of a tab bar.
+/// @type Color
+$tab-background: $white !default;
 
-$tabs-navigation-padding: rem-calc(16) !default;
-$tabs-navigation-bg-color: $silver !default;
-$tabs-navigation-active-bg-color: $white !default;
-$tabs-navigation-hover-bg-color: scale-color($tabs-navigation-bg-color, $lightness: -6%) !default;
-$tabs-navigation-font-color: $jet !default;
-$tabs-navigation-active-font-color: $tabs-navigation-font-color !default;
-$tabs-navigation-font-size: rem-calc(16) !default;
-$tabs-navigation-font-family: $body-font-family !default;
+/// active background color of a tab bar.
+/// @type Color
+$tab-background-active: $light-gray !default;
 
-$tabs-content-margin-bottom: rem-calc(24) !default;
-$tabs-content-padding: ($column-gutter/2) !default;
+/// Default border color of tab content.
+/// @type Color
+$tab-border: $light-gray !default;
 
-$tabs-vertical-navigation-margin-bottom: 1.25rem !default;
+/// Default text color for items in a Menu.
+/// @type Color
+$tab-item-color: foreground($tab-background, $primary-color) !default;
 
-@include exports("tab") {
-  @if $include-html-tabs-classes {
-    .tabs {
-      @include clearfix;
-      margin-bottom: 0 !important;
-      margin-left: 0;
+/// Default background color on hover for items in a Menu.
+$tab-item-background-hover: $white !default;
 
-      dd,
-      .tab-title {
-        float: $default-float;
-        list-style: none;
-        margin-bottom: 0 !important;
-        position: relative;
+/// Default padding of a a tab item.
+/// @type Number
+$tab-item-padding: 1.25rem 1.5rem !default;
 
-        > a {
-          display: block;
-          background-color: $tabs-navigation-bg-color;
-          color: $tabs-navigation-font-color;
-          font-family: $tabs-navigation-font-family;
-          font-size: $tabs-navigation-font-size;
-          padding: $tabs-navigation-padding $tabs-navigation-padding * 2;
+/// Maximum number of `expand-n` classes to include in the CSS.
+/// @type Number
+$tab-expand-max: 6 !default;
 
-          &:hover {
-            background-color: $tabs-navigation-hover-bg-color;
-          }
-        }
+/// Default background color of tab content.
+/// @type Color
+$tab-content-background: $white !default;
 
-        &.active > a {
-          background-color: $tabs-navigation-active-bg-color;
-          color: $tabs-navigation-active-font-color;
-        }
-      }
+/// Default border color of tab content.
+/// @type Color
+$tab-content-border: $light-gray !default;
 
-      &.radius {
-        dd:first-child,
-        .tab:first-child {
-          a { @include side-radius($default-float, $global-radius); }
-        }
+/// Default text color of tab content.
+/// @type Color
+$tab-content-color: foreground($tab-background, $primary-color) !default;
 
-        dd:last-child,
-        .tab:last-child {
-          a { @include side-radius($opposite-direction, $global-radius); }
-        }
-      }
+/// Default padding for tab content.
+/// @type Number | List
+$tab-content-padding: 1rem !default;
 
-      &.vertical {
-        dd,
-        .tab-title {
-          position: inherit;
-          float: none;
-          display: block;
-          top: auto;
+@mixin foundation-tabs {
+  .tabs {
+    @include clearfix;
+    margin: $tab-margin;
+    list-style-type: none;
+    background: $tab-background;
+    border: 1px solid $tab-content-border;
+
+    // Simple
+    &.simple {
+      > li > a {
+        padding: 0;
+
+        &:hover {
+          background: transparent;
         }
       }
     }
 
-    .tabs-content {
-      @include clearfix;
-      margin-bottom: $tabs-content-margin-bottom;
-      width: 100%;
-
-      > .content {
-        display: none;
-        float: $default-float;
-        padding: $tabs-content-padding 0;
-        width: 100%;
-
-        &.active {
-          display: block;
-          float: none;
-        }
-        &.contained {
-          padding: $tabs-content-padding;
-        }
-      }
-
-      &.vertical {
-        display: block;
-
-        > .content {
-          padding: 0 $tabs-content-padding;
-        }
-      }
-    }
-
-    @media #{$medium-up} {
-      .tabs {
-        &.vertical {
-          float: $default-float;
-          margin: 0;
-          margin-bottom: $tabs-vertical-navigation-margin-bottom !important;
-          max-width: 20%;
-          width: 20%;
-        }
-      }
-
-      .tabs-content {
-        &.vertical {
-          float: $default-float;
-          margin-#{$default-float}: -1px;
-          max-width: 80%;
-          padding-#{$default-float}: 1rem;
-          width: 80%;
-        }
-      }
-    }
-
-    .no-js {
-      .tabs-content > .content {
-        display: block;
+    // Vertical
+    &.vertical {
+      > li {
+        width: auto;
         float: none;
+        display: block;
       }
+    }
+
+    // Primary color
+    &.primary {
+      background: $primary-color;
+
+      > li > a {
+        color: foreground($primary-color);
+
+        &:hover,
+        &:focus {
+          background: smart-scale($primary-color);
+        }
+      }
+    }
+  }
+
+  .tabs-title {
+    float: #{$global-left};
+
+    > a {
+      display: block;
+      padding: $tab-item-padding;
+      line-height: 1;
+      font-size: 12px;
+      color: $tab-item-color;
+
+      &:hover,
+      &:focus,
+      &[aria-selected='true'] {
+        background: $tab-background-active;
+      }
+    }
+  }
+
+  .tabs-content {
+    background: $tab-content-background;
+    transition: all 0.5s ease;
+    border: 1px solid $tab-content-border;
+    border-top: 0;
+
+    &.vertical {
+      border: 1px solid $tab-content-border;
+      border-#{$global-left}: 0;
+    }
+  }
+
+  .tabs-panel {
+    display: none;
+    padding: $tab-content-padding;
+
+    &.is-active {
+      display: block;
     }
   }
 }
