@@ -6,3 +6,5 @@ RSpec::Core::RakeTask.new(:rspec)
 
 desc 'Run the test suite'
 task :default => :rspec
+
+import 'tasks/import.rake'
