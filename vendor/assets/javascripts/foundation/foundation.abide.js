@@ -1,426 +1,392 @@
-;(function ($, window, document, undefined) {
+!function(Foundation, $) {
   'use strict';
 
-  Foundation.libs.abide = {
-    name : 'abide',
+  /**
+   * Creates a new instance of Abide.
+   * @class
+   * @fires Abide#init
+   * @param {Object} element - jQuery object to add the trigger to.
+   * @param {Object} options - Overrides to the default plugin settings.
+   */
+  function Abide(element, options) {
+    this.$element = element;
+    this.options  = $.extend({}, Abide.defaults, this.$element.data(), options);
+    this.$window  = $(window);
+    this.name     = 'Abide';
+    this.attr     = 'data-abide';
 
-    version : '5.5.3',
+    this._init();
+    this._events();
 
-    settings : {
-      live_validate : true, // validate the form as you go
-      validate_on_blur : true, // validate whenever you focus/blur on an input field
-      // validate_on: 'tab', // tab (when user tabs between fields), change (input changes), manual (call custom events)
+    Foundation.registerPlugin(this);
+  }
 
-      focus_on_invalid : true, // automatically bring the focus to an invalid input field
-      error_labels : true, // labels with a for="inputId" will receive an `error` class
-      error_class : 'error', // labels with a for="inputId" will receive an `error` class
-      // the amount of time Abide will take before it validates the form (in ms).
-      // smaller time will result in faster validation
-      timeout : 1000,
-      patterns : {
-        alpha : /^[a-zA-Z]+$/,
-        alpha_numeric : /^[a-zA-Z0-9]+$/,
-        integer : /^[-+]?\d+$/,
-        number : /^[-+]?\d*(?:[\.\,]\d+)?$/,
+  /**
+   * Default settings for plugin
+   */
+  Abide.defaults = {
+    validateOn: 'fieldChange', // options: fieldChange, manual, submit
+    labelErrorClass: 'is-invalid-label',
+    inputErrorClass: 'is-invalid-input',
+    formErrorSelector: '.form-error',
+    formErrorClass: 'is-visible',
+    patterns: {
+      alpha : /^[a-zA-Z]+$/,
+      alpha_numeric : /^[a-zA-Z0-9]+$/,
+      integer : /^[-+]?\d+$/,
+      number : /^[-+]?\d*(?:[\.\,]\d+)?$/,
 
-        // amex, visa, diners
-        card : /^(?:4[0-9]{12}(?:[0-9]{3})?|5[1-5][0-9]{14}|6(?:011|5[0-9][0-9])[0-9]{12}|3[47][0-9]{13}|3(?:0[0-5]|[68][0-9])[0-9]{11}|(?:2131|1800|35\d{3})\d{11})$/,
-        cvv : /^([0-9]){3,4}$/,
+      // amex, visa, diners
+      card : /^(?:4[0-9]{12}(?:[0-9]{3})?|5[1-5][0-9]{14}|6(?:011|5[0-9][0-9])[0-9]{12}|3[47][0-9]{13}|3(?:0[0-5]|[68][0-9])[0-9]{11}|(?:2131|1800|35\d{3})\d{11})$/,
+      cvv : /^([0-9]){3,4}$/,
 
-        // http://www.whatwg.org/specs/web-apps/current-work/multipage/states-of-the-type-attribute.html#valid-e-mail-address
-        email : /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$/,
+      // http://www.whatwg.org/specs/web-apps/current-work/multipage/states-of-the-type-attribute.html#valid-e-mail-address
+      email : /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$/,
 
-        // http://blogs.lse.ac.uk/lti/2008/04/23/a-regular-expression-to-match-any-url/
-        url: /^(https?|ftp|file|ssh):\/\/([-;:&=\+\$,\w]+@{1})?([-A-Za-z0-9\.]+)+:?(\d+)?((\/[-\+~%\/\.\w]+)?\??([-\+=&;%@\.\w]+)?#?([\w]+)?)?/,
-        // abc.de
-        domain : /^([a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,8}$/,
+      url : /^(https?|ftp|file|ssh):\/\/(((([a-zA-Z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:)*@)?(((\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5]))|((([a-zA-Z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-zA-Z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-zA-Z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-zA-Z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-zA-Z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-zA-Z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-zA-Z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-zA-Z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?)(:\d*)?)(\/((([a-zA-Z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)+(\/(([a-zA-Z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*)?)?(\?((([a-zA-Z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|[\uE000-\uF8FF]|\/|\?)*)?(\#((([a-zA-Z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|\/|\?)*)?$/,
+      // abc.de
+      domain : /^([a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,8}$/,
 
-        datetime : /^([0-2][0-9]{3})\-([0-1][0-9])\-([0-3][0-9])T([0-5][0-9])\:([0-5][0-9])\:([0-5][0-9])(Z|([\-\+]([0-1][0-9])\:00))$/,
-        // YYYY-MM-DD
-        date : /(?:19|20)[0-9]{2}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1[0-9]|2[0-9])|(?:(?!02)(?:0[1-9]|1[0-2])-(?:30))|(?:(?:0[13578]|1[02])-31))$/,
-        // HH:MM:SS
-        time : /^(0[0-9]|1[0-9]|2[0-3])(:[0-5][0-9]){2}$/,
-        dateISO : /^\d{4}[\/\-]\d{1,2}[\/\-]\d{1,2}$/,
-        // MM/DD/YYYY
-        month_day_year : /^(0[1-9]|1[012])[- \/.](0[1-9]|[12][0-9]|3[01])[- \/.]\d{4}$/,
-        // DD/MM/YYYY
-        day_month_year : /^(0[1-9]|[12][0-9]|3[01])[- \/.](0[1-9]|1[012])[- \/.]\d{4}$/,
+      datetime : /^([0-2][0-9]{3})\-([0-1][0-9])\-([0-3][0-9])T([0-5][0-9])\:([0-5][0-9])\:([0-5][0-9])(Z|([\-\+]([0-1][0-9])\:00))$/,
+      // YYYY-MM-DD
+      date : /(?:19|20)[0-9]{2}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1[0-9]|2[0-9])|(?:(?!02)(?:0[1-9]|1[0-2])-(?:30))|(?:(?:0[13578]|1[02])-31))$/,
+      // HH:MM:SS
+      time : /^(0[0-9]|1[0-9]|2[0-3])(:[0-5][0-9]){2}$/,
+      dateISO : /^\d{4}[\/\-]\d{1,2}[\/\-]\d{1,2}$/,
+      // MM/DD/YYYY
+      month_day_year : /^(0[1-9]|1[012])[- \/.](0[1-9]|[12][0-9]|3[01])[- \/.]\d{4}$/,
+      // DD/MM/YYYY
+      day_month_year : /^(0[1-9]|[12][0-9]|3[01])[- \/.](0[1-9]|1[012])[- \/.]\d{4}$/,
 
-        // #FFF or #FFFFFF
-        color : /^#?([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$/
-      },
-      validators : {
-        equalTo : function (el, required, parent) {
-          var from  = document.getElementById(el.getAttribute(this.add_namespace('data-equalto'))).value,
-              to    = el.value,
-              valid = (from === to);
-
-          return valid;
-        }
-      }
+      // #FFF or #FFFFFF
+      color : /^#?([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$/
     },
+    validators: {
+      equalTo: function (el, required, parent) {
+        var from  = document.getElementById(el.getAttribute(this.add_namespace('data-equalto'))).value,
+            to    = el.value,
+            valid = (from === to);
 
-    timer : null,
-
-    init : function (scope, method, options) {
-      this.bindings(method, options);
-    },
-
-    events : function (scope) {
-      var self = this,
-          form = self.S(scope).attr('novalidate', 'novalidate'),
-          settings = form.data(this.attr_name(true) + '-init') || {};
-
-      this.invalid_attr = this.add_namespace('data-invalid');
-
-      function validate(originalSelf, e) {
-        clearTimeout(self.timer);
-        self.timer = setTimeout(function () {
-          self.validate([originalSelf], e);
-        }.bind(originalSelf), settings.timeout);
+        return valid;
       }
-
-      form
-        .off('.abide')
-        .on('submit.fndtn.abide', function (e) {
-          var is_ajax = /ajax/i.test(self.S(this).attr(self.attr_name()));
-          return self.validate(self.S(this).find('input, textarea, select').not(":hidden, [data-abide-ignore]").get(), e, is_ajax);
-        })
-        .on('validate.fndtn.abide', function (e) {
-          if (settings.validate_on === 'manual') {
-            self.validate([e.target], e);
-          }
-        })
-        .on('reset', function (e) {
-          return self.reset($(this), e);
-        })
-        .find('input, textarea, select').not(":hidden, [data-abide-ignore]")
-          .off('.abide')
-          .on('blur.fndtn.abide change.fndtn.abide', function (e) {
-              var id = this.getAttribute('id'),
-                  eqTo = form.find('[data-equalto="'+ id +'"]');
-            // old settings fallback
-            // will be deprecated with F6 release
-            if (settings.validate_on_blur && settings.validate_on_blur === true) {
-              validate(this, e);
-            }
-            // checks if there is an equalTo equivalent related by id
-            if(typeof eqTo.get(0) !== "undefined" && eqTo.val().length){
-              validate(eqTo.get(0),e);
-            }
-            // new settings combining validate options into one setting
-            if (settings.validate_on === 'change') {
-              validate(this, e);
-            }
-          })
-          .on('keydown.fndtn.abide', function (e) {
-            var id = this.getAttribute('id'),
-                eqTo = form.find('[data-equalto="'+ id +'"]');
-            // old settings fallback
-            // will be deprecated with F6 release
-            if (settings.live_validate && settings.live_validate === true && e.which != 9) {
-              validate(this, e);
-            }
-            // checks if there is an equalTo equivalent related by id
-            if(typeof eqTo.get(0) !== "undefined" && eqTo.val().length){
-              validate(eqTo.get(0),e);
-            }
-            // new settings combining validate options into one setting
-            if (settings.validate_on === 'tab' && e.which === 9) {
-              validate(this, e);
-            }
-            else if (settings.validate_on === 'change') {
-              validate(this, e);
-            }
-          })
-          .on('focus', function (e) {
-            if (navigator.userAgent.match(/iPad|iPhone|Android|BlackBerry|Windows Phone|webOS/i)) {
-              $('html, body').animate({
-                  scrollTop: $(e.target).offset().top
-              }, 100);
-            }
-          });
-    },
-
-    reset : function (form, e) {
-      var self = this;
-      form.removeAttr(self.invalid_attr);
-
-      $('[' + self.invalid_attr + ']', form).removeAttr(self.invalid_attr);
-      $('.' + self.settings.error_class, form).not('small').removeClass(self.settings.error_class);
-      $(':input', form).not(':button, :submit, :reset, :hidden, [data-abide-ignore]').val('').removeAttr(self.invalid_attr);
-    },
-
-    validate : function (els, e, is_ajax) {
-      var validations = this.parse_patterns(els),
-          validation_count = validations.length,
-          form = this.S(els[0]).closest('form'),
-          submit_event = /submit/.test(e.type);
-
-      // Has to count up to make sure the focus gets applied to the top error
-      for (var i = 0; i < validation_count; i++) {
-        if (!validations[i] && (submit_event || is_ajax)) {
-          if (this.settings.focus_on_invalid) {
-            els[i].focus();
-          }
-          form.trigger('invalid.fndtn.abide');
-          this.S(els[i]).closest('form').attr(this.invalid_attr, '');
-          return false;
-        }
-      }
-
-      if (submit_event || is_ajax) {
-        form.trigger('valid.fndtn.abide');
-      }
-
-      form.removeAttr(this.invalid_attr);
-
-      if (is_ajax) {
-        return false;
-      }
-
-      return true;
-    },
-
-    parse_patterns : function (els) {
-      var i = els.length,
-          el_patterns = [];
-
-      while (i--) {
-        el_patterns.push(this.pattern(els[i]));
-      }
-
-      return this.check_validation_and_apply_styles(el_patterns);
-    },
-
-    pattern : function (el) {
-      var type = el.getAttribute('type'),
-          required = typeof el.getAttribute('required') === 'string';
-
-      var pattern = el.getAttribute('pattern') || '';
-
-      if (this.settings.patterns.hasOwnProperty(pattern) && pattern.length > 0) {
-        return [el, this.settings.patterns[pattern], required];
-      } else if (pattern.length > 0) {
-        return [el, new RegExp(pattern), required];
-      }
-
-      if (this.settings.patterns.hasOwnProperty(type)) {
-        return [el, this.settings.patterns[type], required];
-      }
-
-      pattern = /.*/;
-
-      return [el, pattern, required];
-    },
-
-    // TODO: Break this up into smaller methods, getting hard to read.
-    check_validation_and_apply_styles : function (el_patterns) {
-      var i = el_patterns.length,
-          validations = [];
-      if (i == 0) {
-        return validations;
-      }
-      var form = this.S(el_patterns[0][0]).closest('[data-' + this.attr_name(true) + ']'),
-          settings = form.data(this.attr_name(true) + '-init') || {};
-      while (i--) {
-        var el = el_patterns[i][0],
-            required = el_patterns[i][2],
-            value = el.value.trim(),
-            direct_parent = this.S(el).parent(),
-            validator = el.getAttribute(this.add_namespace('data-abide-validator')),
-            is_radio = el.type === 'radio',
-            is_checkbox = el.type === 'checkbox',
-            label = this.S('label[for="' + el.getAttribute('id') + '"]'),
-            valid_length = (required) ? (el.value.length > 0) : true,
-            el_validations = [];
-
-        var parent, valid;
-
-        // support old way to do equalTo validations
-        if (el.getAttribute(this.add_namespace('data-equalto'))) { validator = 'equalTo' }
-
-        if (!direct_parent.is('label')) {
-          parent = direct_parent;
-        } else {
-          parent = direct_parent.parent();
-        }
-
-        if (is_radio && required) {
-          el_validations.push(this.valid_radio(el, required));
-        } else if (is_checkbox && required) {
-          el_validations.push(this.valid_checkbox(el, required));
-
-        } else if (validator) {
-          // Validate using each of the specified (space-delimited) validators.
-          var validators = validator.split(' ');
-          var last_valid = true, all_valid = true;
-          for (var iv = 0; iv < validators.length; iv++) {
-              valid = this.settings.validators[validators[iv]].apply(this, [el, required, parent])
-              el_validations.push(valid);
-              all_valid = valid && last_valid;
-              last_valid = valid;
-          }
-          if (all_valid) {
-              this.S(el).removeAttr(this.invalid_attr);
-              parent.removeClass('error');
-              if (label.length > 0 && this.settings.error_labels) {
-                label.removeClass(this.settings.error_class).removeAttr('role');
-              }
-              $(el).triggerHandler('valid');
-          } else {
-              this.S(el).attr(this.invalid_attr, '');
-              parent.addClass('error');
-              if (label.length > 0 && this.settings.error_labels) {
-                label.addClass(this.settings.error_class).attr('role', 'alert');
-              }
-              $(el).triggerHandler('invalid');
-          }
-        } else {
-
-          if (el_patterns[i][1].test(value) && valid_length ||
-            !required && el.value.length < 1 || $(el).attr('disabled')) {
-            el_validations.push(true);
-          } else {
-            el_validations.push(false);
-          }
-
-          el_validations = [el_validations.every(function (valid) {return valid;})];
-          if (el_validations[0]) {
-            this.S(el).removeAttr(this.invalid_attr);
-            el.setAttribute('aria-invalid', 'false');
-            el.removeAttribute('aria-describedby');
-            parent.removeClass(this.settings.error_class);
-            if (label.length > 0 && this.settings.error_labels) {
-              label.removeClass(this.settings.error_class).removeAttr('role');
-            }
-            $(el).triggerHandler('valid');
-          } else {
-            this.S(el).attr(this.invalid_attr, '');
-            el.setAttribute('aria-invalid', 'true');
-
-            // Try to find the error associated with the input
-            var errorElem = parent.find('small.' + this.settings.error_class, 'span.' + this.settings.error_class);
-            var errorID = errorElem.length > 0 ? errorElem[0].id : '';
-            if (errorID.length > 0) {
-              el.setAttribute('aria-describedby', errorID);
-            }
-
-            // el.setAttribute('aria-describedby', $(el).find('.error')[0].id);
-            parent.addClass(this.settings.error_class);
-            if (label.length > 0 && this.settings.error_labels) {
-              label.addClass(this.settings.error_class).attr('role', 'alert');
-            }
-            $(el).triggerHandler('invalid');
-          }
-        }
-        validations = validations.concat(el_validations);
-      }
-
-      return validations;
-    },
-
-    valid_checkbox : function (el, required) {
-      var el = this.S(el),
-          valid = (el.is(':checked') || !required || el.get(0).getAttribute('disabled'));
-
-      if (valid) {
-        el.removeAttr(this.invalid_attr).parent().removeClass(this.settings.error_class);
-        $(el).triggerHandler('valid');
-      } else {
-        el.attr(this.invalid_attr, '').parent().addClass(this.settings.error_class);
-        $(el).triggerHandler('invalid');
-      }
-
-      return valid;
-    },
-
-    valid_radio : function (el, required) {
-      var name = el.getAttribute('name'),
-          group = this.S(el).closest('[data-' + this.attr_name(true) + ']').find("[name='" + name + "']"),
-          count = group.length,
-          valid = false,
-          disabled = false;
-
-      // Has to count up to make sure the focus gets applied to the top error
-      for (var i=0; i < count; i++) {
-        if( group[i].getAttribute('disabled') ){
-          disabled=true;
-          valid=true;
-        } else {
-          if (group[i].checked){
-            valid = true;
-          } else {
-            if( disabled ){
-              valid = false;
-            }
-          }
-        }
-      }
-
-      // Has to count up to make sure the focus gets applied to the top error
-      for (var i = 0; i < count; i++) {
-        if (valid) {
-          this.S(group[i]).removeAttr(this.invalid_attr).parent().removeClass(this.settings.error_class);
-          $(group[i]).triggerHandler('valid');
-        } else {
-          this.S(group[i]).attr(this.invalid_attr, '').parent().addClass(this.settings.error_class);
-          $(group[i]).triggerHandler('invalid');
-        }
-      }
-
-      return valid;
-    },
-
-    valid_equal : function (el, required, parent) {
-      var from  = document.getElementById(el.getAttribute(this.add_namespace('data-equalto'))).value,
-          to    = el.value,
-          valid = (from === to);
-
-      if (valid) {
-        this.S(el).removeAttr(this.invalid_attr);
-        parent.removeClass(this.settings.error_class);
-        if (label.length > 0 && settings.error_labels) {
-          label.removeClass(this.settings.error_class);
-        }
-      } else {
-        this.S(el).attr(this.invalid_attr, '');
-        parent.addClass(this.settings.error_class);
-        if (label.length > 0 && settings.error_labels) {
-          label.addClass(this.settings.error_class);
-        }
-      }
-
-      return valid;
-    },
-
-    valid_oneof : function (el, required, parent, doNotValidateOthers) {
-      var el = this.S(el),
-        others = this.S('[' + this.add_namespace('data-oneof') + ']'),
-        valid = others.filter(':checked').length > 0;
-
-      if (valid) {
-        el.removeAttr(this.invalid_attr).parent().removeClass(this.settings.error_class);
-      } else {
-        el.attr(this.invalid_attr, '').parent().addClass(this.settings.error_class);
-      }
-
-      if (!doNotValidateOthers) {
-        var _this = this;
-        others.each(function () {
-          _this.valid_oneof.call(_this, this, null, null, true);
-        });
-      }
-
-      return valid;
-    },
-
-    reflow : function(scope, options) {
-      var self = this,
-          form = self.S('[' + this.attr_name() + ']').attr('novalidate', 'novalidate');
-          self.S(form).each(function (idx, el) {
-            self.events(el);
-          });
     }
   };
-}(jQuery, window, window.document));
+
+
+  /**
+   * Initializes the Abide plugin and calls functions to get Abide functioning on load.
+   * @private
+   */
+  Abide.prototype._init = function() {
+  };
+
+  /**
+   * Initializes events for Abide.
+   * @private
+   */
+  Abide.prototype._events = function() {
+    var self = this;
+    this.$element
+      .off('.abide')
+      .on('reset.fndtn.abide', function(e) {
+        self.resetForm($(this));
+      })
+      .on('submit.fndtn.abide', function(e) {
+        e.preventDefault();
+        self.validateForm(self.$element);
+      })
+      .find('input, textarea, select')
+        .off('.abide')
+        .on('blur.fndtn.abide change.fndtn.abide', function (e) {
+          if (self.options.validateOn === 'fieldChange') {
+            self.validateInput($(e.target), self.$element);
+          }
+          // self.validateForm(self.$element);
+        })
+        .on('keydown.fndtn.abide', function (e) {
+          // if (settings.live_validate === true && e.which != 9) {
+          //   clearTimeout(self.timer);
+          //   self.timer = setTimeout(function () {
+          //     self.validate([this], e);
+          //   }.bind(this), settings.timeout);
+          // }
+          // self.validateForm(self.$element);
+        });
+
+  },
+  /**
+   * Calls necessary functions to update Abide upon DOM change
+   * @private
+   */
+  Abide.prototype._reflow = function() {
+    var self = this;
+  };
+  /**
+   * Checks whether or not a form element has the required attribute and if it's checked or not
+   * @param {Object} element - jQuery object to check for required attribute
+   * @returns {Boolean} Boolean value depends on whether or not attribute is checked or empty
+   */
+  Abide.prototype.requiredCheck = function($el) {
+    switch ($el[0].type) {
+      case 'text':
+        if ($el.attr('required') && !$el.val()) {
+          // requirement check does not pass
+          return false;
+        } else {
+          return true;
+        }
+        break;
+      case 'checkbox':
+        if ($el.attr('required') && !$el.is(':checked')) {
+          return false;
+        } else {
+          return true;
+        }
+        break;
+      case 'radio':
+        if ($el.attr('required') && !$el.is(':checked')) {
+          return false;
+        } else {
+          return true;
+        }
+        break;
+      default:
+        if ($el.attr('required') && (!$el.val() || !$el.val().length || $el.is(':empty'))) {
+          return false;
+        } else {
+          return true;
+        }
+    }
+  };
+  /**
+   * Checks whether or not a form element has the required attribute and if it's checked or not
+   * @param {Object} element - jQuery object to check for required attribute
+   * @returns {Boolean} Boolean value depends on whether or not attribute is checked or empty
+   */
+  Abide.prototype.findLabel = function($el) {
+    if ($el.next('label').length) {
+      return $el.next('label');
+    }
+    else {
+      return $el.closest('label');
+    }
+  };
+  /**
+   * Adds the CSS error class as specified by the Abide settings to the label, input, and the form
+   * @param {Object} element - jQuery object to add the class to
+   */
+  Abide.prototype.addErrorClasses = function($el) {
+    var self = this,
+        $label = self.findLabel($el),
+        $formError = $el.next(self.options.formErrorSelector) || $el.find(self.options.formErrorSelector);
+
+    // label
+    if ($label) {
+      $label.addClass(self.options.labelErrorClass);
+    }
+    // form error
+    if ($formError) {
+      $formError.addClass(self.options.formErrorClass);
+    }
+    // input
+    $el.addClass(self.options.inputErrorClass);
+  };
+  /**
+   * Removes CSS error class as specified by the Abide settings from the label, input, and the form
+   * @param {Object} element - jQuery object to remove the class from
+   */
+  Abide.prototype.removeErrorClasses = function($el) {
+    var self = this,
+        $label = self.findLabel($el),
+        $formError = $el.next(self.options.formErrorSelector) || $el.find(self.options.formErrorSelector);
+    // label
+    if ($label && $label.hasClass(self.options.labelErrorClass)) {
+      $label.removeClass(self.options.labelErrorClass);
+    }
+    // form error
+    if ($formError && $formError.hasClass(self.options.formErrorClass)) {
+      $formError.removeClass(self.options.formErrorClass);
+    }
+    // input
+    if ($el.hasClass(self.options.inputErrorClass)) {
+      $el.removeClass(self.options.inputErrorClass);
+    }
+  };
+  /**
+   * Goes through a form to find inputs and proceeds to validate them in ways specific to their type
+   * @fires Abide#invalid
+   * @fires Abide#valid
+   * @param {Object} element - jQuery object to validate, should be an HTML input
+   * @param {Object} form - jQuery object of the entire form to find the various input elements
+   */
+  Abide.prototype.validateInput = function($el, $form) {
+    var self = this,
+        textInput = $form.find('input[type="text"]'),
+        checkInput = $form.find('input[type="checkbox"]'),
+        label,
+        radioGroupName;
+
+    if ($el[0].type === 'text') {
+      if (!self.requiredCheck($el) || !self.validateText($el)) {
+        self.addErrorClasses($el);
+        $el.trigger('invalid.fndtn.abide', $el[0]);
+      }
+      else {
+        self.removeErrorClasses($el);
+        $el.trigger('valid.fndtn.abide', $el[0]);
+      }
+    }
+    else if ($el[0].type === 'radio') {
+      radioGroupName = $el.attr('name');
+      label = $el.siblings('label');
+
+      if (self.validateRadio(radioGroupName)) {
+        $(label).each(function() {
+          if ($(this).hasClass(self.options.labelErrorClass)) {
+            $(this).removeClass(self.options.labelErrorClass);
+          }
+        });
+        $el.trigger('valid.fndtn.abide', $el[0]);
+      }
+      else {
+        $(label).each(function() {
+          $(this).addClass(self.options.labelErrorClass);
+        });
+        $el.trigger('invalid.fndtn.abide', $el[0]);
+      };
+    }
+    else if ($el[0].type === 'checkbox') {
+      if (!self.requiredCheck($el)) {
+        self.addErrorClasses($el);
+        $el.trigger('invalid.fndtn.abide', $el[0]);
+      }
+      else {
+        self.removeErrorClasses($el);
+        $el.trigger('valid.fndtn.abide', $el[0]);
+      }
+    }
+    else {
+      if (!self.requiredCheck($el) || !self.validateText($el)) {
+        self.addErrorClasses($el);
+        $el.trigger('invalid.fndtn.abide', $el[0]);
+      }
+      else {
+        self.removeErrorClasses($el);
+        $el.trigger('valid.fndtn.abide', $el[0]);
+      }
+    }
+  };
+  /**
+   * Goes through a form and if there are any invalid inputs, it will display the form error element
+   * @param {Object} element - jQuery object to validate, should be a form HTML element
+   */
+  Abide.prototype.validateForm = function($form) {
+    var self = this,
+        inputs = $form.find('input'),
+        inputCount = $form.find('input').length,
+        counter = 0;
+
+    while (counter < inputCount) {
+      self.validateInput($(inputs[counter]), $form);
+      counter++;
+    }
+
+    // what are all the things that can go wrong with a form?
+    if ($form.find('.form-error.is-visible').length || $form.find('.is-invalid-label').length) {
+      $form.find('[data-abide-error]').css('display', 'block');
+    }
+    else {
+      $form.find('[data-abide-error]').css('display', 'none');
+    }
+  };
+  /**
+   * Determines whether or a not a text input is valid based on the patterns specified in the attribute
+   * @param {Object} element - jQuery object to validate, should be a text input HTML element
+   * @returns {Boolean} Boolean value depends on whether or not the input value matches the pattern specified
+   */
+  Abide.prototype.validateText = function($el) {
+    var self = this,
+        valid = false,
+        patternLib = this.options.patterns,
+        inputText = $($el).val(),
+        // maybe have a different way of parsing this bc people might use type
+        pattern = $($el).attr('pattern');
+
+    // if there's no value, then return true
+    // since required check has already been done
+    if (inputText.length === 0) {
+      return true;
+    }
+    else {
+      if (inputText.match(patternLib[pattern])) {
+        return true;
+      }
+      else {
+        return false;
+      }
+    }
+  };
+  /**
+   * Determines whether or a not a radio input is valid based on whether or not it is required and selected
+   * @param {String} group - A string that specifies the name of a radio button group
+   * @returns {Boolean} Boolean value depends on whether or not at least one radio input has been selected (if it's required)
+   */
+  Abide.prototype.validateRadio = function(group) {
+    var self = this,
+        labels = $(':radio[name="' + group + '"]').siblings('label'),
+        counter = 0;
+    // go through each radio button
+    $(':radio[name="' + group + '"]').each(function() {
+      // put them through the required checkpoint
+      if (!self.requiredCheck($(this))) {
+        // if at least one doesn't pass, add a tally to the counter
+        counter++;
+      }
+      // if at least one is checked
+      // reset the counter
+      if ($(this).is(':checked')) {
+        counter = 0;
+      }
+    });
+
+    if (counter > 0) {
+      return false;
+    }
+    else {
+      return true;
+    }
+  };
+  Abide.prototype.matchValidation = function(val, validation) {
+
+  };
+  /**
+   * Resets form inputs and styles
+   * @param {Object} $form - A jQuery object that should be an HTML form element
+   */
+  Abide.prototype.resetForm = function($form) {
+    var self = this;
+    var invalidAttr = 'data-invalid';
+    // remove data attributes
+    $('[' + self.invalidAttr + ']', $form).removeAttr(invalidAttr);
+    // remove styles
+    $('.' + self.options.labelErrorClass, $form).not('small').removeClass(self.options.labelErrorClass);
+    $('.' + self.options.inputErrorClass, $form).not('small').removeClass(self.options.inputErrorClass);
+    $('.form-error.is-visible').removeClass('is-visible');
+    $form.find('[data-abide-error]').css('display', 'none');
+    $(':input', $form).not(':button, :submit, :reset, :hidden, [data-abide-ignore]').val('').removeAttr(invalidAttr);
+  };
+  Abide.prototype.destroy = function(){
+    //TODO this...
+  };
+
+  Foundation.plugin(Abide, 'Abide');
+
+  // Exports for AMD/Browserify
+  if (typeof module !== 'undefined' && typeof module.exports !== 'undefined')
+    module.exports = Abide;
+  if (typeof define === 'function')
+    define(['foundation'], function() {
+      return Abide;
+    });
+
+}(Foundation, jQuery);

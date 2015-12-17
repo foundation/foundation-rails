@@ -1,51 +1,68 @@
-// Foundation by ZURB
+// Foundation for Sites by ZURB
 // foundation.zurb.com
 // Licensed under MIT Open Source
 
-@import 'global';
+////
+/// @group flex-video
+////
 
-//
-// @variables
-//
-$include-html-media-classes: $include-html-classes !default;
+/// Padding above a flex video container.
+/// @type Number
+$flexvideo-padding-top: rem-calc(25) !default;
 
-// We use these to control video container padding and margins
-$flex-video-padding-top: rem-calc(25) !default;
-$flex-video-padding-bottom: 67.5% !default;
-$flex-video-margin-bottom: rem-calc(16) !default;
+/// Margin below a flex video container.
+/// @type Number
+$flexvideo-margin-bottom: rem-calc(16) !default;
 
-// We use this to control widescreen bottom padding
-$flex-video-widescreen-padding-bottom: 56.34% !default;
+/// Padding used to create a 4:3 aspect ratio.
+/// @type Number
+$flexvideo-ratio: 4 by 3 !default;
 
-//
-// @mixins
-//
+/// Padding used to create a 16:9 aspect ratio.
+/// @type Number
+$flexvideo-ratio-widescreen: 16 by 9 !default;
 
-@mixin flex-video-container {
-  height: 0;
-  margin-bottom: $flex-video-margin-bottom;
-  overflow: hidden;
-  padding-bottom: $flex-video-padding-bottom;
-  padding-top: $flex-video-padding-top;
+/// Creates a percentage height that can be used as padding in a flex video container.
+/// @param {List} $ratio - Ratio to use to calculate the height, formatted as `x by y`.
+/// @return {Number} A percentage value that can be used as the `padding-bottom` parameter of a flex video container.
+@function flex-video($ratio) {
+  $w: nth($ratio, 1);
+  $h: nth($ratio, 3);
+  @return $h / $w * 100%;
+}
+
+/// Creates a flex video container.
+/// @param {List} $ratio [$flexvideo-ratio] - Ratio to use for the container, formatted as `x by y`.
+@mixin flex-video($ratio: $flexvideo-ratio) {
   position: relative;
-
-  &.widescreen { padding-bottom: $flex-video-widescreen-padding-bottom; }
-  &.vimeo { padding-top: 0; }
+  height: 0;
+  padding-top: $flexvideo-padding-top;
+  padding-bottom: flex-video($ratio);
+  margin-bottom: $flexvideo-margin-bottom;
+  overflow: hidden;
 
   iframe,
   object,
   embed,
   video {
-    height: 100%;
     position: absolute;
     top: 0;
+    #{$global-left}: 0;
     width: 100%;
-    #{$default-float}: 0;
+    height: 100%;
   }
 }
 
-@include exports("flex-video") {
-  @if $include-html-media-classes {
-    .flex-video { @include flex-video-container; }
+@mixin foundation-flex-video {
+  .flex-video {
+    @include flex-video;
+
+    &.widescreen {
+      padding-bottom: flex-video($flexvideo-ratio-widescreen);
+    }
+
+    &.vimeo {
+      padding-top: 0;
+    }
   }
 }

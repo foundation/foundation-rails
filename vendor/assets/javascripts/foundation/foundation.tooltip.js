@@ -1,348 +1,429 @@
-;(function ($, window, document, undefined) {
+/**
+ * Tooltip module.
+ * @module foundation.tooltip
+ * @requires foundation.util.box
+ * @requires foundation.util.triggers
+ */
+!function($, document, Foundation){
   'use strict';
 
-  Foundation.libs.tooltip = {
-    name : 'tooltip',
+  /**
+   * Creates a new instance of a Tooltip.
+   * @class
+   * @fires Tooltip#init
+   * @param {jQuery} element - jQuery object to attach a tooltip to.
+   * @param {Object} options - object to extend the default configuration.
+   */
+  function Tooltip(element, options){
+    this.$element = element;
+    this.options = $.extend({}, Tooltip.defaults, this.$element.data(), options);
 
-    version : '5.5.3',
+    this.isActive = false;
+    this.isClick = false;
+    this._init();
 
-    settings : {
-      additional_inheritable_classes : [],
-      tooltip_class : '.tooltip',
-      append_to : 'body',
-      touch_close_text : 'Tap To Close',
-      disable_for_touch : false,
-      hover_delay : 200,
-      fade_in_duration : 150,
-      fade_out_duration : 150,
-      show_on : 'all',
-      tip_template : function (selector, content) {
-        return '<span data-selector="' + selector + '" id="' + selector + '" class="'
-          + Foundation.libs.tooltip.settings.tooltip_class.substring(1)
-          + '" role="tooltip">' + content + '<span class="nub"></span></span>';
-      }
-    },
+    Foundation.registerPlugin(this);
+  }
 
-    cache : {},
-
-    init : function (scope, method, options) {
-      Foundation.inherit(this, 'random_str');
-      this.bindings(method, options);
-    },
-
-    should_show : function (target, tip) {
-      var settings = $.extend({}, this.settings, this.data_options(target));
-
-      if (settings.show_on === 'all') {
-        return true;
-      } else if (this.small() && settings.show_on === 'small') {
-        return true;
-      } else if (this.medium() && settings.show_on === 'medium') {
-        return true;
-      } else if (this.large() && settings.show_on === 'large') {
-        return true;
-      }
-      return false;
-    },
-
-    medium : function () {
-      return matchMedia(Foundation.media_queries['medium']).matches;
-    },
-
-    large : function () {
-      return matchMedia(Foundation.media_queries['large']).matches;
-    },
-
-    events : function (instance) {
-      var self = this,
-          S = self.S;
-
-      self.create(this.S(instance));
-
-      function _startShow(elt, $this, immediate) {
-        if (elt.timer) {
-          return;
-        }
-
-        if (immediate) {
-          elt.timer = null;
-          self.showTip($this);
-        } else {
-          elt.timer = setTimeout(function () {
-            elt.timer = null;
-            self.showTip($this);
-          }.bind(elt), self.settings.hover_delay);
-        }
-      }
-
-      function _startHide(elt, $this) {
-        if (elt.timer) {
-          clearTimeout(elt.timer);
-          elt.timer = null;
-        }
-
-        self.hide($this);
-      }
-
-      $(this.scope)
-        .off('.tooltip')
-        .on('mouseenter.fndtn.tooltip mouseleave.fndtn.tooltip touchstart.fndtn.tooltip MSPointerDown.fndtn.tooltip',
-          '[' + this.attr_name() + ']', function (e) {
-          var $this = S(this),
-              settings = $.extend({}, self.settings, self.data_options($this)),
-              is_touch = false;
-
-          if (Modernizr.touch && /touchstart|MSPointerDown/i.test(e.type) && S(e.target).is('a')) {
-            return false;
-          }
-
-          if (/mouse/i.test(e.type) && self.ie_touch(e)) {
-            return false;
-          }
-          
-          if ($this.hasClass('open')) {
-            if (Modernizr.touch && /touchstart|MSPointerDown/i.test(e.type)) {
-              e.preventDefault();
-            }
-            self.hide($this);
-          } else {
-            if (settings.disable_for_touch && Modernizr.touch && /touchstart|MSPointerDown/i.test(e.type)) {
-              return;
-            } else if (!settings.disable_for_touch && Modernizr.touch && /touchstart|MSPointerDown/i.test(e.type)) {
-              e.preventDefault();
-              S(settings.tooltip_class + '.open').hide();
-              is_touch = true;
-              // close other open tooltips on touch
-              if ($('.open[' + self.attr_name() + ']').length > 0) {
-               var prevOpen = S($('.open[' + self.attr_name() + ']')[0]);
-               self.hide(prevOpen);
-              }
-            }
-
-            if (/enter|over/i.test(e.type)) {
-              _startShow(this, $this);
-
-            } else if (e.type === 'mouseout' || e.type === 'mouseleave') {
-              _startHide(this, $this);
-            } else {
-              _startShow(this, $this, true);
-            }
-          }
-        })
-        .on('mouseleave.fndtn.tooltip touchstart.fndtn.tooltip MSPointerDown.fndtn.tooltip', '[' + this.attr_name() + '].open', function (e) {
-          if (/mouse/i.test(e.type) && self.ie_touch(e)) {
-            return false;
-          }
-
-          if ($(this).data('tooltip-open-event-type') == 'touch' && e.type == 'mouseleave') {
-            return;
-          } else if ($(this).data('tooltip-open-event-type') == 'mouse' && /MSPointerDown|touchstart/i.test(e.type)) {
-            self.convert_to_touch($(this));
-          } else {
-            _startHide(this, $(this));
-          }
-        })
-        .on('DOMNodeRemoved DOMAttrModified', '[' + this.attr_name() + ']:not(a)', function (e) {
-          _startHide(this, S(this));
-        });
-    },
-
-    ie_touch : function (e) {
-      // How do I distinguish between IE11 and Windows Phone 8?????
-      return false;
-    },
-
-    showTip : function ($target) {
-      var $tip = this.getTip($target);
-      if (this.should_show($target, $tip)) {
-        return this.show($target);
-      }
-      return;
-    },
-
-    getTip : function ($target) {
-      var selector = this.selector($target),
-          settings = $.extend({}, this.settings, this.data_options($target)),
-          tip = null;
-
-      if (selector) {
-        tip = this.S('span[data-selector="' + selector + '"]' + settings.tooltip_class);
-      }
-
-      return (typeof tip === 'object') ? tip : false;
-    },
-
-    selector : function ($target) {
-      var dataSelector = $target.attr(this.attr_name()) || $target.attr('data-selector');
-
-      if (typeof dataSelector != 'string') {
-        dataSelector = this.random_str(6);
-        $target
-          .attr('data-selector', dataSelector)
-          .attr('aria-describedby', dataSelector);
-      }
-
-      return dataSelector;
-    },
-
-    create : function ($target) {
-      var self = this,
-          settings = $.extend({}, this.settings, this.data_options($target)),
-          tip_template = this.settings.tip_template;
-
-      if (typeof settings.tip_template === 'string' && window.hasOwnProperty(settings.tip_template)) {
-        tip_template = window[settings.tip_template];
-      }
-
-      var $tip = $(tip_template(this.selector($target), $('<div></div>').html($target.attr('title')).html())),
-          classes = this.inheritable_classes($target);
-
-      $tip.addClass(classes).appendTo(settings.append_to);
-
-      if (Modernizr.touch) {
-        $tip.append('<span class="tap-to-close">' + settings.touch_close_text + '</span>');
-        $tip.on('touchstart.fndtn.tooltip MSPointerDown.fndtn.tooltip', function (e) {
-          self.hide($target);
-        });
-      }
-
-      $target.removeAttr('title').attr('title', '');
-    },
-
-    reposition : function (target, tip, classes) {
-      var width, nub, nubHeight, nubWidth, objPos;
-
-      tip.css('visibility', 'hidden').show();
-
-      width = target.data('width');
-      nub = tip.children('.nub');
-      nubHeight = nub.outerHeight();
-      nubWidth = nub.outerWidth();
-
-      if (this.small()) {
-        tip.css({'width' : '100%'});
-      } else {
-        tip.css({'width' : (width) ? width : 'auto'});
-      }
-
-      objPos = function (obj, top, right, bottom, left, width) {
-        return obj.css({
-          'top' : (top) ? top : 'auto',
-          'bottom' : (bottom) ? bottom : 'auto',
-          'left' : (left) ? left : 'auto',
-          'right' : (right) ? right : 'auto'
-        }).end();
-      };
-      
-      var o_top = target.offset().top;
-      var o_left = target.offset().left;
-      var outerHeight = target.outerHeight();
-
-      objPos(tip, (o_top + outerHeight + 10), 'auto', 'auto', o_left);
-
-      if (this.small()) {
-        objPos(tip, (o_top + outerHeight + 10), 'auto', 'auto', 12.5, $(this.scope).width());
-        tip.addClass('tip-override');
-        objPos(nub, -nubHeight, 'auto', 'auto', o_left);
-      } else {
-        
-        if (Foundation.rtl) {
-          nub.addClass('rtl');
-          o_left = o_left + target.outerWidth() - tip.outerWidth();
-        }
-
-        objPos(tip, (o_top + outerHeight + 10), 'auto', 'auto', o_left);
-        // reset nub from small styles, if they've been applied
-        if (nub.attr('style')) {
-          nub.removeAttr('style');
-        }
-        
-        tip.removeClass('tip-override');
-        
-        var tip_outerHeight = tip.outerHeight();
-        
-        if (classes && classes.indexOf('tip-top') > -1) {
-          if (Foundation.rtl) {
-            nub.addClass('rtl');
-          }
-          objPos(tip, (o_top - tip_outerHeight), 'auto', 'auto', o_left)
-            .removeClass('tip-override');
-        } else if (classes && classes.indexOf('tip-left') > -1) {
-          objPos(tip, (o_top + (outerHeight / 2) - (tip_outerHeight / 2)), 'auto', 'auto', (o_left - tip.outerWidth() - nubHeight))
-            .removeClass('tip-override');
-          nub.removeClass('rtl');
-        } else if (classes && classes.indexOf('tip-right') > -1) {
-          objPos(tip, (o_top + (outerHeight / 2) - (tip_outerHeight / 2)), 'auto', 'auto', (o_left + target.outerWidth() + nubHeight))
-            .removeClass('tip-override');
-          nub.removeClass('rtl');
-        }
-      }
-
-      tip.css('visibility', 'visible').hide();
-    },
-
-    small : function () {
-      return matchMedia(Foundation.media_queries.small).matches &&
-        !matchMedia(Foundation.media_queries.medium).matches;
-    },
-
-    inheritable_classes : function ($target) {
-      var settings = $.extend({}, this.settings, this.data_options($target)),
-          inheritables = ['tip-top', 'tip-left', 'tip-bottom', 'tip-right', 'radius', 'round'].concat(settings.additional_inheritable_classes),
-          classes = $target.attr('class'),
-          filtered = classes ? $.map(classes.split(' '), function (el, i) {
-            if ($.inArray(el, inheritables) !== -1) {
-              return el;
-            }
-          }).join(' ') : '';
-
-      return $.trim(filtered);
-    },
-
-    convert_to_touch : function ($target) {
-      var self = this,
-          $tip = self.getTip($target),
-          settings = $.extend({}, self.settings, self.data_options($target));
-
-      if ($tip.find('.tap-to-close').length === 0) {
-        $tip.append('<span class="tap-to-close">' + settings.touch_close_text + '</span>');
-        $tip.on('click.fndtn.tooltip.tapclose touchstart.fndtn.tooltip.tapclose MSPointerDown.fndtn.tooltip.tapclose', function (e) {
-          self.hide($target);
-        });
-      }
-
-      $target.data('tooltip-open-event-type', 'touch');
-    },
-
-    show : function ($target) {
-      var $tip = this.getTip($target);
-      if ($target.data('tooltip-open-event-type') == 'touch') {
-        this.convert_to_touch($target);
-      }
-
-      this.reposition($target, $tip, $target.attr('class'));
-      $target.addClass('open');
-      $tip.fadeIn(this.settings.fade_in_duration);
-    },
-
-    hide : function ($target) {
-      var $tip = this.getTip($target);
-
-      $tip.fadeOut(this.settings.fade_out_duration, function () {
-        $tip.find('.tap-to-close').remove();
-        $tip.off('click.fndtn.tooltip.tapclose MSPointerDown.fndtn.tapclose');
-        $target.removeClass('open');
-      });
-    },
-
-    off : function () {
-      var self = this;
-      this.S(this.scope).off('.fndtn.tooltip');
-      this.S(this.settings.tooltip_class).each(function (i) {
-        $('[' + self.attr_name() + ']').eq(i).attr('title', $(this).text());
-      }).remove();
-    },
-
-    reflow : function () {}
+  Tooltip.defaults = {
+    disableForTouch: false,
+    /**
+     * Time, in ms, before a tooltip should open on hover.
+     * @option
+     * @example 200
+     */
+    hoverDelay: 200,
+    /**
+     * Time, in ms, a tooltip should take to fade into view.
+     * @option
+     * @example 150
+     */
+    fadeInDuration: 150,
+    /**
+     * Time, in ms, a tooltip should take to fade out of view.
+     * @option
+     * @example 150
+     */
+    fadeOutDuration: 150,
+    /**
+     * Disables hover events from opening the tooltip if set to true
+     * @option
+     * @example false
+     */
+    disableHover: false,
+    /**
+     * Optional addtional classes to apply to the tooltip template on init.
+     * @option
+     * @example 'my-cool-tip-class'
+     */
+    templateClasses: '',
+    /**
+     * Non-optional class added to tooltip templates. Foundation default is 'tooltip'.
+     * @option
+     * @example 'tooltip'
+     */
+    tooltipClass: 'tooltip',
+    /**
+     * Class applied to the tooltip anchor element.
+     * @option
+     * @example 'has-tip'
+     */
+    triggerClass: 'has-tip',
+    /**
+     * Minimum breakpoint size at which to open the tooltip.
+     * @option
+     * @example 'small'
+     */
+    showOn: 'small',
+    /**
+     * Custom template to be used to generate markup for tooltip.
+     * @option
+     * @example '<div class="tooltip"></div>'
+     */
+    template: '',
+    /**
+     * Text displayed in the tooltip template on open.
+     * @option
+     * @example 'Some cool space fact here.'
+     */
+    tipText: '',
+    touchCloseText: 'Tap to close.',
+    /**
+     * Allows the tooltip to remain open if triggered with a click or touch event.
+     * @option
+     * @example true
+     */
+    clickOpen: true,
+    /**
+     * Additional positioning classes, set by the JS
+     * @option
+     * @example 'top'
+     */
+    positionClass: '',
+    /**
+     * Distance, in pixels, the template should push away from the anchor on the Y axis.
+     * @option
+     * @example 10
+     */
+    vOffset: 10,
+    /**
+     * Distance, in pixels, the template should push away from the anchor on the X axis, if aligned to a side.
+     * @option
+     * @example 12
+     */
+    hOffset: 12
   };
-}(jQuery, window, window.document));
+
+  /**
+   * Initializes the tooltip by setting the creating the tip element, adding it's text, setting private variables and setting attributes on the anchor.
+   * @private
+   */
+  Tooltip.prototype._init = function(){
+    var elemId = this.$element.attr('aria-describedby') || Foundation.GetYoDigits(6, 'tooltip');
+
+    this.options.positionClass = this._getPositionClass(this.$element);
+    this.options.tipText = this.options.tipText || this.$element.attr('title');
+    this.template = this.options.template ? $(this.options.template) : this._buildTemplate(elemId);
+
+    this.template.appendTo(document.body)
+        .text(this.options.tipText)
+        .hide();
+
+    this.$element.attr({
+      'title': '',
+      'aria-describedby': elemId,
+      'data-yeti-box': elemId,
+      'data-toggle': elemId,
+      'data-resize': elemId
+    }).addClass(this.triggerClass);
+
+    //helper variables to track movement on collisions
+    this.usedPositions = [];
+    this.counter = 4;
+    this.classChanged = false;
+
+    this._events();
+  };
+
+  /**
+   * Grabs the current positioning class, if present, and returns the value or an empty string.
+   * @private
+   */
+  Tooltip.prototype._getPositionClass = function(element){
+    if(!element){ return ''; }
+    // var position = element.attr('class').match(/top|left|right/g);
+    var position = element[0].className.match(/(top|left|right)/g);
+        position = position ? position[0] : '';
+    return position;
+  };
+  /**
+   * builds the tooltip element, adds attributes, and returns the template.
+   * @private
+   */
+  Tooltip.prototype._buildTemplate = function(id){
+    var templateClasses = (this.options.tooltipClass + ' ' + this.options.positionClass).trim();
+    var $template =  $('<div></div>').addClass(templateClasses).attr({
+      'role': 'tooltip',
+      'aria-hidden': true,
+      'data-is-active': false,
+      'data-is-focus': false,
+      'id': id
+    });
+    return $template;
+  };
+
+  /**
+   * Function that gets called if a collision event is detected.
+   * @param {String} position - positioning class to try
+   * @private
+   */
+  Tooltip.prototype._reposition = function(position){
+    this.usedPositions.push(position ? position : 'bottom');
+
+    //default, try switching to opposite side
+    if(!position && (this.usedPositions.indexOf('top') < 0)){
+      this.template.addClass('top');
+    }else if(position === 'top' && (this.usedPositions.indexOf('bottom') < 0)){
+      this.template.removeClass(position);
+    }else if(position === 'left' && (this.usedPositions.indexOf('right') < 0)){
+      this.template.removeClass(position)
+          .addClass('right');
+    }else if(position === 'right' && (this.usedPositions.indexOf('left') < 0)){
+      this.template.removeClass(position)
+          .addClass('left');
+    }
+
+    //if default change didn't work, try bottom or left first
+    else if(!position && (this.usedPositions.indexOf('top') > -1) && (this.usedPositions.indexOf('left') < 0)){
+      this.template.addClass('left');
+    }else if(position === 'top' && (this.usedPositions.indexOf('bottom') > -1) && (this.usedPositions.indexOf('left') < 0)){
+      this.template.removeClass(position)
+          .addClass('left');
+    }else if(position === 'left' && (this.usedPositions.indexOf('right') > -1) && (this.usedPositions.indexOf('bottom') < 0)){
+      this.template.removeClass(position);
+    }else if(position === 'right' && (this.usedPositions.indexOf('left') > -1) && (this.usedPositions.indexOf('bottom') < 0)){
+      this.template.removeClass(position);
+    }
+    //if nothing cleared, set to bottom
+    else{
+      this.template.removeClass(position);
+    }
+    this.classChanged = true;
+    this.counter--;
+
+  };
+
+  /**
+   * sets the position class of an element and recursively calls itself until there are no more possible positions to attempt, or the tooltip element is no longer colliding.
+   * if the tooltip is larger than the screen width, default to full width - any user selected margin
+   * @private
+   */
+  Tooltip.prototype._setPosition = function(){
+    var position = this._getPositionClass(this.template),
+        $tipDims = Foundation.Box.GetDimensions(this.template),
+        $anchorDims = Foundation.Box.GetDimensions(this.$element),
+        direction = (position === 'left' ? 'left' : ((position === 'right') ? 'left' : 'top')),
+        param = (direction === 'top') ? 'height' : 'width',
+        offset = (param === 'height') ? this.options.vOffset : this.options.hOffset,
+        _this = this;
+
+    if(($tipDims.width >= $tipDims.windowDims.width) || (!this.counter && !Foundation.Box.ImNotTouchingYou(this.template))){
+      this.template.offset(Foundation.Box.GetOffsets(this.template, this.$element, 'center bottom', this.options.vOffset, this.options.hOffset, true)).css({
+      // this.$element.offset(Foundation.GetOffsets(this.template, this.$element, 'center bottom', this.options.vOffset, this.options.hOffset, true)).css({
+        'width': $anchorDims.windowDims.width - (this.options.hOffset * 2),
+        'height': 'auto'
+      });
+      return false;
+    }
+
+    this.template.offset(Foundation.Box.GetOffsets(this.template, this.$element,'center ' + (position || 'bottom'), this.options.vOffset, this.options.hOffset));
+
+    while(!Foundation.Box.ImNotTouchingYou(this.template) && this.counter){
+      this._reposition(position);
+      this._setPosition();
+    }
+  };
+
+  /**
+   * reveals the tooltip, and fires an event to close any other open tooltips on the page
+   * @fires Closeme#tooltip
+   * @fires Tooltip#show
+   * @function
+   */
+  Tooltip.prototype.show = function(){
+    if(this.options.showOn !== 'all' && !Foundation.MediaQuery.atLeast(this.options.showOn)){
+      // console.error('The screen is too small to display this tooltip');
+      return false;
+    }
+
+    var _this = this;
+    this.template.css('visibility', 'hidden').show();
+    this._setPosition();
+
+    /**
+     * Fires to close all other open tooltips on the page
+     * @event Closeme#tooltip
+     */
+    this.$element.trigger('closeme.zf.tooltip', this.template.attr('id'));
+
+
+    this.template.attr({
+      'data-is-active': true,
+      'aria-hidden': false
+    });
+    _this.isActive = true;
+    // console.log(this.template);
+    this.template.stop().hide().css('visibility', '').fadeIn(this.options.fadeInDuration, function(){
+      //maybe do stuff?
+    });
+    /**
+     * Fires when the tooltip is shown
+     * @event Tooltip#show
+     */
+    this.$element.trigger('show.zf.tooltip');
+  };
+
+  /**
+   * Hides the current tooltip, and resets the positioning class if it was changed due to collision
+   * @fires Tooltip#hide
+   * @function
+   */
+  Tooltip.prototype.hide = function(){
+    // console.log('hiding', this.$element.data('yeti-box'));
+    var _this = this;
+    this.template.stop().attr({
+      'aria-hidden': true,
+      'data-is-active': false
+    }).fadeOut(this.options.fadeOutDuration, function(){
+      _this.isActive = false;
+      _this.isClick = false;
+      if(_this.classChanged){
+        _this.template
+             .removeClass(_this._getPositionClass(_this.template))
+             .addClass(_this.options.positionClass);
+
+       _this.usedPositions = [];
+       _this.counter = 4;
+       _this.classChanged = false;
+      }
+    });
+    /**
+     * fires when the tooltip is hidden
+     * @event Tooltip#hide
+     */
+    this.$element.trigger('hide.zf.tooltip');
+  };
+
+  /**
+   * adds event listeners for the tooltip and its anchor
+   * TODO combine some of the listeners like focus and mouseenter, etc.
+   * @private
+   */
+  Tooltip.prototype._events = function(){
+    var _this = this;
+    var $template = this.template;
+    var isFocus = false;
+
+    if(!this.options.disableHover){
+
+      this.$element
+      .on('mouseenter.zf.tooltip', function(e){
+        if(!_this.isActive){
+          _this.timeout = setTimeout(function(){
+            _this.show();
+          }, _this.options.hoverDelay);
+        }
+      })
+      .on('mouseleave.zf.tooltip', function(e){
+        clearTimeout(_this.timeout);
+        if(!isFocus || (!_this.isClick && _this.options.clickOpen)){
+          _this.hide();
+        }
+      });
+    }
+    if(this.options.clickOpen){
+      this.$element.on('mousedown.zf.tooltip', function(e){
+        e.stopImmediatePropagation();
+        if(_this.isClick){
+          _this.hide();
+          // _this.isClick = false;
+        }else{
+          _this.isClick = true;
+          if((_this.options.disableHover || !_this.$element.attr('tabindex')) && !_this.isActive){
+            _this.show();
+          }
+        }
+      });
+    }
+
+    if(!this.options.disableForTouch){
+      this.$element
+      .on('tap.zf.tooltip touchend.zf.tooltip', function(e){
+        _this.isActive ? _this.hide() : _this.show();
+      });
+    }
+
+    this.$element.on({
+      // 'toggle.zf.trigger': this.toggle.bind(this),
+      // 'close.zf.trigger': this.hide.bind(this)
+      'close.zf.trigger': this.hide.bind(this)
+    });
+
+    this.$element
+      .on('focus.zf.tooltip', function(e){
+        isFocus = true;
+        console.log(_this.isClick);
+        if(_this.isClick){
+          return false;
+        }else{
+          // $(window)
+          _this.show();
+        }
+      })
+
+      .on('focusout.zf.tooltip', function(e){
+        isFocus = false;
+        _this.isClick = false;
+        _this.hide();
+      })
+
+      .on('resizeme.zf.trigger', function(){
+        if(_this.isActive){
+          _this._setPosition();
+        }
+      });
+  };
+  /**
+   * adds a toggle method, in addition to the static show() & hide() functions
+   * @function
+   */
+  Tooltip.prototype.toggle = function(){
+    if(this.isActive){
+      this.hide();
+    }else{
+      this.show();
+    }
+  };
+  /**
+   * Destroys an instance of tooltip, removes template element from the view.
+   * @function
+   */
+  Tooltip.prototype.destroy = function(){
+    this.$element.attr('title', this.template.text())
+                 .off('.zf.trigger .zf.tootip')
+                //  .removeClass('has-tip')
+                 .removeAttr('aria-describedby')
+                 .removeAttr('data-yeti-box')
+                 .removeAttr('data-toggle')
+                 .removeAttr('data-resize');
+
+    this.template.remove();
+
+    Foundation.unregisterPlugin(this);
+  };
+  /**
+   * TODO utilize resize event trigger
+   */
+
+  Foundation.plugin(Tooltip, 'Tooltip');
+}(jQuery, window.document, window.Foundation);
