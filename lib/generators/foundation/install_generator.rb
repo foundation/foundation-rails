@@ -14,7 +14,7 @@ module Foundation
         # gsub_file "app/assets/javascripts/application#{detect_js_format[0]}", /\/\/= require jquery\n/, ""
         insert_into_file File.join(javascripts_base_dir, "application#{detect_js_format[0]}"), "#{detect_js_format[1]} require foundation\n", :after => "jquery_ujs\n"
         append_to_file File.join(javascripts_base_dir, "application#{detect_js_format[0]}"), "#{detect_js_format[2]}"
-        settings_file = File.join(File.dirname(__FILE__),"..", "..", "..", "vendor", "assets", "stylesheets", "foundation", "_settings.scss")
+        settings_file = File.join(File.dirname(__FILE__),"..", "..", "..", "vendor", "assets", "stylesheets", "foundation", "settings", "_settings.scss")
         create_file File.join(stylesheets_base_dir, 'foundation_and_overrides.scss'), File.read(settings_file)
         append_to_file File.join(stylesheets_base_dir, 'foundation_and_overrides.scss'), "\n@import 'foundation';\n"
         insert_into_file File.join(stylesheets_base_dir, "application#{detect_css_format[0]}"), "\n#{detect_css_format[1]} require foundation_and_overrides\n", :after => "require_self"
