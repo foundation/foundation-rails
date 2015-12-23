@@ -15,7 +15,7 @@ namespace :assets do
     sh 'cp -R bower_components/foundation-sites/scss/* vendor/assets/scss/'
 
     manifest = Dir['vendor/assets/js/*.js'].
-      map { |file| "//= require js/#{File.basename(file, '.js')}" }.
+      map { |file| "//= require #{File.basename(file, '.js')}" }.
       sort.join("\n")
     File.write('vendor/assets/js/foundation.js', manifest)
 
