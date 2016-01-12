@@ -42,12 +42,6 @@ Append the following lines to your `app/assets/javascripts/application.js` file:
     //= require foundation
     $(document).foundation();
 
-### Add Modernizr
-
-Make sure that Modernizr is included in the `<head>` of your page layout:
-
-    javascript_include_tag "vendor/modernizr"
-
 ### Set Viewport Width
 
 Add the following line to the `head` of your page layout:
@@ -59,7 +53,7 @@ Add the following line to the `head` of your page layout:
 Run the generator to add foundation to the asset pipeline:
 
     rails g foundation:install [layout_name] [options]
-    
+
     Options:
       [--haml]  # Generate HAML layout instead of erb
       [--slim]  # Generate Slim layout instead of erb
