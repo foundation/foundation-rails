@@ -1,3 +1,5 @@
+require 'rails'
+
 module Foundation
   module Rails
     class Engine < ::Rails::Engine
