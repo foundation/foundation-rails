@@ -7,7 +7,7 @@ module FoundationRailsTestHelpers
       end
     end
     FileUtils.cd(dummy_app_path) do
-      %(bundle install)
+      %x(bundle install)
     end
   end
 
