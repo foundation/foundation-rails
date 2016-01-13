@@ -1,6 +1,8 @@
 # Foundation::Rails
 
-Foundation::Rails is a gem to make it super easy to use Foundation in your upcoming Rails project. You can start using Foundation::Rails in your projects by following the instructions below.
+[![Gem Version](https://badge.fury.io/rb/foundation-rails.svg)](https://badge.fury.io/rb/foundation-rails)
+
+Foundation::Rails is a gem that makes it super easy to use Foundation in your upcoming Rails project. You can start using Foundation::Rails in your projects by following the instructions below.
 
 ## Installation
 
@@ -28,7 +30,7 @@ You can run the following command to add Foundation:
 
 Append the following line to your `app/assets/stylesheets/application.css` file:
 
-    /*= require foundation */
+    /*= require foundation
 
 If you're planning on using Sass, then you'll want to rename `application.css` to `application.scss`. That file should then look like:
 
