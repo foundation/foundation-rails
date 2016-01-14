@@ -1,7 +1,13 @@
 module FoundationRailsTestHelpers
   def create_dummy_app
     FileUtils.cd(tmp_path) do
-      %x(rails new dummy --skip-active-record --skip-test-unit --skip-spring)
+      %x(rails new dummy --skip-active-record --skip-test-unit --skip-spring --skip-bundle)
+      File.open(dummy_app_path + '/Gemfile', 'a') do |f|
+        f.puts "gem 'foundation-rails', path: '#{File.join(File.dirname(__FILE__), '..', '..')}'"
+      end
+    end
+    FileUtils.cd(dummy_app_path) do
+      %x(bundle install)
     end
   end
 

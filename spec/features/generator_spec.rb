@@ -19,7 +19,6 @@ feature 'Foundation install succeeds' do
     layout_file = IO.read("#{dummy_app_path}/app/views/layouts/application.html.erb")
 
     expect(layout_file).to match(/stylesheet_link_tag    "application"/)
-    expect(layout_file).to match(/javascript_include_tag "vendor\/modernizr"/)
     expect(layout_file).to match(/javascript_include_tag "application/)
   end
 end
