@@ -13,6 +13,7 @@ namespace :assets do
     sh 'bower install'
     sh 'cp -R bower_components/foundation-sites/js/* vendor/assets/js/'
     sh 'cp -R bower_components/foundation-sites/scss/* vendor/assets/scss/'
+    sh 'cp -R bower_components/motion-ui/src/* vendor/assets/scss/motion-ui'
 
     manifest = Dir['vendor/assets/js/*.js'].
       map { |file| "//= require #{File.basename(file, '.js')}" }.
@@ -25,7 +26,7 @@ namespace :assets do
   desc 'Remove old Foundation for Sites assets'
   task :clean do
     sh 'rm -rf vendor'
-    sh 'mkdir -p vendor/assets/js/ vendor/assets/scss'
+    sh 'mkdir -p vendor/assets/js/ vendor/assets/scss vendor/assets/scss/motion-ui'
   end
 
 end
