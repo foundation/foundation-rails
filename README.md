@@ -24,6 +24,8 @@ You can run the following command to add Foundation:
 
     $ rails g foundation:install
 
+To generate Haml or Slim instead of erb, append the `--haml` or `--slim` options to the above command, respectively.
+
 ## Manual Installation
 
 ### Add Foundation to your CSS
