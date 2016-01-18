@@ -18,7 +18,7 @@
 //= require foundation.tabs
 //= require foundation.toggler
 //= require foundation.tooltip
-//= require foundation.util.box
+//= require foundation.util.box.js
 //= require foundation.util.keyboard
 //= require foundation.util.mediaQuery
 //= require foundation.util.motion
