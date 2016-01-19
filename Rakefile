@@ -18,7 +18,7 @@ namespace :assets do
     js_files = Dir['vendor/assets/js/*.js'].sort
     # Move foundation.core.js to beginning of js_files
     js_files.insert(0, js_files.delete(js_files.find { |file| file[/foundation.core.js/] }))
-    manifest = js_files.map { |file| "//= require #{File.basename(file, '.js')}" }.join("\n")
+    manifest = js_files.map { |file| "//= require #{File.basename(file)}" }.join("\n")
     File.write('vendor/assets/js/foundation.js', manifest)
 
     puts 'Now update version.rb'

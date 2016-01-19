@@ -24,9 +24,9 @@ You can run the following command to add Foundation:
 
     $ rails g foundation:install
 
-To generate Haml or Slim instead of erb, append the `--haml` or `--slim` options to the above command, respectively.
+Generating Haml or Slim versions of the markup can be done by appending the `--haml` or `--slim` option to the above command.
 
-### Motion-UI
+### Motion UI
 
 [Motion UI](https://github.com/zurb/motion-ui) is a Sass library for creating flexible UI transitions and animations, and it comes packaged with the `foundation-rails` gem. To use Motion UI, uncomment the following lines from `foundation_and_overrides.scss`:
 
