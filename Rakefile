@@ -21,7 +21,11 @@ namespace :assets do
     manifest = js_files.map { |file| "//= require #{File.basename(file)}" }.join("\n")
     File.write('vendor/assets/js/foundation.js', manifest)
 
-    puts 'Now update version.rb'
+    Dir['vendor/assets/js/*.js'].each do |file|
+      sh "mv #{file} #{file.split('.js')[0]}.es6"
+    end
+
+    puts "\n*********************\n** ASSETS UPDATED! **\n*********************\n"
   end
 
   desc 'Remove old Foundation for Sites assets'

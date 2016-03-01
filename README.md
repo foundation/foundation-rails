@@ -2,7 +2,7 @@
 
 [![Gem Version](https://badge.fury.io/rb/foundation-rails.svg)](https://badge.fury.io/rb/foundation-rails)
 
-Foundation::Rails is a gem that makes it super easy to use Foundation in your upcoming Rails project. You can start using Foundation::Rails in your projects by following the instructions below.
+**Foundation::Rails** is a gem that makes it super easy to use Foundation in your upcoming Rails project.
 
 ## Installation
 
