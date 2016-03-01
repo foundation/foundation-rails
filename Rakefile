@@ -22,7 +22,7 @@ namespace :assets do
     File.write('vendor/assets/js/foundation.js', manifest)
 
     Dir['vendor/assets/js/*.js'].each do |file|
-      sh "mv #{file} #{file.split('.js')[0]}.es6"
+      sh "mv #{file} #{file}.es6"
     end
 
     puts "\n*********************\n** ASSETS UPDATED! **\n*********************\n"
