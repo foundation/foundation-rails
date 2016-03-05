@@ -13,6 +13,7 @@ namespace :assets do
     sh 'bower install'
     sh 'cp -R bower_components/foundation-sites/js/* vendor/assets/js/'
     sh 'cp -R bower_components/foundation-sites/scss/* vendor/assets/scss/'
+    sh 'cp -R bower_components/foundation-sites/scss/settings/_settings.scss lib/generators/foundation/templates'
     sh 'cp -R bower_components/motion-ui/src/* vendor/assets/scss/motion-ui'
 
     js_files = Dir['vendor/assets/js/*.js'].sort
