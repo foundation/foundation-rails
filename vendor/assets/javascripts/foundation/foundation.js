@@ -13,7 +13,7 @@
     var head = $('head');
     head.prepend($.map(class_array, function (class_name) {
       if (head.has('.' + class_name).length === 0) {
-        return '<meta class="' + class_name + '" />';
+        return '<meta content="' + class_name + '" name="' + class_name + '" class="' + class_name + '" />';
       }
     }));
   };
@@ -579,7 +579,7 @@
       //    Class (String): Class name for the generated <meta> tag
       register_media : function (media, media_class) {
         if (Foundation.media_queries[media] === undefined) {
-          $('head').append('<meta class="' + media_class + '"/>');
+          $('head').append('<meta content="' + media_class + '" name="' + media_class + '" class="' + media_class + '"/>');
           Foundation.media_queries[media] = removeQuotes($('.' + media_class).css('font-family'));
         }
       },
