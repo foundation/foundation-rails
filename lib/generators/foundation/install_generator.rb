@@ -56,6 +56,7 @@ module Foundation
       def create_app_scss
         template "foundation_and_overrides.scss", File.join(stylesheets_base_dir, "foundation_and_overrides.scss")
         template "_settings.scss", File.join(stylesheets_base_dir, "_settings.scss")
+        template "browserslist", File.join(stylesheets_base_dir, "browserslist")
       end
 
       private
