@@ -8,7 +8,7 @@
 
 Add this line to your application's Gemfile:
 
-    $ gem 'foundation-rails'
+    gem 'foundation-rails'
 
 And then execute:
 
