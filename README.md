@@ -85,6 +85,6 @@ Run the generator to add foundation to the asset pipeline:
 
 ## Resources
 
-* [Foundation Docs](http://foundation.zurb.com/docs/)
+* [Foundation Docs](http://foundation.zurb.com/docs)
 * [Foundation Forum](http://foundation.zurb.com/forum)
-* [Foundation Training](http://foundation.zurb.com/learn/training.html)
+* [Foundation Training](http://zurb.com/university/courses)
