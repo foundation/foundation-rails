@@ -34,7 +34,7 @@ namespace :assets do
   desc 'Remove old Foundation for Sites assets'
   task :clean do
     sh 'rm -rf vendor'
-    sh 'mkdir -p vendor/assets/js/ vendor/assets/scss vendor/assets/scss/motion-ui'
+    sh 'mkdir -p vendor/assets/js/ vendor/assets/scss vendor/assets/scss/motion-ui vendor/assets/_vendor'
   end
 
 end
