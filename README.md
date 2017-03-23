@@ -44,7 +44,8 @@ Append the following line to your `app/assets/stylesheets/application.css` file:
 
 If you're planning on using Sass, then you'll want to rename `application.css` to `application.scss`. That file should then look like:
 
-    @import "foundation_and_overrides";
+    @import "foundation";
+    @include foundation-everything();
     /* Add imports of custom sass/scss files here */
 
 ### Add Foundation to your JS
