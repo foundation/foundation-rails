@@ -13,7 +13,7 @@ module Foundation
       def add_assets
         # rails_ujs breaks, need to incorporate rails-behavior plugin for this to work seamlessly
         # gsub_file "app/assets/javascripts/application#{detect_js_format[0]}", /\/\/= require jquery\n/, ""
-        insert_into_file File.join(javascripts_base_dir, "application#{detect_js_format[0]}"), "#{detect_js_format[1]} require foundation\n", :after => "jquery_ujs\n"
+        insert_into_file File.join(javascripts_base_dir, "application#{detect_js_format[0]}"), "#{detect_js_format[1]} require foundation\n", :after => "rails-ujs\n"
         append_to_file File.join(javascripts_base_dir, "application#{detect_js_format[0]}"), "#{detect_js_format[2]}"
         create_app_scss
         insert_into_file File.join(stylesheets_base_dir, "application#{detect_css_format[0]}"), "\n#{detect_css_format[1]} require foundation_and_overrides\n", :after => "require_self"
