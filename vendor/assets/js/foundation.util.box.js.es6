@@ -1,7 +1,120 @@
-'use strict';
+/******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+/******/
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId]) {
+/******/ 			return installedModules[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/
+/******/
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+/******/
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+/******/
+/******/ 	// identity function for calling harmony imports with the correct context
+/******/ 	__webpack_require__.i = function(value) { return value; };
+/******/
+/******/ 	// define getter function for harmony exports
+/******/ 	__webpack_require__.d = function(exports, name, getter) {
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, {
+/******/ 				configurable: false,
+/******/ 				enumerable: true,
+/******/ 				get: getter
+/******/ 			});
+/******/ 		}
+/******/ 	};
+/******/
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = function(module) {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			function getDefault() { return module['default']; } :
+/******/ 			function getModuleExports() { return module; };
+/******/ 		__webpack_require__.d(getter, 'a', getter);
+/******/ 		return getter;
+/******/ 	};
+/******/
+/******/ 	// Object.prototype.hasOwnProperty.call
+/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
+/******/
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "";
+/******/
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(__webpack_require__.s = 100);
+/******/ })
+/************************************************************************/
+/******/ ({
+
+/***/ 1:
+/***/ (function(module, exports) {
+
+module.exports = {Foundation: window.Foundation};
+
+/***/ }),
+
+/***/ 100:
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__(34);
 
 
-import { rtl as Rtl } from "./foundation.util.core";
+/***/ }),
+
+/***/ 3:
+/***/ (function(module, exports) {
+
+module.exports = {rtl: window.Foundation.rtl, GetYoDigits: window.Foundation.GetYoDigits, transitionend: window.Foundation.transitionend};
+
+/***/ }),
+
+/***/ 34:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__foundation_core__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__foundation_core___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__foundation_core__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__foundation_util_box__ = __webpack_require__(64);
+
+
+
+__WEBPACK_IMPORTED_MODULE_0__foundation_core__["Foundation"].Box = __WEBPACK_IMPORTED_MODULE_1__foundation_util_box__["a" /* Box */];
+
+/***/ }),
+
+/***/ 64:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return Box; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__foundation_util_core__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__foundation_util_core___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__foundation_util_core__);
+
+
+
 
 var Box = {
   ImNotTouchingYou: ImNotTouchingYou,
@@ -9,7 +122,7 @@ var Box = {
   GetDimensions: GetDimensions,
   GetOffsets: GetOffsets,
   GetExplicitOffsets: GetExplicitOffsets
-}
+};
 
 /**
  * Compares the dimensions of an element to a container and determines collision events with container.
@@ -27,26 +140,28 @@ function ImNotTouchingYou(element, parent, lrOnly, tbOnly, ignoreBottom) {
 
 function OverlapArea(element, parent, lrOnly, tbOnly, ignoreBottom) {
   var eleDims = GetDimensions(element),
-  topOver, bottomOver, leftOver, rightOver;
+      topOver,
+      bottomOver,
+      leftOver,
+      rightOver;
   if (parent) {
     var parDims = GetDimensions(parent);
 
-    bottomOver = (parDims.height + parDims.offset.top) - (eleDims.offset.top + eleDims.height);
-    topOver    = eleDims.offset.top - parDims.offset.top;
-    leftOver   = eleDims.offset.left - parDims.offset.left;
-    rightOver  = (parDims.width + parDims.offset.left) - (eleDims.offset.left + eleDims.width);
-  }
-  else {
-    bottomOver = (eleDims.windowDims.height + eleDims.windowDims.offset.top) - (eleDims.offset.top + eleDims.height);
-    topOver    = eleDims.offset.top - eleDims.windowDims.offset.top;
-    leftOver   = eleDims.offset.left - eleDims.windowDims.offset.left;
-    rightOver  = eleDims.windowDims.width - (eleDims.offset.left + eleDims.width);
+    bottomOver = parDims.height + parDims.offset.top - (eleDims.offset.top + eleDims.height);
+    topOver = eleDims.offset.top - parDims.offset.top;
+    leftOver = eleDims.offset.left - parDims.offset.left;
+    rightOver = parDims.width + parDims.offset.left - (eleDims.offset.left + eleDims.width);
+  } else {
+    bottomOver = eleDims.windowDims.height + eleDims.windowDims.offset.top - (eleDims.offset.top + eleDims.height);
+    topOver = eleDims.offset.top - eleDims.windowDims.offset.top;
+    leftOver = eleDims.offset.left - eleDims.windowDims.offset.left;
+    rightOver = eleDims.windowDims.width - (eleDims.offset.left + eleDims.width);
   }
 
   bottomOver = ignoreBottom ? 0 : Math.min(bottomOver, 0);
-  topOver    = Math.min(topOver, 0);
-  leftOver   = Math.min(leftOver, 0);
-  rightOver  = Math.min(rightOver, 0);
+  topOver = Math.min(topOver, 0);
+  leftOver = Math.min(leftOver, 0);
+  rightOver = Math.min(rightOver, 0);
 
   if (lrOnly) {
     return leftOver + rightOver;
@@ -56,7 +171,7 @@ function OverlapArea(element, parent, lrOnly, tbOnly, ignoreBottom) {
   }
 
   // use sum of squares b/c we care about overlap area.
-  return Math.sqrt((topOver * topOver) + (bottomOver * bottomOver) + (leftOver * leftOver) + (rightOver * rightOver));
+  return Math.sqrt(topOver * topOver + bottomOver * bottomOver + leftOver * leftOver + rightOver * rightOver);
 }
 
 /**
@@ -66,7 +181,7 @@ function OverlapArea(element, parent, lrOnly, tbOnly, ignoreBottom) {
  * @returns {Object} - nested object of integer pixel values
  * TODO - if element is window, return only those values.
  */
-function GetDimensions(elem, test){
+function GetDimensions(elem, test) {
   elem = elem.length ? elem[0] : elem;
 
   if (elem === window || elem === document) {
@@ -102,7 +217,7 @@ function GetDimensions(elem, test){
         left: winX
       }
     }
-  }
+  };
 }
 
 /**
@@ -123,13 +238,9 @@ function GetOffsets(element, anchor, position, vOffset, hOffset, isOverflow) {
   console.log("NOTE: GetOffsets is deprecated in favor of GetExplicitOffsets and will be removed in 6.5");
   switch (position) {
     case 'top':
-      return Rtl() ?
-        GetExplicitOffsets(element, anchor, 'top', 'left', vOffset, hOffset, isOverflow) :
-        GetExplicitOffsets(element, anchor, 'top', 'right', vOffset, hOffset, isOverflow);
+      return __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__foundation_util_core__["rtl"])() ? GetExplicitOffsets(element, anchor, 'top', 'left', vOffset, hOffset, isOverflow) : GetExplicitOffsets(element, anchor, 'top', 'right', vOffset, hOffset, isOverflow);
     case 'bottom':
-      return Rtl() ?
-        GetExplicitOffsets(element, anchor, 'bottom', 'left', vOffset, hOffset, isOverflow) :
-        GetExplicitOffsets(element, anchor, 'bottom', 'right', vOffset, hOffset, isOverflow);
+      return __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__foundation_util_core__["rtl"])() ? GetExplicitOffsets(element, anchor, 'bottom', 'left', vOffset, hOffset, isOverflow) : GetExplicitOffsets(element, anchor, 'bottom', 'right', vOffset, hOffset, isOverflow);
     case 'center top':
       return GetExplicitOffsets(element, anchor, 'top', 'center', vOffset, hOffset, isOverflow);
     case 'center bottom':
@@ -146,35 +257,34 @@ function GetOffsets(element, anchor, position, vOffset, hOffset, isOverflow) {
     // classes are the only ones that didn't reference anchor
     case 'center':
       return {
-        left: ($eleDims.windowDims.offset.left + ($eleDims.windowDims.width / 2)) - ($eleDims.width / 2) + hOffset,
-        top: ($eleDims.windowDims.offset.top + ($eleDims.windowDims.height / 2)) - ($eleDims.height / 2 + vOffset)
-      }
+        left: $eleDims.windowDims.offset.left + $eleDims.windowDims.width / 2 - $eleDims.width / 2 + hOffset,
+        top: $eleDims.windowDims.offset.top + $eleDims.windowDims.height / 2 - ($eleDims.height / 2 + vOffset)
+      };
     case 'reveal':
       return {
         left: ($eleDims.windowDims.width - $eleDims.width) / 2 + hOffset,
         top: $eleDims.windowDims.offset.top + vOffset
-      }
+      };
     case 'reveal full':
       return {
         left: $eleDims.windowDims.offset.left,
         top: $eleDims.windowDims.offset.top
-      }
+      };
       break;
     default:
       return {
-        left: (Rtl() ? $anchorDims.offset.left - $eleDims.width + $anchorDims.width - hOffset: $anchorDims.offset.left + hOffset),
+        left: __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__foundation_util_core__["rtl"])() ? $anchorDims.offset.left - $eleDims.width + $anchorDims.width - hOffset : $anchorDims.offset.left + hOffset,
         top: $anchorDims.offset.top + $anchorDims.height + vOffset
-      }
+      };
 
   }
-
 }
 
 function GetExplicitOffsets(element, anchor, position, alignment, vOffset, hOffset, isOverflow) {
   var $eleDims = GetDimensions(element),
       $anchorDims = anchor ? GetDimensions(anchor) : null;
 
-      var topVal, leftVal;
+  var topVal, leftVal;
 
   // set position related attribute
 
@@ -193,7 +303,6 @@ function GetExplicitOffsets(element, anchor, position, alignment, vOffset, hOffs
       break;
   }
 
-
   // set alignment related attribute
   switch (position) {
     case 'top':
@@ -206,7 +315,7 @@ function GetExplicitOffsets(element, anchor, position, alignment, vOffset, hOffs
           leftVal = $anchorDims.offset.left - $eleDims.width + $anchorDims.width - hOffset;
           break;
         case 'center':
-          leftVal = isOverflow ? hOffset : (($anchorDims.offset.left + ($anchorDims.width / 2)) - ($eleDims.width / 2)) + hOffset;
+          leftVal = isOverflow ? hOffset : $anchorDims.offset.left + $anchorDims.width / 2 - $eleDims.width / 2 + hOffset;
           break;
       }
       break;
@@ -217,15 +326,19 @@ function GetExplicitOffsets(element, anchor, position, alignment, vOffset, hOffs
           topVal = $anchorDims.offset.top - vOffset + $anchorDims.height - $eleDims.height;
           break;
         case 'top':
-          topVal = $anchorDims.offset.top + vOffset
+          topVal = $anchorDims.offset.top + vOffset;
           break;
         case 'center':
-          topVal = ($anchorDims.offset.top + vOffset + ($anchorDims.height / 2)) - ($eleDims.height / 2)
+          topVal = $anchorDims.offset.top + vOffset + $anchorDims.height / 2 - $eleDims.height / 2;
           break;
       }
       break;
   }
-  return {top: topVal, left: leftVal};
+  return { top: topVal, left: leftVal };
 }
 
-export {Box};
+
+
+/***/ })
+
+/******/ });

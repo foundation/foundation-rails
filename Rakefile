@@ -11,7 +11,8 @@ namespace :assets do
   desc 'Update Foundation for Sites assets'
   task update: :clean do
     sh 'bower install'
-    sh 'cp -R bower_components/foundation-sites/js/* vendor/assets/js/'
+    sh 'cp -R bower_components/foundation-sites/dist/js/plugins/* vendor/assets/js/'
+    sh 'rm -f vendor/assets/js/*.min.*'
     sh 'cp -R bower_components/foundation-sites/scss/* vendor/assets/scss/'
     sh 'cp -R bower_components/foundation-sites/scss/settings/_settings.scss lib/generators/foundation/templates'
     sh 'cp -R bower_components/motion-ui/src/* vendor/assets/scss/motion-ui'
