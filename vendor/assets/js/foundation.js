@@ -9,6 +9,7 @@
 //= require foundation.util.timerAndImageLoader.js
 //= require foundation.util.touch.js
 //= require foundation.util.triggers.js
+//= require foundation.smoothScroll.js
 //= require foundation.abide.js
 //= require foundation.accordion.js
 //= require foundation.accordionMenu.js
@@ -25,7 +26,6 @@
 //= require foundation.responsiveToggle.js
 //= require foundation.reveal.js
 //= require foundation.slider.js
-//= require foundation.smoothScroll.js
 //= require foundation.sticky.js
 //= require foundation.tabs.js
 //= require foundation.toggler.js
