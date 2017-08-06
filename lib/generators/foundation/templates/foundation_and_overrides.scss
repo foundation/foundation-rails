@@ -10,12 +10,13 @@
 // We include everything by default.  To slim your CSS, remove components you don't use.
 
 @include foundation-global-styles;
-@include foundation-grid;
+@include foundation-xy-grid-classes;
+//@include foundation-grid;
+//@include foundation-flex-grid;
+@include foundation-flex-classes;
 @include foundation-typography;
-@include foundation-button;
 @include foundation-forms;
-@include foundation-visibility-classes;
-@include foundation-float-classes;
+@include foundation-button;
 @include foundation-accordion;
 @include foundation-accordion-menu;
 @include foundation-badge;
@@ -24,14 +25,14 @@
 @include foundation-callout;
 @include foundation-card;
 @include foundation-close-button;
+@include foundation-menu;
+@include foundation-menu-icon;
 @include foundation-drilldown-menu;
 @include foundation-dropdown;
 @include foundation-dropdown-menu;
 @include foundation-responsive-embed;
 @include foundation-label;
 @include foundation-media-object;
-@include foundation-menu;
-@include foundation-menu-icon;
 @include foundation-off-canvas;
 @include foundation-orbit;
 @include foundation-pagination;
@@ -46,6 +47,8 @@
 @include foundation-title-bar;
 @include foundation-tooltip;
 @include foundation-top-bar;
+@include foundation-visibility-classes;
+@include foundation-float-classes;
 
 // If you'd like to include motion-ui the foundation-rails gem comes prepackaged with it, uncomment the 3 @imports, if you are not using the gem you need to install the motion-ui sass package.
 //
