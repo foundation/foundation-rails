@@ -1,0 +1,28 @@
+{
+  "name": "foundation-rails",
+  "version": "6.4.13",
+  "description": "[![Gem Version](https://badge.fury.io/rb/foundation-rails.svg)](https://badge.fury.io/rb/foundation-rails)",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "lint": "stylelint 'lib/generators/foundation/templates/**/*.scss'",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zurb/foundation-rails.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/zurb/foundation-rails/issues"
+  },
+  "homepage": "https://github.com/zurb/foundation-rails#readme",
+  "devDependencies": {
+    "stylelint": "^8.2.0",
+    "stylelint-config-standard": "^17.0.0",
+    "stylelint-scss": "^2.1.0"
+  }
+}
