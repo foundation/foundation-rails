@@ -54,6 +54,12 @@ Append the following lines to your `app/assets/javascripts/application.js` file:
     //= require foundation
     $(document).foundation();
 
+To only require the JS you need, peek into the [foundation-rails js directory](https://github.com/zurb/foundation-rails/tree/master/vendor/assets/js) and open the file in which you plan to require. For example, If you want to use the accordion, require only the necessary JS.
+
+    //= require foundation.util.keyboard
+    //= require foundation.util.motion
+    //= require foundation.accordion
+
 ### Set Viewport Width
 
 Add the following line to the `head` of your page layout:
