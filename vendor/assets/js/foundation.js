@@ -6,7 +6,6 @@
 //= require foundation.util.motion.js
 //= require foundation.util.nest.js
 //= require foundation.util.timer.js
-//= require foundation.util.timerAndImageLoader.js
 //= require foundation.util.touch.js
 //= require foundation.util.triggers.js
 //= require foundation.abide.js
@@ -30,4 +29,3 @@
 //= require foundation.tabs.js
 //= require foundation.toggler.js
 //= require foundation.tooltip.js
-//= require foundation.zf.responsiveAccordionTabs.js
