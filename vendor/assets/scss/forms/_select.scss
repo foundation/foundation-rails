@@ -26,6 +26,10 @@ $select-radius: $global-radius !default;
   padding: $input-padding;
 
   appearance: none;
+  -moz-appearance:none;
+  -webkit-appearance:none;
+  -ms-appearance:none;
+
   border: $input-border;
   border-radius: $select-radius;
   background-color: $select-background;
