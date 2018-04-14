@@ -20,7 +20,6 @@
 //= require foundation.magellan.js
 //= require foundation.offcanvas.js
 //= require foundation.orbit.js
-//= require foundation.responsiveAccordionTabs.js
 //= require foundation.responsiveMenu.js
 //= require foundation.responsiveToggle.js
 //= require foundation.reveal.js
@@ -29,3 +28,4 @@
 //= require foundation.tabs.js
 //= require foundation.toggler.js
 //= require foundation.tooltip.js
+//= require foundation.responsiveAccordionTabs.js
