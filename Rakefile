@@ -19,15 +19,11 @@ namespace :assets do
     # NOTE: This is a temporary dependency management solution introduced in 6.3, will probably be removed in 6.4
     sh 'cp -R bower_components/foundation-sites/_vendor/* vendor/assets/_vendor/'
 
-    js_files = Dir['vendor/assets/js/*.js'].sort
-    # Move foundation.core.js to beginning of js_files
-    util_file_regex = /foundation\.util*/
-    js_files = js_files.find_all { |file| file =~ util_file_regex } + js_files.reject { |file| file =~ util_file_regex }
-    js_files.insert(0, js_files.delete(js_files.find { |file| file =~ /foundation\.core\.js/ }))
-    manifest = js_files.map { |file| "//= require #{File.basename(file)}" }.join("\n")
-    File.write('vendor/assets/js/foundation.js', manifest)
-
-    puts "\n*********************\n** ASSETS UPDATED! **\n*********************\n"
+    puts ""
+    puts "********************************************************************************"
+    puts "**                              ASSETS UPDATED!                               **"
+    puts "**   You may need to update the list of plugins to import in foundation.js    **"
+    puts "********************************************************************************"
   end
 
   desc 'Remove old Foundation for Sites assets'

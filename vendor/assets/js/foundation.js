@@ -1,3 +1,5 @@
+// Core & utilities
+// ----------------------------------------------------------------------------
 //= require foundation.core.js
 //= require foundation.util.box.js
 //= require foundation.util.imageLoader.js
@@ -8,6 +10,9 @@
 //= require foundation.util.timer.js
 //= require foundation.util.touch.js
 //= require foundation.util.triggers.js
+
+// Plugins
+// ----------------------------------------------------------------------------
 //= require foundation.smoothScroll.js
 //= require foundation.abide.js
 //= require foundation.accordion.js
