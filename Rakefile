@@ -11,8 +11,9 @@ namespace :assets do
   desc 'Update Foundation for Sites assets'
   task update: :clean do
     sh 'bower install'
-    sh 'cp -R bower_components/foundation-sites/dist/js/plugins/* vendor/assets/js/'
-    sh 'rm -f vendor/assets/js/*.min.*'
+    sh 'cp -R bower_components/foundation-sites/dist/js/* vendor/assets/js/'
+    sh 'rm -f vendor/assets/js/npm.js'
+    sh 'rm -f vendor/assets/js/foundation.d.ts'
     sh 'cp -R bower_components/foundation-sites/scss/* vendor/assets/scss/'
     sh 'cp -R bower_components/foundation-sites/scss/settings/_settings.scss lib/generators/foundation/templates'
     sh 'cp -R bower_components/motion-ui/src/* vendor/assets/scss/motion-ui'
@@ -22,8 +23,12 @@ namespace :assets do
     puts ""
     puts "********************************************************************************"
     puts "**                              ASSETS UPDATED!                               **"
-    puts "**   You may need to update the list of plugins to import in foundation.js    **"
     puts "********************************************************************************"
+    puts "                                                                                "
+    puts "                 You may need to update the list of plugins you                 "
+    puts "                 want to import in \"foundation.sprockets.js\"                  "
+    puts "                                                                                "
+
   end
 
   desc 'Remove old Foundation for Sites assets'
