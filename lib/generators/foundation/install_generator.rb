@@ -9,6 +9,7 @@ module Foundation
 
       class_option :haml, :desc => "Generate Haml layout instead of erb", :type => :boolean
       class_option :slim, :desc => "Generate Slim layout instead of erb", :type => :boolean
+      class_option :namespace, :desc => "Add namespace to basedir", :type => :string
 
       def add_assets
         # rails_ujs breaks, need to incorporate rails-behavior plugin for this to work seamlessly
@@ -66,15 +67,15 @@ module Foundation
       end
 
       def javascripts_base_dir
-        File.join("app", "assets", "javascripts")
+        File.join("app", "assets", "javascripts", "#{options.namespace}")
       end
 
       def stylesheets_base_dir
-        File.join("app", "assets", "stylesheets")
+        File.join("app", "assets", "stylesheets", "#{options.namespace}")
       end
 
       def layouts_base_dir
-        File.join("app", "views", "layouts")
+        File.join("app", "views", "layouts", "#{options.namespace}")
       end
     end
   end

@@ -98,6 +98,7 @@ rails g foundation:install [layout_name] [options]
 Options:
     [--haml]         # Generate HAML layout instead of erb
     [--slim]         # Generate Slim layout instead of erb
+    [--namespace]    # Add namespace to basedir
 Runtime options:
     -f, [--force]    # Overwrite files that already exist
     -p, [--pretend]  # Run but do not make any changes

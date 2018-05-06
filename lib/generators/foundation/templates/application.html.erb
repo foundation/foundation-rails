@@ -6,8 +6,8 @@
 
     <title><%%= content_for?(:title) ? yield(:title) : "Untitled" %></title>
 
-    <%%= stylesheet_link_tag    "application" %>
-    <%%= javascript_include_tag "application", 'data-turbolinks-track' => true %>
+    <%%= stylesheet_link_tag    "<%= @options[:namespace] ? "#{@options[:namespace]}/application" : "application" %>"  %>
+    <%%= javascript_include_tag "<%= @options[:namespace] ? "#{@options[:namespace]}/application" : "application" %>", 'data-turbolinks-track' => true %>
     <%%= csrf_meta_tags %>
   </head>
 
