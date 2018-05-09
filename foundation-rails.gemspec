@@ -27,4 +27,8 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rake"
   spec.add_development_dependency "rails"
   spec.add_development_dependency "rspec", "~> 3.2"
+
+  # Required by dummy app
+  spec.add_development_dependency "bootsnap", "~> 1.3"
+  spec.add_development_dependency "listen", "~> 3.0"
 end
