@@ -17,7 +17,7 @@ module FoundationRailsTestHelpers
 
   def install_foundation
     FileUtils.cd(dummy_app_path) do
-      %x(rails g foundation:install -f 2>&1)
+      puts %x(rails g foundation:install -f 2>&1)
     end
   end
 
