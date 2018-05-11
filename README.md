@@ -53,7 +53,14 @@ If you're planning on using Sass, then you'll want to rename `application.css` t
 Append the following lines to your `app/assets/javascripts/application.js` file:
 
     //= require foundation
-    $(document).foundation();
+    $(function(){ $(document).foundation(); });
+
+Or if you use Turbolink:
+
+    //= require foundation
+    $(document).on('turbolinks:load', function() {
+        $(function(){ $(document).foundation(); });
+    });
 
 ### Set Viewport Width
 
