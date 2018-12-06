@@ -1,2 +1,2 @@
 require 'foundation/rails'
-require 'sprockets/rails'
+require 'sprockets/es6'
