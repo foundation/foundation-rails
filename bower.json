@@ -2,7 +2,7 @@
   "name": "foundation-rails",
   "version": "6.5.1.0",
   "dependencies": {
-    "foundation-sites": "6.5.1",
+    "foundation-sites": "6.5.2",
     "motion-ui": "2.0.3"
   }
 }
