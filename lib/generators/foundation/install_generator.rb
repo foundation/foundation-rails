@@ -66,7 +66,7 @@ module Foundation
       end
 
       def javascripts_base_dir
-        File.join("app", "assets", "javascripts")
+        File.join("app", "assets", "javascript")
       end
 
       def stylesheets_base_dir
