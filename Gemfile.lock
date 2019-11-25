@@ -100,7 +100,7 @@ GEM
     minitest (5.11.3)
     msgpack (1.2.6)
     nio4r (2.3.1)
-    nokogiri (1.10.1)
+    nokogiri (1.10.5)
       mini_portile2 (~> 2.4.0)
     public_suffix (3.0.3)
     rack (2.0.6)
