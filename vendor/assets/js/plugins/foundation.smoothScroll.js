@@ -167,7 +167,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 /**
  * SmoothScroll module.
- * @module foundation.smooth-scroll
+ * @module foundation.smoothScroll
  */
 
 var SmoothScroll =
@@ -338,7 +338,7 @@ SmoothScroll.defaults = {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /Users/ncoden/Documents/Documents/Projects/Programmation/Web/2016/Foundation/foundation-sites/js/entries/plugins/foundation.smoothScroll.js */"./js/entries/plugins/foundation.smoothScroll.js");
+module.exports = __webpack_require__(/*! /Volumes/Data/Development/Foundation/foundation-sites/js/entries/plugins/foundation.smoothScroll.js */"./js/entries/plugins/foundation.smoothScroll.js");
 
 
 /***/ }),

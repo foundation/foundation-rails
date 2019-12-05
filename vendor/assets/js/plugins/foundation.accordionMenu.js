@@ -331,7 +331,7 @@ function (_Plugin) {
             });
           }
         }
-      }).on('keydown.zf.accordionmenu', function (e) {
+      }).on('keydown.zf.accordionMenu', function (e) {
         var $element = jquery__WEBPACK_IMPORTED_MODULE_0___default()(this),
             $elements = $element.parent('ul').children('li'),
             $prevElement,
@@ -408,8 +408,6 @@ function (_Plugin) {
             if (preventDefault) {
               e.preventDefault();
             }
-
-            e.stopImmediatePropagation();
           }
         });
       }); //.attr('tabindex', 0);
@@ -599,7 +597,7 @@ AccordionMenu.defaults = {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /Users/ncoden/Documents/Documents/Projects/Programmation/Web/2016/Foundation/foundation-sites/js/entries/plugins/foundation.accordionMenu.js */"./js/entries/plugins/foundation.accordionMenu.js");
+module.exports = __webpack_require__(/*! /Volumes/Data/Development/Foundation/foundation-sites/js/entries/plugins/foundation.accordionMenu.js */"./js/entries/plugins/foundation.accordionMenu.js");
 
 
 /***/ }),
