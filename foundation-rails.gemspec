@@ -6,11 +6,11 @@ require 'foundation/rails/version'
 Gem::Specification.new do |spec|
   spec.name          = "foundation-rails"
   spec.version       = Foundation::Rails::VERSION
-  spec.authors       = ["ZURB"]
-  spec.email         = ["foundation@zurb.com"]
-  spec.description   = %q{ZURB Foundation on Sass/Compass}
-  spec.summary       = %q{ZURB Foundation on Sass/Compass}
-  spec.homepage      = "http://foundation.zurb.com"
+  spec.authors       = ["Yetinauts"]
+  spec.email         = ["contact@get.foundation"]
+  spec.description   = %q{Foundation on Sass/Compass}
+  spec.summary       = %q{Foundation on Sass/Compass}
+  spec.homepage      = "https://get.foundation"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files`.split($/)
