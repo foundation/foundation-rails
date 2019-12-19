@@ -18,7 +18,8 @@ gemfile:
 
 before_install:
 - gem update --system --no-doc
-- gem install bundler
+- gem install -v 1.17.3 bundler --no-rdoc --no-ri
+- bundle _1.17.3_ install
 
 notifications:
   email: false
