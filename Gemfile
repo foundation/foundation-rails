@@ -2,6 +2,6 @@ source 'https://rubygems.org'
 gemspec
 
 gem 'rails'
-gem 'sass'
+gem 'sassc-rails'
 gem 'railties'
 gem 'sprockets-es6'
