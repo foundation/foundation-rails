@@ -3,7 +3,7 @@
 source "https://rubygems.org"
 
 gem "rails", "~> 5.0"
-gem "sassc-rails"
+gem "sassc"
 gem "railties"
 gem "sprockets-es6"
 
