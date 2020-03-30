@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    foundation-rails (6.6.1.0)
+    foundation-rails (6.6.2.0)
       railties (>= 3.1.0)
       sass (>= 3.3.0)
       sprockets-es6 (>= 0.9.0)
@@ -207,4 +207,4 @@ DEPENDENCIES
   sprockets-es6
 
 BUNDLED WITH
-   1.17.1
+   2.1.2
