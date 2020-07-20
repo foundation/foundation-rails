@@ -66,7 +66,11 @@ module Foundation
       end
 
       def javascripts_base_dir
-        File.join("app", "assets", "javascripts")
+        if Rails::VERSION.to_i < 6
+          File.join("app", "assets", "javascripts")
+        else
+          File.join("app", "javascript", "packs")
+        end
       end
 
       def stylesheets_base_dir
