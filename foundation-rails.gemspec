@@ -11,6 +11,15 @@ Gem::Specification.new do |spec|
   spec.description   = %q{Foundation on Sass/Compass}
   spec.summary       = %q{Foundation on Sass/Compass}
   spec.homepage      = "https://get.foundation"
+  if spec.respond_to?(:metadata=)
+    spec.metadata = {
+      "bug_tracker_uri" => "https://github.com/foundation/foundation-rails/issues",
+      "changelog_uri" => "https://github.com/foundation/foundation-rails/releases",
+      "homepage_uri" => "https://get.foundation",
+      "source_code_uri" => "https://github.com/foundation/foundation-rails"
+    }
+  end
+  
   spec.license       = "MIT"
 
   spec.files         = `git ls-files`.split($/)
