@@ -1,0 +1,43 @@
+name: Test
+on: [push]
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        ruby:
+          - "2.7" # EOF: 31 Mar 2023
+          - "3.0" # EOF: 31 Mar 2024
+          - "3.1" # EOF: 31 Mar 2025
+          - "3.2" # EOF: 31 Mar 2026
+        gemfile:
+          - gemfiles/rails_6.0.gemfile # EOF: 01 Jun 2023
+          - gemfiles/rails_6.1.gemfile # EOF: ?, assume 2024
+          - gemfiles/rails_7.0.gemfile # EOF: ?, assume 2025
+    env:
+      BUNDLE_GEMFILE: ${{ matrix.gemfile }}
+    runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Ruby ${{ matrix.ruby }}
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+
+      - uses: actions/cache@v2
+        with:
+          path: vendor/bundle
+          key: ${{ runner.os }}-${{ matrix.ruby }}-${{ matrix.gemfile }}-gems-${{ hashFiles('**/Gemfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-gems-
+
+      - name: bundle install
+        run: |
+          gem install bundler
+          bundle config path vendor/bundle
+          bundle install -j $(getconf _NPROCESSORS_ONLN) --retry 3
+
+      - name: Run Test
+        run: bundle exec rake
