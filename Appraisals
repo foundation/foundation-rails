@@ -1,19 +1,11 @@
-appraise 'rails_4.1' do
-  gem 'rails', '~> 4.1'
-end
+SUPPORTED_RAILS_VERSIONS = %w[
+  6.0
+  6.1
+  7.0
+].freeze
 
-appraise 'rails_4.2' do
-  gem 'rails', '~> 4.2'
-end
-
-appraise 'rails_5.0' do
-  gem 'rails', '~> 5.0'
-end
-
-appraise 'rails_5.1' do
-  gem 'rails', '~> 5.1'
-end
-
-appraise 'rails_5.2' do
-  gem 'rails', '~> 5.2'
+SUPPORTED_RAILS_VERSIONS.each do |rails_version|
+  appraise "rails_#{rails_version}" do
+    gem 'rails', "~> #{rails_version}"
+  end
 end
