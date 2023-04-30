@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 gemspec
 
-gem 'rails'
+gem 'rails', '~> 6.0'
 gem 'sass'
 gem 'railties'
 gem 'sprockets-es6'
