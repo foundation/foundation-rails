@@ -143,8 +143,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! jquery */ "jquery");
 /* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(jquery__WEBPACK_IMPORTED_MODULE_0__);
 
-
-
 /**
  * Runs a callback function when images are fully loaded.
  * @param {Object} images - Image(s) to check if loaded.
@@ -152,8 +150,7 @@ __webpack_require__.r(__webpack_exports__);
  */
 
 function onImagesLoaded(images, callback) {
-  var self = this,
-      unloaded = images.length;
+  var unloaded = images.length;
 
   if (unloaded === 0) {
     callback();
@@ -168,7 +165,7 @@ function onImagesLoaded(images, callback) {
       var image = new Image(); // Still count image as loaded if it finalizes with an error.
 
       var events = "load.zf.images error.zf.images";
-      jquery__WEBPACK_IMPORTED_MODULE_0___default()(image).one(events, function me(event) {
+      jquery__WEBPACK_IMPORTED_MODULE_0___default()(image).one(events, function me() {
         // Unbind the event listeners. We're using 'one' but only one of the two events will have fired.
         jquery__WEBPACK_IMPORTED_MODULE_0___default()(this).off(events, me);
         singleImageLoaded();

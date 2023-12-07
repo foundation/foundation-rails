@@ -169,14 +169,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(jquery__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _foundation_core_utils__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./foundation.core.utils */ "./js/foundation.core.utils.js");
 /* harmony import */ var _foundation_util_mediaQuery__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./foundation.util.mediaQuery */ "./js/foundation.util.mediaQuery.js");
-
-
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 
 
 
-var FOUNDATION_VERSION = '6.6.2'; // Global Foundation object
+var FOUNDATION_VERSION = '6.7.5'; // Global Foundation object
 // This is attached to the window, or used as a module for AMD/Browserify
 
 var Foundation = {
@@ -261,7 +259,9 @@ var Foundation = {
     .trigger("destroyed.zf.".concat(pluginName));
 
     for (var prop in plugin) {
-      plugin[prop] = null; //clean up script to prep for garbage collection.
+      if (typeof plugin[prop] === 'function') {
+        plugin[prop] = null; //clean up script to prep for garbage collection.
+      }
     }
 
     return;
@@ -296,7 +296,7 @@ var Foundation = {
             jquery__WEBPACK_IMPORTED_MODULE_0___default()('[data-' + plugins + ']').foundation('_init');
           },
           'undefined': function undefined() {
-            this['object'](Object.keys(_this._plugins));
+            this.object(Object.keys(_this._plugins));
           }
         };
 
@@ -320,8 +320,8 @@ var Foundation = {
       plugins = Object.keys(this._plugins);
     } // If plugins is a string, convert it to an array with one item
     else if (typeof plugins === 'string') {
-        plugins = [plugins];
-      }
+      plugins = [plugins];
+    }
 
     var _this = this; // Iterate through each plugin
 
@@ -341,7 +341,7 @@ var Foundation = {
         };
 
         if ($el.attr('data-options')) {
-          $el.attr('data-options').split(';').forEach(function (option, _index) {
+          $el.attr('data-options').split(';').forEach(function (option) {
             var opt = option.split(':').map(function (el) {
               return el.trim();
             });
@@ -360,7 +360,7 @@ var Foundation = {
     });
   },
   getFnName: functionName,
-  addToJquery: function addToJquery($) {
+  addToJquery: function addToJquery() {
     // TODO: consider not making this a jQuery function
     // TODO: need way to reflow vs. re-initialize
 
@@ -370,7 +370,7 @@ var Foundation = {
      */
     var foundation = function foundation(method) {
       var type = _typeof(method),
-          $noJS = $('.no-js');
+          $noJS = jquery__WEBPACK_IMPORTED_MODULE_0___default()('.no-js');
 
       if ($noJS.length) {
         $noJS.removeClass('no-js');
@@ -395,7 +395,7 @@ var Foundation = {
           } else {
             this.each(function (i, el) {
               //otherwise loop through the jQuery collection and invoke the method on each
-              plugClass[method].apply($(el).data('zfPlugin'), args);
+              plugClass[method].apply(jquery__WEBPACK_IMPORTED_MODULE_0___default()(el).data('zfPlugin'), args);
             });
           }
         } else {
@@ -410,8 +410,8 @@ var Foundation = {
       return this;
     };
 
-    $.fn.foundation = foundation;
-    return $;
+    jquery__WEBPACK_IMPORTED_MODULE_0___default.a.fn.foundation = foundation;
+    return jquery__WEBPACK_IMPORTED_MODULE_0___default.a;
   }
 };
 Foundation.util = {
@@ -480,6 +480,7 @@ window.Foundation = Foundation; // Polyfill for requestAnimationFrame
 })();
 
 if (!Function.prototype.bind) {
+  /* eslint-disable no-extend-native */
   Function.prototype.bind = function (oThis) {
     if (typeof this !== 'function') {
       // closest thing possible to the ECMAScript 5
@@ -542,32 +543,25 @@ function hyphenate(str) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Plugin", function() { return Plugin; });
-/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! jquery */ "jquery");
-/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(jquery__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _foundation_core_utils__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./foundation.core.utils */ "./js/foundation.core.utils.js");
-
-
+/* harmony import */ var _foundation_core_utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./foundation.core.utils */ "./js/foundation.core.utils.js");
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-
  // Abstract class for providing lifecycle hooks. Expect plugins to define AT LEAST
 // {function} _setup (replaces previous constructor),
 // {function} _destroy (replaces previous destroy)
 
-var Plugin =
-/*#__PURE__*/
-function () {
+var Plugin = /*#__PURE__*/function () {
   function Plugin(element, options) {
     _classCallCheck(this, Plugin);
 
     this._setup(element, options);
 
     var pluginName = getPluginName(this);
-    this.uuid = Object(_foundation_core_utils__WEBPACK_IMPORTED_MODULE_1__["GetYoDigits"])(6, pluginName);
+    this.uuid = Object(_foundation_core_utils__WEBPACK_IMPORTED_MODULE_0__["GetYoDigits"])(6, pluginName);
 
     if (!this.$element.attr("data-".concat(pluginName))) {
       this.$element.attr("data-".concat(pluginName), this.uuid);
@@ -599,7 +593,9 @@ function () {
       .trigger("destroyed.zf.".concat(pluginName));
 
       for (var prop in this) {
-        this[prop] = null; //clean up script to prep for garbage collection.
+        if (this.hasOwnProperty(prop)) {
+          this[prop] = null; //clean up script to prep for garbage collection.
+        }
       }
     }
   }]);
@@ -638,8 +634,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ignoreMousedisappear", function() { return ignoreMousedisappear; });
 /* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! jquery */ "jquery");
 /* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(jquery__WEBPACK_IMPORTED_MODULE_0__);
-
-
  // Core Foundation Utilities, utilized in a number of places.
 
 /**
@@ -816,26 +810,33 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MediaQuery", function() { return MediaQuery; });
 /* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! jquery */ "jquery");
 /* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(jquery__WEBPACK_IMPORTED_MODULE_0__);
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
-function _iterableToArrayLimit(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"]; if (_i == null) return; var _arr = []; var _n = true; var _d = false; var _s, _e; try { for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
  // Default set of media queries
-
-var defaultQueries = {
-  'default': 'only screen',
-  landscape: 'only screen and (orientation: landscape)',
-  portrait: 'only screen and (orientation: portrait)',
-  retina: 'only screen and (-webkit-min-device-pixel-ratio: 2),' + 'only screen and (min--moz-device-pixel-ratio: 2),' + 'only screen and (-o-min-device-pixel-ratio: 2/1),' + 'only screen and (min-device-pixel-ratio: 2),' + 'only screen and (min-resolution: 192dpi),' + 'only screen and (min-resolution: 2dppx)'
-}; // matchMedia() polyfill - Test a CSS media type/query in JS.
+// const defaultQueries = {
+//   'default' : 'only screen',
+//   landscape : 'only screen and (orientation: landscape)',
+//   portrait : 'only screen and (orientation: portrait)',
+//   retina : 'only screen and (-webkit-min-device-pixel-ratio: 2),' +
+//     'only screen and (min--moz-device-pixel-ratio: 2),' +
+//     'only screen and (-o-min-device-pixel-ratio: 2/1),' +
+//     'only screen and (min-device-pixel-ratio: 2),' +
+//     'only screen and (min-resolution: 192dpi),' +
+//     'only screen and (min-resolution: 2dppx)'
+//   };
+// matchMedia() polyfill - Test a CSS media type/query in JS.
 // Authors & copyright © 2012: Scott Jehl, Paul Irish, Nicholas Zakas, David Knight. MIT license
 
 /* eslint-disable */
@@ -897,7 +898,7 @@ var MediaQuery = {
   _init: function _init() {
     // make sure the initialization is only done once when calling _init() several times
     if (this.isInitialized === true) {
-      return;
+      return this;
     } else {
       this.isInitialized = true;
     }
@@ -906,7 +907,7 @@ var MediaQuery = {
     var $meta = jquery__WEBPACK_IMPORTED_MODULE_0___default()('meta.foundation-mq');
 
     if (!$meta.length) {
-      jquery__WEBPACK_IMPORTED_MODULE_0___default()('<meta class="foundation-mq">').appendTo(document.head);
+      jquery__WEBPACK_IMPORTED_MODULE_0___default()('<meta class="foundation-mq" name="foundation-mq" content>').appendTo(document.head);
     }
 
     var extractedStyles = jquery__WEBPACK_IMPORTED_MODULE_0___default()('.foundation-mq').css('font-family');
@@ -1099,7 +1100,7 @@ var MediaQuery = {
   _watcher: function _watcher() {
     var _this2 = this;
 
-    jquery__WEBPACK_IMPORTED_MODULE_0___default()(window).off('resize.zf.mediaquery').on('resize.zf.mediaquery', function () {
+    jquery__WEBPACK_IMPORTED_MODULE_0___default()(window).on('resize.zf.trigger', function () {
       var newSize = _this2._getCurrentSize(),
           currentSize = _this2.current;
 
