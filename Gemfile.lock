@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    foundation-rails (6.7.5.0)
+    foundation-rails (6.8.1.0)
       railties (>= 3.1.0)
       sassc
       sprockets-es6
@@ -83,7 +83,7 @@ GEM
       minitest (>= 5.1)
       mutex_m
       tzinfo (~> 2.0)
-    addressable (2.8.5)
+    addressable (2.8.6)
       public_suffix (>= 2.0.2, < 6.0)
     appraisal (2.5.0)
       bundler
@@ -94,7 +94,7 @@ GEM
       babel-source (>= 4.0, < 6)
       execjs (~> 2.0)
     base64 (0.2.0)
-    bigdecimal (3.1.4)
+    bigdecimal (3.1.5)
     bootsnap (1.17.0)
       msgpack (~> 1.2)
     builder (3.2.4)
@@ -121,7 +121,7 @@ GEM
       activesupport (>= 6.1)
     i18n (1.14.1)
       concurrent-ruby (~> 1.0)
-    io-console (0.6.0)
+    io-console (0.7.0)
     irb (1.10.1)
       rdoc
       reline (>= 0.3.8)
@@ -143,7 +143,7 @@ GEM
     minitest (5.20.0)
     msgpack (1.7.2)
     mutex_m (0.2.0)
-    net-imap (0.4.7)
+    net-imap (0.4.8)
       date
       net-protocol
     net-pop (0.1.2)
