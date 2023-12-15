@@ -1,13 +1,13 @@
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
-		module.exports = factory(require("./foundation.util.keyboard"), require("./foundation.core"), require("jquery"), require("./foundation.util.box"), require("./foundation.util.motion"), require("./foundation.util.touch"));
+		module.exports = factory(require("./foundation.core"), require("./foundation.util.box"), require("./foundation.util.keyboard"), require("./foundation.util.motion"), require("./foundation.util.touch"), require("jquery"));
 	else if(typeof define === 'function' && define.amd)
-		define(["./foundation.util.keyboard", "./foundation.core", "jquery", "./foundation.util.box", "./foundation.util.motion", "./foundation.util.touch"], factory);
+		define(["./foundation.core", "./foundation.util.box", "./foundation.util.keyboard", "./foundation.util.motion", "./foundation.util.touch", "jquery"], factory);
 	else if(typeof exports === 'object')
-		exports["foundation.dropdown"] = factory(require("./foundation.util.keyboard"), require("./foundation.core"), require("jquery"), require("./foundation.util.box"), require("./foundation.util.motion"), require("./foundation.util.touch"));
+		exports["foundation.dropdown"] = factory(require("./foundation.core"), require("./foundation.util.box"), require("./foundation.util.keyboard"), require("./foundation.util.motion"), require("./foundation.util.touch"), require("jquery"));
 	else
-		root["__FOUNDATION_EXTERNAL__"] = root["__FOUNDATION_EXTERNAL__"] || {}, root["__FOUNDATION_EXTERNAL__"]["foundation.dropdown"] = factory(root["__FOUNDATION_EXTERNAL__"]["foundation.util.keyboard"], root["__FOUNDATION_EXTERNAL__"]["foundation.core"], root["jQuery"], root["__FOUNDATION_EXTERNAL__"]["foundation.util.box"], root["__FOUNDATION_EXTERNAL__"]["foundation.util.motion"], root["__FOUNDATION_EXTERNAL__"]["foundation.util.touch"]);
-})(window, function(__WEBPACK_EXTERNAL_MODULE__foundation_util_keyboard__, __WEBPACK_EXTERNAL_MODULE__foundation_core__, __WEBPACK_EXTERNAL_MODULE_jquery__, __WEBPACK_EXTERNAL_MODULE__foundation_util_box__, __WEBPACK_EXTERNAL_MODULE__foundation_util_motion__, __WEBPACK_EXTERNAL_MODULE__foundation_util_touch__) {
+		root["__FOUNDATION_EXTERNAL__"] = root["__FOUNDATION_EXTERNAL__"] || {}, root["__FOUNDATION_EXTERNAL__"]["foundation.dropdown"] = factory(root["__FOUNDATION_EXTERNAL__"]["foundation.core"], root["__FOUNDATION_EXTERNAL__"]["foundation.util.box"], root["__FOUNDATION_EXTERNAL__"]["foundation.util.keyboard"], root["__FOUNDATION_EXTERNAL__"]["foundation.util.motion"], root["__FOUNDATION_EXTERNAL__"]["foundation.util.touch"], root["jQuery"]);
+})(window, function(__WEBPACK_EXTERNAL_MODULE__foundation_core__, __WEBPACK_EXTERNAL_MODULE__foundation_util_box__, __WEBPACK_EXTERNAL_MODULE__foundation_util_keyboard__, __WEBPACK_EXTERNAL_MODULE__foundation_util_motion__, __WEBPACK_EXTERNAL_MODULE__foundation_util_touch__, __WEBPACK_EXTERNAL_MODULE_jquery__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -194,9 +194,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _foundation_util_triggers__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./foundation.util.triggers */ "./js/foundation.util.triggers.js");
 /* harmony import */ var _foundation_util_touch__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./foundation.util.touch */ "./foundation.util.touch");
 /* harmony import */ var _foundation_util_touch__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_foundation_util_touch__WEBPACK_IMPORTED_MODULE_5__);
-
-
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -204,19 +202,23 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
 function _get(target, property, receiver) { if (typeof Reflect !== "undefined" && Reflect.get) { _get = Reflect.get; } else { _get = function _get(target, property, receiver) { var base = _superPropBase(target, property); if (!base) return; var desc = Object.getOwnPropertyDescriptor(base, property); if (desc.get) { return desc.get.call(receiver); } return desc.value; }; } return _get(target, property, receiver || target); }
 
 function _superPropBase(object, property) { while (!Object.prototype.hasOwnProperty.call(object, property)) { object = _getPrototypeOf(object); if (object === null) break; } return object; }
 
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } else if (call !== void 0) { throw new TypeError("Derived constructors may only return object or undefined"); } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
 
 
@@ -233,20 +235,20 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
  * @requires foundation.util.triggers
  */
 
-var Dropdown =
-/*#__PURE__*/
-function (_Positionable) {
+var Dropdown = /*#__PURE__*/function (_Positionable) {
   _inherits(Dropdown, _Positionable);
+
+  var _super = _createSuper(Dropdown);
 
   function Dropdown() {
     _classCallCheck(this, Dropdown);
 
-    return _possibleConstructorReturn(this, _getPrototypeOf(Dropdown).apply(this, arguments));
+    return _super.apply(this, arguments);
   }
 
   _createClass(Dropdown, [{
     key: "_setup",
-
+    value:
     /**
      * Creates a new instance of a dropdown.
      * @class
@@ -255,7 +257,7 @@ function (_Positionable) {
      *        Object should be of the dropdown panel, rather than its anchor.
      * @param {Object} options - Overrides to the default plugin settings.
      */
-    value: function _setup(element, options) {
+    function _setup(element, options) {
       this.$element = element;
       this.options = jquery__WEBPACK_IMPORTED_MODULE_0___default.a.extend({}, Dropdown.defaults, this.$element.data(), options);
       this.className = 'Dropdown'; // ie9 back compat
@@ -439,8 +441,7 @@ function (_Positionable) {
       }
 
       this.$anchors.add(this.$element).on('keydown.zf.dropdown', function (e) {
-        var $target = jquery__WEBPACK_IMPORTED_MODULE_0___default()(this),
-            visibleFocusableElements = _foundation_util_keyboard__WEBPACK_IMPORTED_MODULE_1__["Keyboard"].findFocusable(_this.$element);
+        var $target = jquery__WEBPACK_IMPORTED_MODULE_0___default()(this);
         _foundation_util_keyboard__WEBPACK_IMPORTED_MODULE_1__["Keyboard"].handleKey(e, 'Dropdown', {
           open: function open() {
             if ($target.is(_this.$anchors) && !$target.is('input, textarea')) {
@@ -730,9 +731,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _foundation_util_box__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_foundation_util_box__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _foundation_core_plugin__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./foundation.core.plugin */ "./foundation.core");
 /* harmony import */ var _foundation_core_plugin__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_foundation_core_plugin__WEBPACK_IMPORTED_MODULE_1__);
-
-
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -740,15 +739,19 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } else if (call !== void 0) { throw new TypeError("Derived constructors may only return object or undefined"); } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
 
 
@@ -773,20 +776,20 @@ function nextItem(item, array) {
   }
 }
 
-var Positionable =
-/*#__PURE__*/
-function (_Plugin) {
+var Positionable = /*#__PURE__*/function (_Plugin) {
   _inherits(Positionable, _Plugin);
+
+  var _super = _createSuper(Positionable);
 
   function Positionable() {
     _classCallCheck(this, Positionable);
 
-    return _possibleConstructorReturn(this, _getPrototypeOf(Positionable).apply(this, arguments));
+    return _super.apply(this, arguments);
   }
 
   _createClass(Positionable, [{
     key: "_init",
-
+    value:
     /**
      * Abstract class encapsulating the tether-like explicit positioning logic
      * including repositioning based on overlap.
@@ -796,7 +799,7 @@ function (_Plugin) {
      * generated) by explicitly declaring them.
      *
      **/
-    value: function _init() {
+    function _init() {
       this.triedPositions = {};
       this.position = this.options.position === 'auto' ? this._getDefaultPosition() : this.options.position;
       this.alignment = this.options.alignment === 'auto' ? this._getDefaultAlignment() : this.options.alignment;
@@ -872,7 +875,7 @@ function (_Plugin) {
   }, {
     key: "_alignmentsExhausted",
     value: function _alignmentsExhausted(position) {
-      return this.triedPositions[position] && this.triedPositions[position].length == ALIGNMENTS[position].length;
+      return this.triedPositions[position] && this.triedPositions[position].length === ALIGNMENTS[position].length;
     } // When we're trying to center, we don't want to apply offset that's going to
     // take us just off center, so wrap around to return 0 for the appropriate
     // offset in those alignments.  TODO: Figure out if we want to make this
@@ -1018,9 +1021,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _foundation_core_utils__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_foundation_core_utils__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _foundation_util_motion__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./foundation.util.motion */ "./foundation.util.motion");
 /* harmony import */ var _foundation_util_motion__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_foundation_util_motion__WEBPACK_IMPORTED_MODULE_2__);
-
-
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 
 
@@ -1154,9 +1155,8 @@ Triggers.Listeners.Global = {
 
       _this.triggerHandler('close.zf.trigger', [_this]);
     });
-  } // Global, parses whole document.
-
-};
+  }
+}; // Global, parses whole document.
 
 Triggers.Initializers.addClosemeListener = function (pluginName) {
   var yetiBoxes = jquery__WEBPACK_IMPORTED_MODULE_0___default()('[data-yeti-box]'),
@@ -1183,7 +1183,7 @@ Triggers.Initializers.addClosemeListener = function (pluginName) {
 function debounceGlobalListener(debounce, trigger, listener) {
   var timer,
       args = Array.prototype.slice.call(arguments, 3);
-  jquery__WEBPACK_IMPORTED_MODULE_0___default()(window).off(trigger).on(trigger, function (e) {
+  jquery__WEBPACK_IMPORTED_MODULE_0___default()(window).on(trigger, function () {
     if (timer) {
       clearTimeout(timer);
     }
@@ -1275,17 +1275,17 @@ Triggers.Initializers.addSimpleListeners = function () {
 Triggers.Initializers.addGlobalListeners = function () {
   var $document = jquery__WEBPACK_IMPORTED_MODULE_0___default()(document);
   Triggers.Initializers.addMutationEventsListener($document);
-  Triggers.Initializers.addResizeListener();
+  Triggers.Initializers.addResizeListener(250);
   Triggers.Initializers.addScrollListener();
   Triggers.Initializers.addClosemeListener();
 };
 
-Triggers.init = function ($, Foundation) {
-  Object(_foundation_core_utils__WEBPACK_IMPORTED_MODULE_1__["onLoad"])($(window), function () {
-    if ($.triggersInitialized !== true) {
+Triggers.init = function (__, Foundation) {
+  Object(_foundation_core_utils__WEBPACK_IMPORTED_MODULE_1__["onLoad"])(jquery__WEBPACK_IMPORTED_MODULE_0___default()(window), function () {
+    if (jquery__WEBPACK_IMPORTED_MODULE_0___default.a.triggersInitialized !== true) {
       Triggers.Initializers.addSimpleListeners();
       Triggers.Initializers.addGlobalListeners();
-      $.triggersInitialized = true;
+      jquery__WEBPACK_IMPORTED_MODULE_0___default.a.triggersInitialized = true;
     }
   });
 

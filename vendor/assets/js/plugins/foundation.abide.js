@@ -144,9 +144,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(jquery__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _foundation_core_plugin__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./foundation.core.plugin */ "./foundation.core");
 /* harmony import */ var _foundation_core_plugin__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_foundation_core_plugin__WEBPACK_IMPORTED_MODULE_1__);
-
-
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -154,15 +152,19 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } else if (call !== void 0) { throw new TypeError("Derived constructors may only return object or undefined"); } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
 
 
@@ -172,20 +174,20 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
  * @module foundation.abide
  */
 
-var Abide =
-/*#__PURE__*/
-function (_Plugin) {
+var Abide = /*#__PURE__*/function (_Plugin) {
   _inherits(Abide, _Plugin);
+
+  var _super = _createSuper(Abide);
 
   function Abide() {
     _classCallCheck(this, Abide);
 
-    return _possibleConstructorReturn(this, _getPrototypeOf(Abide).apply(this, arguments));
+    return _super.apply(this, arguments);
   }
 
   _createClass(Abide, [{
     key: "_setup",
-
+    value:
     /**
      * Creates a new instance of Abide.
      * @class
@@ -194,7 +196,7 @@ function (_Plugin) {
      * @param {Object} element - jQuery object to add the trigger to.
      * @param {Object} options - Overrides to the default plugin settings.
      */
-    value: function _setup(element) {
+    function _setup(element) {
       var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
       this.$element = element;
       this.options = jquery__WEBPACK_IMPORTED_MODULE_0___default.a.extend(true, {}, Abide.defaults, this.$element.data(), options);
@@ -491,6 +493,10 @@ function (_Plugin) {
         'data-invalid': '',
         'aria-invalid': true
       });
+
+      if ($formError.filter(':visible').length) {
+        this.addA11yErrorDescribe($el, $formError);
+      }
     }
     /**
      * Adds [for] and [role=alert] attributes to all form error targetting $el,
@@ -503,19 +509,11 @@ function (_Plugin) {
     value: function addA11yAttributes($el) {
       var $errors = this.findFormError($el);
       var $labels = $errors.filter('label');
-      var $error = $errors.first();
-      if (!$errors.length) return; // Set [aria-describedby] on the input toward the first form error if it is not set
+      if (!$errors.length) return;
+      var $error = $errors.filter(':visible').first();
 
-      if (typeof $el.attr('aria-describedby') === 'undefined') {
-        // Get the first error ID or create one
-        var errorId = $error.attr('id');
-
-        if (typeof errorId === 'undefined') {
-          errorId = Object(_foundation_core_plugin__WEBPACK_IMPORTED_MODULE_1__["GetYoDigits"])(6, 'abide-error');
-          $error.attr('id', errorId);
-        }
-
-        $el.attr('aria-describedby', errorId);
+      if ($error.length) {
+        this.addA11yErrorDescribe($el, $error);
       }
 
       if ($labels.filter('[for]').length < $labels.length) {
@@ -539,6 +537,21 @@ function (_Plugin) {
         var $label = jquery__WEBPACK_IMPORTED_MODULE_0___default()(label);
         if (typeof $label.attr('role') === 'undefined') $label.attr('role', 'alert');
       }).end();
+    }
+  }, {
+    key: "addA11yErrorDescribe",
+    value: function addA11yErrorDescribe($el, $error) {
+      if (typeof $el.attr('aria-describedby') !== 'undefined') return; // Set [aria-describedby] on the input toward the first form error if it is not set
+      // Get the first error ID or create one
+
+      var errorId = $error.attr('id');
+
+      if (typeof errorId === 'undefined') {
+        errorId = Object(_foundation_core_plugin__WEBPACK_IMPORTED_MODULE_1__["GetYoDigits"])(6, 'abide-error');
+        $error.attr('id', errorId);
+      }
+
+      $el.attr('aria-describedby', errorId).data('abide-describedby', true);
     }
     /**
      * Adds [aria-live] attribute to the given global form error $el.
@@ -611,12 +624,12 @@ function (_Plugin) {
     key: "removeErrorClasses",
     value: function removeErrorClasses($el) {
       // radios need to clear all of the els
-      if ($el[0].type == 'radio') {
+      if ($el[0].type === 'radio') {
         return this.removeRadioErrorClasses($el.attr('name'));
       } // checkboxes need to clear all of the els
-      else if ($el[0].type == 'checkbox') {
-          return this.removeCheckboxErrorClasses($el.attr('name'));
-        }
+      else if ($el[0].type === 'checkbox') {
+        return this.removeCheckboxErrorClasses($el.attr('name'));
+      }
 
       var $label = this.findLabel($el);
       var $formError = this.findFormError($el);
@@ -633,6 +646,10 @@ function (_Plugin) {
         'data-invalid': null,
         'aria-invalid': null
       });
+
+      if ($el.data('abide-describedby')) {
+        $el.removeAttr('aria-describedby').removeData('abide-describedby');
+      }
     }
     /**
      * Goes through a form to find inputs and proceeds to validate them in ways specific to their type.
@@ -714,10 +731,10 @@ function (_Plugin) {
       }
 
       if (manageErrorClasses) {
-        this.removeErrorClasses($el);
-
         if (!goodToGo) {
           this.addErrorClasses($el, failedValidators);
+        } else {
+          this.removeErrorClasses($el);
         }
       }
       /**
@@ -807,8 +824,8 @@ function (_Plugin) {
           valid = this.options.patterns[pattern].test(inputText);
         } // If the pattern name isn't also the type attribute of the field, then test it as a regexp
         else if (pattern !== $el.attr('type')) {
-            valid = new RegExp(pattern).test(inputText);
-          }
+          valid = new RegExp(pattern).test(inputText);
+        }
       }
 
       return valid;
@@ -881,7 +898,7 @@ function (_Plugin) {
           }
 
           if (typeof jquery__WEBPACK_IMPORTED_MODULE_0___default()(e).attr('data-min-required') !== 'undefined') {
-            minRequired = parseInt(jquery__WEBPACK_IMPORTED_MODULE_0___default()(e).attr('data-min-required'));
+            minRequired = parseInt(jquery__WEBPACK_IMPORTED_MODULE_0___default()(e).attr('data-min-required'), 10);
           }
         }); // For the group to be valid, the minRequired amount of checkboxes have to be checked
 
@@ -1062,6 +1079,7 @@ Abide.defaults = {
   validateOnBlur: false,
   patterns: {
     alpha: /^[a-zA-Z]+$/,
+    // eslint-disable-next-line camelcase
     alpha_numeric: /^[a-zA-Z0-9]+$/,
     integer: /^[-+]?\d+$/,
     number: /^[-+]?\d*(?:[\.\,]\d+)?$/,
@@ -1083,15 +1101,17 @@ Abide.defaults = {
     time: /^(0[0-9]|1[0-9]|2[0-3])(:[0-5][0-9]){2}$/,
     dateISO: /^\d{4}[\/\-]\d{1,2}[\/\-]\d{1,2}$/,
     // MM/DD/YYYY
+    // eslint-disable-next-line camelcase
     month_day_year: /^(0[1-9]|1[012])[- \/.](0[1-9]|[12][0-9]|3[01])[- \/.]\d{4}$/,
     // DD/MM/YYYY
+    // eslint-disable-next-line camelcase
     day_month_year: /^(0[1-9]|[12][0-9]|3[01])[- \/.](0[1-9]|1[012])[- \/.]\d{4}$/,
     // #FFF or #FFFFFF
     color: /^#?([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$/,
     // Domain || URL
     website: {
       test: function test(text) {
-        return Abide.defaults.patterns['domain'].test(text) || Abide.defaults.patterns['url'].test(text);
+        return Abide.defaults.patterns.domain.test(text) || Abide.defaults.patterns.url.test(text);
       }
     }
   },
@@ -1100,12 +1120,10 @@ Abide.defaults = {
    * Optional validation functions to be used. `equalTo` being the only default included function.
    * Functions should return only a boolean if the input is valid or not. Functions are given the following arguments:
    * el : The jQuery element to validate.
-   * required : Boolean value of the required attribute be present or not.
-   * parent : The direct parent of the input.
    * @option
    */
   validators: {
-    equalTo: function equalTo(el, required, parent) {
+    equalTo: function equalTo(el) {
       return jquery__WEBPACK_IMPORTED_MODULE_0___default()("#".concat(el.attr('data-equalto'))).val() === el.val();
     }
   }

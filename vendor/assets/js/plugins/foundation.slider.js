@@ -184,9 +184,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _foundation_util_touch__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./foundation.util.touch */ "./foundation.util.touch");
 /* harmony import */ var _foundation_util_touch__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_foundation_util_touch__WEBPACK_IMPORTED_MODULE_4__);
 /* harmony import */ var _foundation_util_triggers__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./foundation.util.triggers */ "./js/foundation.util.triggers.js");
-
-
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -194,15 +192,19 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } else if (call !== void 0) { throw new TypeError("Derived constructors may only return object or undefined"); } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
 
 
@@ -220,20 +222,20 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
  * @requires foundation.util.touch
  */
 
-var Slider =
-/*#__PURE__*/
-function (_Plugin) {
+var Slider = /*#__PURE__*/function (_Plugin) {
   _inherits(Slider, _Plugin);
+
+  var _super = _createSuper(Slider);
 
   function Slider() {
     _classCallCheck(this, Slider);
 
-    return _possibleConstructorReturn(this, _getPrototypeOf(Slider).apply(this, arguments));
+    return _super.apply(this, arguments);
   }
 
   _createClass(Slider, [{
     key: "_setup",
-
+    value:
     /**
      * Creates a new instance of a slider control.
      * @class
@@ -241,11 +243,12 @@ function (_Plugin) {
      * @param {jQuery} element - jQuery object to make into a slider control.
      * @param {Object} options - Overrides to the default plugin settings.
      */
-    value: function _setup(element, options) {
+    function _setup(element, options) {
       this.$element = element;
       this.options = jquery__WEBPACK_IMPORTED_MODULE_0___default.a.extend({}, Slider.defaults, this.$element.data(), options);
       this.className = 'Slider'; // ie9 back compat
-      // Touch and Triggers inits are idempotent, we just need to make sure it's initialied.
+
+      this.initialized = false; // Touch and Triggers inits are idempotent, we just need to make sure it's initialied.
 
       _foundation_util_touch__WEBPACK_IMPORTED_MODULE_4__["Touch"].init(jquery__WEBPACK_IMPORTED_MODULE_0___default.a);
       _foundation_util_triggers__WEBPACK_IMPORTED_MODULE_5__["Triggers"].init(jquery__WEBPACK_IMPORTED_MODULE_0___default.a);
@@ -258,18 +261,18 @@ function (_Plugin) {
           'ARROW_UP': 'increase',
           'ARROW_DOWN': 'decrease',
           'ARROW_LEFT': 'decrease',
-          'SHIFT_ARROW_RIGHT': 'increase_fast',
-          'SHIFT_ARROW_UP': 'increase_fast',
-          'SHIFT_ARROW_DOWN': 'decrease_fast',
-          'SHIFT_ARROW_LEFT': 'decrease_fast',
+          'SHIFT_ARROW_RIGHT': 'increaseFast',
+          'SHIFT_ARROW_UP': 'increaseFast',
+          'SHIFT_ARROW_DOWN': 'decreaseFast',
+          'SHIFT_ARROW_LEFT': 'decreaseFast',
           'HOME': 'min',
           'END': 'max'
         },
         'rtl': {
           'ARROW_LEFT': 'increase',
           'ARROW_RIGHT': 'decrease',
-          'SHIFT_ARROW_LEFT': 'increase_fast',
-          'SHIFT_ARROW_RIGHT': 'decrease_fast'
+          'SHIFT_ARROW_LEFT': 'increaseFast',
+          'SHIFT_ARROW_RIGHT': 'decreaseFast'
         }
       });
     }
@@ -287,8 +290,6 @@ function (_Plugin) {
       this.$handle = this.handles.eq(0);
       this.$input = this.inputs.length ? this.inputs.eq(0) : jquery__WEBPACK_IMPORTED_MODULE_0___default()("#".concat(this.$handle.attr('aria-controls')));
       this.$fill = this.$element.find('[data-slider-fill]').css(this.options.vertical ? 'height' : 'width', 0);
-
-      var _this = this;
 
       if (this.options.disabled || this.$element.hasClass(this.options.disabledClass)) {
         this.options.disabled = true;
@@ -319,6 +320,8 @@ function (_Plugin) {
       this.setHandles();
 
       this._events();
+
+      this.initialized = true;
     }
   }, {
     key: "setHandles",
@@ -482,7 +485,7 @@ function (_Plugin) {
             //empty variable, will be used for min-height/width for fill bar
         dim,
             //percentage w/h of the handle compared to the slider bar
-        handlePct = ~~(percent(handleDim, elemDim) * 100); //if left handle, the math is slightly different than if it's the right handle, and the left/top property needs to be changed for the fill bar
+        handlePct = Math.floor(percent(handleDim, elemDim) * 100); //if left handle, the math is slightly different than if it's the right handle, and the left/top property needs to be changed for the fill bar
 
         if (isLeftHndl) {
           //left or top percentage value to apply to the fill bar.
@@ -505,15 +508,8 @@ function (_Plugin) {
 
 
         css["min-".concat(hOrW)] = "".concat(dim, "%");
-      }
+      } //because we don't know exactly how the handle will be moved, check the amount of time it should take to move.
 
-      this.$element.one('finished.zf.animate', function () {
-        /**
-         * Fires when the handle is done moving.
-         * @event Slider#moved
-         */
-        _this.$element.trigger('moved.zf.slider', [$hndl]);
-      }); //because we don't know exactly how the handle will be moved, check the amount of time it should take to move.
 
       var moveTime = this.$element.data('dragging') ? 1000 / 60 : this.options.moveTime;
       Object(_foundation_util_motion__WEBPACK_IMPORTED_MODULE_2__["Move"])(moveTime, $hndl, function () {
@@ -534,15 +530,25 @@ function (_Plugin) {
           _this.$fill.css(css);
         }
       });
-      /**
-       * Fires when the value has not been change for a given time.
-       * @event Slider#changed
-       */
 
-      clearTimeout(_this.timeout);
-      _this.timeout = setTimeout(function () {
-        _this.$element.trigger('changed.zf.slider', [$hndl]);
-      }, _this.options.changedDelay);
+      if (this.initialized) {
+        this.$element.one('finished.zf.animate', function () {
+          /**
+           * Fires when the handle is done moving.
+           * @event Slider#moved
+           */
+          _this.$element.trigger('moved.zf.slider', [$hndl]);
+        });
+        /**
+         * Fires when the value has not been change for a given time.
+         * @event Slider#changed
+         */
+
+        clearTimeout(_this.timeout);
+        _this.timeout = setTimeout(function () {
+          _this.$element.trigger('changed.zf.slider', [$hndl]);
+        }, _this.options.changedDelay);
+      }
     }
     /**
      * Sets the initial attribute for the slider element.
@@ -603,7 +609,7 @@ function (_Plugin) {
   }, {
     key: "_handleEvent",
     value: function _handleEvent(e, $handle, val) {
-      var value, hasVal;
+      var value;
 
       if (!val) {
         //click or drag events
@@ -642,9 +648,7 @@ function (_Plugin) {
           value = this.options.end - value;
         }
 
-        value = _this._adjustValue(null, value); //boolean flag for the setHandlePos fn, specifically for vertical sliders
-
-        hasVal = false;
+        value = _this._adjustValue(null, value);
 
         if (!$handle) {
           //figure out which handle it is, pass it to the next function.
@@ -655,7 +659,6 @@ function (_Plugin) {
       } else {
         //change event on input
         value = this._adjustValue(null, val);
-        hasVal = true;
       }
 
       this._setHandlePos($handle, value);
@@ -675,8 +678,8 @@ function (_Plugin) {
           step = this.options.step,
           div = parseFloat(step / 2),
           left,
-          prev_val,
-          next_val;
+          previousVal,
+          nextVal;
 
       if (!!$handle) {
         val = parseFloat($handle.attr('aria-valuenow'));
@@ -690,14 +693,14 @@ function (_Plugin) {
         left = step + val % step;
       }
 
-      prev_val = val - left;
-      next_val = prev_val + step;
+      previousVal = val - left;
+      nextVal = previousVal + step;
 
       if (left === 0) {
         return val;
       }
 
-      val = val >= prev_val + div ? next_val : prev_val;
+      val = val >= previousVal + div ? nextVal : previousVal;
       return val;
     }
     /**
@@ -738,7 +741,7 @@ function (_Plugin) {
 
 
       this.inputs.off('keyup.zf.slider').on('keyup.zf.slider', function (e) {
-        if (e.keyCode == 13) handleChangeEvent.call(this, e);
+        if (e.keyCode === 13) handleChangeEvent.call(this, e);
       });
       this.inputs.off('change.zf.slider').on('change.zf.slider', handleChangeEvent);
 
@@ -770,12 +773,12 @@ function (_Plugin) {
           _this.$element.data('dragging', true);
 
           curHandle = jquery__WEBPACK_IMPORTED_MODULE_0___default()(e.currentTarget);
-          $body.on('mousemove.zf.slider', function (e) {
-            e.preventDefault();
+          $body.on('mousemove.zf.slider', function (ev) {
+            ev.preventDefault();
 
-            _this._handleEvent(e, curHandle);
-          }).on('mouseup.zf.slider', function (e) {
-            _this._handleEvent(e, curHandle);
+            _this._handleEvent(ev, curHandle);
+          }).on('mouseup.zf.slider', function (ev) {
+            _this._handleEvent(ev, curHandle);
 
             $handle.removeClass('is-dragging');
 
@@ -794,7 +797,7 @@ function (_Plugin) {
       $handle.off('keydown.zf.slider').on('keydown.zf.slider', function (e) {
         var _$handle = jquery__WEBPACK_IMPORTED_MODULE_0___default()(this),
             idx = _this.options.doubleSided ? _this.handles.index(_$handle) : 0,
-            oldValue = parseFloat(_this.inputs.eq(idx).val()),
+            oldValue = parseFloat($handle.attr('aria-valuenow')),
             newValue; // handle keyboard event with keyboard util
 
 
@@ -805,10 +808,10 @@ function (_Plugin) {
           increase: function increase() {
             newValue = oldValue + _this.options.step;
           },
-          decrease_fast: function decrease_fast() {
+          decreaseFast: function decreaseFast() {
             newValue = oldValue - _this.options.step * 10;
           },
-          increase_fast: function increase_fast() {
+          increaseFast: function increaseFast() {
             newValue = oldValue + _this.options.step * 10;
           },
           min: function min() {
@@ -1036,9 +1039,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _foundation_core_utils__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_foundation_core_utils__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _foundation_util_motion__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./foundation.util.motion */ "./foundation.util.motion");
 /* harmony import */ var _foundation_util_motion__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_foundation_util_motion__WEBPACK_IMPORTED_MODULE_2__);
-
-
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 
 
@@ -1172,9 +1173,8 @@ Triggers.Listeners.Global = {
 
       _this.triggerHandler('close.zf.trigger', [_this]);
     });
-  } // Global, parses whole document.
-
-};
+  }
+}; // Global, parses whole document.
 
 Triggers.Initializers.addClosemeListener = function (pluginName) {
   var yetiBoxes = jquery__WEBPACK_IMPORTED_MODULE_0___default()('[data-yeti-box]'),
@@ -1201,7 +1201,7 @@ Triggers.Initializers.addClosemeListener = function (pluginName) {
 function debounceGlobalListener(debounce, trigger, listener) {
   var timer,
       args = Array.prototype.slice.call(arguments, 3);
-  jquery__WEBPACK_IMPORTED_MODULE_0___default()(window).off(trigger).on(trigger, function (e) {
+  jquery__WEBPACK_IMPORTED_MODULE_0___default()(window).on(trigger, function () {
     if (timer) {
       clearTimeout(timer);
     }
@@ -1293,17 +1293,17 @@ Triggers.Initializers.addSimpleListeners = function () {
 Triggers.Initializers.addGlobalListeners = function () {
   var $document = jquery__WEBPACK_IMPORTED_MODULE_0___default()(document);
   Triggers.Initializers.addMutationEventsListener($document);
-  Triggers.Initializers.addResizeListener();
+  Triggers.Initializers.addResizeListener(250);
   Triggers.Initializers.addScrollListener();
   Triggers.Initializers.addClosemeListener();
 };
 
-Triggers.init = function ($, Foundation) {
-  Object(_foundation_core_utils__WEBPACK_IMPORTED_MODULE_1__["onLoad"])($(window), function () {
-    if ($.triggersInitialized !== true) {
+Triggers.init = function (__, Foundation) {
+  Object(_foundation_core_utils__WEBPACK_IMPORTED_MODULE_1__["onLoad"])(jquery__WEBPACK_IMPORTED_MODULE_0___default()(window), function () {
+    if (jquery__WEBPACK_IMPORTED_MODULE_0___default.a.triggersInitialized !== true) {
       Triggers.Initializers.addSimpleListeners();
       Triggers.Initializers.addGlobalListeners();
-      $.triggersInitialized = true;
+      jquery__WEBPACK_IMPORTED_MODULE_0___default.a.triggersInitialized = true;
     }
   });
 

@@ -25,11 +25,11 @@ $global-lineheight: 1.5 !default;
 /// Colors used for buttons, callouts, links, etc. There must always be a color called `primary`.
 /// @type Map
 $foundation-palette: (
-  primary: #1779ba,
-  secondary: #767676,
-  success: #3adb76,
-  warning: #ffae00,
-  alert: #cc4b37,
+  "primary": #1779ba,
+  "secondary": #767676,
+  "success": #3adb76,
+  "warning": #ffae00,
+  "alert": #cc4b37,
 ) !default;
 
 /// Color used for light gray UI items.
@@ -63,6 +63,10 @@ $body-font-color: $black !default;
 /// Font stack of the body.
 /// @type List
 $body-font-family: 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif !default;
+
+/// Set to `true` to enable safe padding on the body for non-rectangular devices (i.e. phones with notches)
+/// @type Boolean
+$body-safe-padding: false !default;
 
 /// Set to `true` to enable antialiased type, using the `-webkit-font-smoothing` and `-moz-osx-font-smoothing` CSS properties.
 /// @type Boolean
@@ -158,6 +162,14 @@ $global-color-pick-contrast-tolerance: 0 !default;
     margin: 0;
     padding: 0;
 
+    @if ($body-safe-padding) {
+      // using environment variables to account for non-rectangular displays e.g. phones with notches
+      padding-top: env(safe-area-inset-top);
+      padding-right: env(safe-area-inset-right);
+      padding-bottom: env(safe-area-inset-bottom);
+      padding-left: env(safe-area-inset-left);
+    }
+
     background: $body-background;
 
     font-family: $body-font-family;
@@ -222,6 +234,7 @@ $global-color-pick-contrast-tolerance: 0 !default;
   // Prevent text overflow on pre
   pre {
     overflow: auto;
+    -webkit-overflow-scrolling: touch;
   }
 
   // Make reset inherit font-family instead of settings sans-serif

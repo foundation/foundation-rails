@@ -144,6 +144,7 @@ function ignoreMousedisappear(handler, { ignoreLeaveWindow = false, ignoreReappe
 }
 
 var foundation_core_utils = /*#__PURE__*/Object.freeze({
+  __proto__: null,
   rtl: rtl,
   GetYoDigits: GetYoDigits,
   RegExpEscape: RegExpEscape,
@@ -151,6 +152,20 @@ var foundation_core_utils = /*#__PURE__*/Object.freeze({
   onLoad: onLoad,
   ignoreMousedisappear: ignoreMousedisappear
 });
+
+// Default set of media queries
+// const defaultQueries = {
+//   'default' : 'only screen',
+//   landscape : 'only screen and (orientation: landscape)',
+//   portrait : 'only screen and (orientation: portrait)',
+//   retina : 'only screen and (-webkit-min-device-pixel-ratio: 2),' +
+//     'only screen and (min--moz-device-pixel-ratio: 2),' +
+//     'only screen and (-o-min-device-pixel-ratio: 2/1),' +
+//     'only screen and (min-device-pixel-ratio: 2),' +
+//     'only screen and (min-resolution: 192dpi),' +
+//     'only screen and (min-resolution: 2dppx)'
+//   };
+
 
 // matchMedia() polyfill - Test a CSS media type/query in JS.
 // Authors & copyright © 2012: Scott Jehl, Paul Irish, Nicholas Zakas, David Knight. MIT license
@@ -218,7 +233,7 @@ var MediaQuery = {
 
     // make sure the initialization is only done once when calling _init() several times
     if (this.isInitialized === true) {
-      return;
+      return this;
     } else {
       this.isInitialized = true;
     }
@@ -226,7 +241,7 @@ var MediaQuery = {
     var self = this;
     var $meta = $('meta.foundation-mq');
     if(!$meta.length){
-      $('<meta class="foundation-mq">').appendTo(document.head);
+      $('<meta class="foundation-mq" name="foundation-mq" content>').appendTo(document.head);
     }
 
     var extractedStyles = $('.foundation-mq').css('font-family');
@@ -417,7 +432,7 @@ var MediaQuery = {
    * @private
    */
   _watcher() {
-    $(window).off('resize.zf.mediaquery').on('resize.zf.mediaquery', () => {
+    $(window).on('resize.zf.trigger', () => {
       var newSize = this._getCurrentSize(), currentSize = this.current;
 
       if (newSize !== currentSize) {
@@ -470,7 +485,7 @@ function parseStyleToObject(str) {
   return styleObject;
 }
 
-var FOUNDATION_VERSION = '6.6.2';
+var FOUNDATION_VERSION = '6.7.5';
 
 // Global Foundation object
 // This is attached to the window, or used as a module for AMD/Browserify
@@ -546,7 +561,9 @@ var Foundation = {
            */
           .trigger(`destroyed.zf.${pluginName}`);
     for(var prop in plugin){
-      plugin[prop] = null;//clean up script to prep for garbage collection.
+      if(typeof plugin[prop] === 'function'){
+        plugin[prop] = null; //clean up script to prep for garbage collection.
+      }
     }
     return;
   },
@@ -564,7 +581,7 @@ var Foundation = {
          plugins.each(function(){
            $(this).data('zfPlugin')._init();
          });
-       }else{
+       }else {
          var type = typeof plugins,
          _this = this,
          fns = {
@@ -579,7 +596,7 @@ var Foundation = {
              $('[data-'+ plugins +']').foundation('_init');
            },
            'undefined': function(){
-             this['object'](Object.keys(_this._plugins));
+             this.object(Object.keys(_this._plugins));
            }
          };
          fns[type](plugins);
@@ -625,7 +642,7 @@ var Foundation = {
             opts = { reflow: true };
 
         if($el.attr('data-options')){
-          $el.attr('data-options').split(';').forEach(function(option, _index){
+          $el.attr('data-options').split(';').forEach(function(option){
             var opt = option.split(':').map(function(el){ return el.trim(); });
             if(opt[0]) opts[opt[0]] = parseValue(opt[1]);
           });
@@ -642,7 +659,7 @@ var Foundation = {
   },
   getFnName: functionName,
 
-  addToJquery: function($) {
+  addToJquery: function() {
     // TODO: consider not making this a jQuery function
     // TODO: need way to reflow vs. re-initialize
     /**
@@ -667,15 +684,15 @@ var Foundation = {
         if(typeof plugClass !== 'undefined' && typeof plugClass[method] !== 'undefined'){//make sure both the class and method exist
           if(this.length === 1){//if there's only one, call it directly.
               plugClass[method].apply(plugClass, args);
-          }else{
+          }else {
             this.each(function(i, el){//otherwise loop through the jQuery collection and invoke the method on each
               plugClass[method].apply($(el).data('zfPlugin'), args);
             });
           }
-        }else{//error for no class or no method
+        }else {//error for no class or no method
           throw new ReferenceError("We're sorry, '" + method + "' is not an available method for " + (plugClass ? functionName(plugClass) : 'this element') + '.');
         }
-      }else{//error for invalid argument type
+      }else {//error for invalid argument type
         throw new TypeError(`We're sorry, ${type} is not a valid parameter. You must use a string representing the method you wish to invoke.`);
       }
       return this;
@@ -745,6 +762,7 @@ window.Foundation = Foundation;
   }
 })();
 if (!Function.prototype.bind) {
+  /* eslint-disable no-extend-native */
   Function.prototype.bind = function(oThis) {
     if (typeof this !== 'function') {
       // closest thing possible to the ECMAScript 5
@@ -993,7 +1011,7 @@ function onImagesLoaded(images, callback){
       var image = new Image();
       // Still count image as loaded if it finalizes with an error.
       var events = "load.zf.images error.zf.images";
-      $(image).one(events, function me(event){
+      $(image).one(events, function me(){
         // Unbind the event listeners. We're using 'one' but only one of the two events will have fired.
         $(this).off(events, me);
         singleImageLoaded();
@@ -1039,6 +1057,32 @@ function findFocusable($element) {
   return $element.find('a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), iframe, object, embed, *[tabindex], *[contenteditable]').filter(function() {
     if (!$(this).is(':visible') || $(this).attr('tabindex') < 0) { return false; } //only have visible elements and those that have a tabindex greater or equal 0
     return true;
+  })
+  .sort( function( a, b ) {
+    if ($(a).attr('tabindex') === $(b).attr('tabindex')) {
+      return 0;
+    }
+    let aTabIndex = parseInt($(a).attr('tabindex'), 10),
+      bTabIndex = parseInt($(b).attr('tabindex'), 10);
+    // Undefined is treated the same as 0
+    if (typeof $(a).attr('tabindex') === 'undefined' && bTabIndex > 0) {
+      return 1;
+    }
+    if (typeof $(b).attr('tabindex') === 'undefined' && aTabIndex > 0) {
+      return -1;
+    }
+    if (aTabIndex === 0 && bTabIndex > 0) {
+      return 1;
+    }
+    if (bTabIndex === 0 && aTabIndex > 0) {
+      return -1;
+    }
+    if (aTabIndex < bTabIndex) {
+      return -1;
+    }
+    if (aTabIndex > bTabIndex) {
+      return 1;
+    }
   });
 }
 
@@ -1173,7 +1217,9 @@ var Keyboard = {
  */
 function getKeyCodes(kcs) {
   var k = {};
-  for (var kc in kcs) k[kcs[kc]] = kcs[kc];
+  for (var kc in kcs) {
+    if (kcs.hasOwnProperty(kc)) k[kcs[kc]] = kcs[kc];
+  }
   return k;
 }
 
@@ -1197,7 +1243,6 @@ const Motion = {
 
 function Move(duration, elem, fn){
   var anim, prog, start = null;
-  // console.log('called');
 
   if (duration === 0) {
     fn.apply(elem);
@@ -1207,12 +1252,11 @@ function Move(duration, elem, fn){
 
   function move(ts){
     if(!start) start = ts;
-    // console.log(start, ts);
     prog = ts - start;
     fn.apply(elem);
 
     if(prog < duration){ anim = window.requestAnimationFrame(move, elem); }
-    else{
+    else {
       window.cancelAnimationFrame(anim);
       elem.trigger('finished.zf.animate', [elem]).triggerHandler('finished.zf.animate', [elem]);
     }
@@ -1295,9 +1339,10 @@ const Nest = {
       if ($sub.length) {
         $item.addClass(hasSubClass);
         if(applyAria) {
-          $item.attr({
+          const firstItem = $item.children('a:first');
+          firstItem.attr({
             'aria-haspopup': true,
-            'aria-label': $item.children('a:first').text()
+            'aria-label': firstItem.attr('aria-label') || firstItem.text()
           });
           // Note:  Drilldowns behave differently in how they hide, and so need
           // additional attributes.  We should look if this possibly over-generalized
@@ -1387,7 +1432,6 @@ function Timer(elem, options, cb) {
 var Touch = {};
 
 var startPosX,
-    startPosY,
     startTime,
     elapsedTime,
     startEvent,
@@ -1410,12 +1454,13 @@ function onTouchEnd(e) {
 }
 
 function onTouchMove(e) {
-  if ($.spotSwipe.preventDefault) { e.preventDefault(); }
+  if (true === $.spotSwipe.preventDefault) { e.preventDefault(); }
 
   if(isMoving) {
     var x = e.touches[0].pageX;
-    var y = e.touches[0].pageY;
+    // var y = e.touches[0].pageY;
     var dx = startPosX - x;
+    // var dy = startPosY - y;
     var dir;
     didMoved = true;
     elapsedTime = new Date().getTime() - startTime;
@@ -1438,35 +1483,36 @@ function onTouchMove(e) {
 
 function onTouchStart(e) {
 
-  if (e.touches.length == 1) {
+  if (e.touches.length === 1) {
     startPosX = e.touches[0].pageX;
-    startPosY = e.touches[0].pageY;
     startEvent = e;
     isMoving = true;
     didMoved = false;
     startTime = new Date().getTime();
-    this.addEventListener('touchmove', onTouchMove, false);
+    this.addEventListener('touchmove', onTouchMove, { passive : true === $.spotSwipe.preventDefault });
     this.addEventListener('touchend', onTouchEnd, false);
   }
 }
 
 function init() {
-  this.addEventListener && this.addEventListener('touchstart', onTouchStart, false);
+  this.addEventListener && this.addEventListener('touchstart', onTouchStart, { passive : true });
 }
 
+// function teardown() {
+//   this.removeEventListener('touchstart', onTouchStart);
+// }
+
 class SpotSwipe {
-  constructor($) {
+  constructor() {
     this.version = '1.0.0';
     this.enabled = 'ontouchstart' in document.documentElement;
     this.preventDefault = false;
     this.moveThreshold = 75;
     this.timeThreshold = 200;
-    this.$ = $;
     this._init();
   }
 
   _init() {
-    var $ = this.$;
     $.event.special.swipe = { setup: init };
     $.event.special.tap = { setup: init };
 
@@ -1485,16 +1531,16 @@ class SpotSwipe {
  * values, and do not add event handlers directly.  *
  ****************************************************/
 
-Touch.setupSpotSwipe = function($) {
+Touch.setupSpotSwipe = function() {
   $.spotSwipe = new SpotSwipe($);
 };
 
 /****************************************************
  * Method for adding pseudo drag events to elements *
  ***************************************************/
-Touch.setupTouchHandler = function($) {
+Touch.setupTouchHandler = function() {
   $.fn.addTouch = function(){
-    this.each(function(i,el){
+    this.each(function(i, el){
       $(el).bind('touchstart touchmove touchend touchcancel', function(event)  {
         //we pass the original event object because the jQuery event
         //object is normalized to w3c specs and does not provide the TouchList
@@ -1502,7 +1548,7 @@ Touch.setupTouchHandler = function($) {
       });
     });
 
-    var handleTouch = function(event){
+    var handleTouch = function(event) {
       var touches = event.changedTouches,
           first = touches[0],
           eventTypes = {
@@ -1532,8 +1578,7 @@ Touch.setupTouchHandler = function($) {
   };
 };
 
-Touch.init = function ($) {
-
+Touch.init = function () {
   if(typeof($.spotSwipe) === 'undefined') {
     Touch.setupSpotSwipe($);
     Touch.setupTouchHandler($);
@@ -1548,7 +1593,7 @@ const MutationObserver = (function () {
     }
   }
   return false;
-}());
+})();
 
 const triggers = (el, type) => {
   el.data(type).split(' ').forEach(id => {
@@ -1595,7 +1640,7 @@ Triggers.Listeners.Basic  = {
       Motion.animateOut($(this), animation, function() {
         $(this).trigger('closed.zf');
       });
-    }else{
+    }else {
       $(this).fadeOut().trigger('closed.zf');
     }
   },
@@ -1679,7 +1724,7 @@ Triggers.Initializers.addClosemeListener = function(pluginName) {
       plugNames.push(pluginName);
     }else if(typeof pluginName === 'object' && typeof pluginName[0] === 'string'){
       plugNames = plugNames.concat(pluginName);
-    }else{
+    }else {
       console.error('Plugin names must be strings');
     }
   }
@@ -1694,11 +1739,11 @@ Triggers.Initializers.addClosemeListener = function(pluginName) {
 
 function debounceGlobalListener(debounce, trigger, listener) {
   let timer, args = Array.prototype.slice.call(arguments, 3);
-  $(window).off(trigger).on(trigger, function(e) {
+  $(window).on(trigger, function() {
     if (timer) { clearTimeout(timer); }
     timer = setTimeout(function(){
       listener.apply(null, args);
-    }, debounce || 10);//default time to emit scroll event
+    }, debounce || 10); //default time to emit scroll event
   });
 }
 
@@ -1773,13 +1818,13 @@ Triggers.Initializers.addSimpleListeners = function() {
 Triggers.Initializers.addGlobalListeners = function() {
   let $document = $(document);
   Triggers.Initializers.addMutationEventsListener($document);
-  Triggers.Initializers.addResizeListener();
+  Triggers.Initializers.addResizeListener(250);
   Triggers.Initializers.addScrollListener();
   Triggers.Initializers.addClosemeListener();
 };
 
 
-Triggers.init = function ($, Foundation) {
+Triggers.init = function (__, Foundation) {
   onLoad($(window), function () {
     if ($.triggersInitialized !== true) {
       Triggers.Initializers.addSimpleListeners();
@@ -1824,7 +1869,9 @@ class Plugin {
          */
         .trigger(`destroyed.zf.${pluginName}`);
     for(var prop in this){
-      this[prop] = null;//clean up script to prep for garbage collection.
+      if (this.hasOwnProperty(prop)) {
+        this[prop] = null; //clean up script to prep for garbage collection.
+      }
     }
   }
 }
@@ -2119,6 +2166,10 @@ class Abide extends Plugin {
       'data-invalid': '',
       'aria-invalid': true
     });
+
+    if ($formError.filter(':visible').length) {
+      this.addA11yErrorDescribe($el, $formError);
+    }
   }
 
   /**
@@ -2129,19 +2180,11 @@ class Abide extends Plugin {
   addA11yAttributes($el) {
     let $errors = this.findFormError($el);
     let $labels = $errors.filter('label');
-    let $error = $errors.first();
     if (!$errors.length) return;
 
-    // Set [aria-describedby] on the input toward the first form error if it is not set
-    if (typeof $el.attr('aria-describedby') === 'undefined') {
-      // Get the first error ID or create one
-      let errorId = $error.attr('id');
-      if (typeof errorId === 'undefined') {
-        errorId = GetYoDigits(6, 'abide-error');
-        $error.attr('id', errorId);
-      }
-
-      $el.attr('aria-describedby', errorId);
+    let $error = $errors.filter(':visible').first();
+    if ($error.length) {
+      this.addA11yErrorDescribe($el, $error);
     }
 
     if ($labels.filter('[for]').length < $labels.length) {
@@ -2166,6 +2209,20 @@ class Abide extends Plugin {
       if (typeof $label.attr('role') === 'undefined')
         $label.attr('role', 'alert');
     }).end();
+  }
+
+  addA11yErrorDescribe($el, $error) {
+    if (typeof $el.attr('aria-describedby') !== 'undefined') return;
+
+    // Set [aria-describedby] on the input toward the first form error if it is not set
+    // Get the first error ID or create one
+    let errorId = $error.attr('id');
+    if (typeof errorId === 'undefined') {
+      errorId = GetYoDigits(6, 'abide-error');
+      $error.attr('id', errorId);
+    }
+
+    $el.attr('aria-describedby', errorId).data('abide-describedby', true);
   }
 
   /**
@@ -2233,11 +2290,11 @@ class Abide extends Plugin {
    */
   removeErrorClasses($el) {
     // radios need to clear all of the els
-    if ($el[0].type == 'radio') {
+    if ($el[0].type === 'radio') {
       return this.removeRadioErrorClasses($el.attr('name'));
     }
     // checkboxes need to clear all of the els
-    else if ($el[0].type == 'checkbox') {
+    else if ($el[0].type === 'checkbox') {
       return this.removeCheckboxErrorClasses($el.attr('name'));
     }
 
@@ -2256,6 +2313,10 @@ class Abide extends Plugin {
       'data-invalid': null,
       'aria-invalid': null
     });
+
+    if ($el.data('abide-describedby')) {
+      $el.removeAttr('aria-describedby').removeData('abide-describedby');
+    }
   }
 
   /**
@@ -2333,10 +2394,10 @@ class Abide extends Plugin {
     }
 
     if (manageErrorClasses) {
-      this.removeErrorClasses($el);
-
       if (!goodToGo) {
         this.addErrorClasses($el, failedValidators);
+      } else {
+        this.removeErrorClasses($el);
       }
     }
 
@@ -2489,7 +2550,7 @@ class Abide extends Plugin {
           checked++;
         }
         if (typeof $(e).attr('data-min-required') !== 'undefined') {
-          minRequired = parseInt($(e).attr('data-min-required'));
+          minRequired = parseInt($(e).attr('data-min-required'), 10);
         }
       });
 
@@ -2669,6 +2730,7 @@ Abide.defaults = {
 
   patterns: {
     alpha : /^[a-zA-Z]+$/,
+    // eslint-disable-next-line camelcase
     alpha_numeric : /^[a-zA-Z0-9]+$/,
     integer : /^[-+]?\d+$/,
     number : /^[-+]?\d*(?:[\.\,]\d+)?$/,
@@ -2695,8 +2757,10 @@ Abide.defaults = {
     time : /^(0[0-9]|1[0-9]|2[0-3])(:[0-5][0-9]){2}$/,
     dateISO : /^\d{4}[\/\-]\d{1,2}[\/\-]\d{1,2}$/,
     // MM/DD/YYYY
+    // eslint-disable-next-line camelcase
     month_day_year : /^(0[1-9]|1[012])[- \/.](0[1-9]|[12][0-9]|3[01])[- \/.]\d{4}$/,
     // DD/MM/YYYY
+    // eslint-disable-next-line camelcase
     day_month_year : /^(0[1-9]|[12][0-9]|3[01])[- \/.](0[1-9]|1[012])[- \/.]\d{4}$/,
 
     // #FFF or #FFFFFF
@@ -2705,7 +2769,7 @@ Abide.defaults = {
     // Domain || URL
     website: {
       test: (text) => {
-        return Abide.defaults.patterns['domain'].test(text) || Abide.defaults.patterns['url'].test(text);
+        return Abide.defaults.patterns.domain.test(text) || Abide.defaults.patterns.url.test(text);
       }
     }
   },
@@ -2714,12 +2778,10 @@ Abide.defaults = {
    * Optional validation functions to be used. `equalTo` being the only default included function.
    * Functions should return only a boolean if the input is valid or not. Functions are given the following arguments:
    * el : The jQuery element to validate.
-   * required : Boolean value of the required attribute be present or not.
-   * parent : The direct parent of the input.
    * @option
    */
   validators: {
-    equalTo: function (el, required, parent) {
+    equalTo: function (el) {
       return $(`#${el.attr('data-equalto')}`).val() === el.val();
     }
   }
@@ -2751,7 +2813,9 @@ class Accordion extends Plugin {
       'ENTER': 'toggle',
       'SPACE': 'toggle',
       'ARROW_DOWN': 'next',
-      'ARROW_UP': 'previous'
+      'ARROW_UP': 'previous',
+      'HOME': 'first',
+      'END': 'last',
     });
   }
 
@@ -2762,10 +2826,8 @@ class Accordion extends Plugin {
   _init() {
     this._isInitializing = true;
 
-    this.$element.attr('role', 'tablist');
     this.$tabs = this.$element.children('[data-accordion-item]');
 
-    this.$tabs.attr({'role': 'presentation'});
 
     this.$tabs.each(function(idx, el) {
       var $el = $(el),
@@ -2775,13 +2837,11 @@ class Accordion extends Plugin {
 
       $el.find('a:first').attr({
         'aria-controls': id,
-        'role': 'tab',
         'id': linkId,
-        'aria-expanded': false,
-        'aria-selected': false
+        'aria-expanded': false
       });
 
-      $content.attr({'role': 'tabpanel', 'aria-labelledby': linkId, 'aria-hidden': true, 'id': id});
+      $content.attr({'role': 'region', 'aria-labelledby': linkId, 'aria-hidden': true, 'id': id});
     });
 
     var $initActive = this.$element.find('.is-active').children('[data-tab-content]');
@@ -2874,6 +2934,18 @@ class Accordion extends Plugin {
               var $a = $elem.prev().find('a').focus();
               if (!_this.options.multiExpand) {
                 $a.trigger('click.zf.accordion');
+              }
+            },
+            first: function() {
+              var $a = _this.$tabs.first().find('.accordion-title').focus();
+              if (!_this.options.multiExpand) {
+                 $a.trigger('click.zf.accordion');
+              }
+            },
+            last: function() {
+              var $a = _this.$tabs.last().find('.accordion-title').focus();
+              if (!_this.options.multiExpand) {
+                 $a.trigger('click.zf.accordion');
               }
             },
             handled: function() {
@@ -2990,11 +3062,10 @@ class Accordion extends Plugin {
     $targetItem.addClass('is-active');
 
     $(`#${targetContentId}`).attr({
-      'aria-expanded': true,
-      'aria-selected': true
+      'aria-expanded': true
     });
 
-    $target.stop().slideDown(this.options.slideSpeed, () => {
+    $target.finish().slideDown(this.options.slideSpeed, () => {
       /**
        * Fires when the tab is done opening.
        * @event Accordion#down
@@ -3018,11 +3089,10 @@ class Accordion extends Plugin {
     $targetItem.removeClass('is-active');
 
     $(`#${targetContentId}`).attr({
-     'aria-expanded': false,
-     'aria-selected': false
+     'aria-expanded': false
     });
 
-    $target.stop().slideUp(this.options.slideSpeed, () => {
+    $target.finish().slideUp(this.options.slideSpeed, () => {
       /**
        * Fires when the tab is done collapsing up.
        * @event Accordion#up
@@ -3166,7 +3236,6 @@ class AccordionMenu extends Plugin {
 
     this.$element.find('[data-submenu]').not('.is-active').slideUp(0);//.find('a').css('padding-left', '1rem');
     this.$element.attr({
-      'role': 'tree',
       'aria-multiselectable': this.options.multiOpen
     });
 
@@ -3200,9 +3269,6 @@ class AccordionMenu extends Plugin {
         'id': subId
       });
     });
-    this.$element.find('li').attr({
-      'role': 'treeitem'
-    });
     var initPanes = this.$element.find('.is-active');
     if (initPanes.length) {
       initPanes.each(function() {
@@ -3224,7 +3290,7 @@ class AccordionMenu extends Plugin {
 
       if ($submenu.length) {
         if (_this.options.submenuToggle) {
-          $(this).children('.submenu-toggle').off('click.zf.accordionMenu').on('click.zf.accordionMenu', function(e) {
+          $(this).children('.submenu-toggle').off('click.zf.accordionMenu').on('click.zf.accordionMenu', function() {
             _this.toggle($submenu);
           });
         } else {
@@ -3493,8 +3559,6 @@ class Drilldown extends Plugin {
       'ARROW_DOWN': 'down',
       'ARROW_LEFT': 'previous',
       'ESCAPE': 'close',
-      'TAB': 'down',
-      'SHIFT_TAB': 'up'
     });
   }
 
@@ -3510,12 +3574,11 @@ class Drilldown extends Plugin {
     }
 
     this.$element.attr({
-      'role': 'tree',
       'aria-multiselectable': false
     });
     this.$submenuAnchors = this.$element.find('li.is-drilldown-submenu-parent').children('a');
     this.$submenus = this.$submenuAnchors.parent('li').children('[data-submenu]').attr('role', 'group');
-    this.$menuItems = this.$element.find('li').not('.js-drilldown-back').attr('role', 'treeitem').find('a');
+    this.$menuItems = this.$element.find('li').not('.js-drilldown-back').find('a');
 
     // Set the main menu as current by default (unless a submenu is selected)
     // Used to set the wrapper height when the drilldown is closed/reopened from any (sub)menu
@@ -3559,7 +3622,7 @@ class Drilldown extends Plugin {
     this.$submenus.each(function(){
       var $menu = $(this),
           $back = $menu.find('.js-drilldown-back');
-      if(!$back.length){
+      if(!$back.length) {
         switch (_this.options.backButtonPosition) {
           case "bottom":
             $menu.append(_this.options.backButton);
@@ -3606,7 +3669,7 @@ class Drilldown extends Plugin {
     var _this = this;
 
     $elem.off('click.zf.drilldown')
-    .on('click.zf.drilldown', function(e){
+    .on('click.zf.drilldown', function(e) {
       if($(e.target).parentsUntil('ul', 'li').hasClass('is-drilldown-submenu-parent')){
         e.preventDefault();
       }
@@ -3618,9 +3681,9 @@ class Drilldown extends Plugin {
 
       if(_this.options.closeOnClick){
         var $body = $('body');
-        $body.off('.zf.drilldown').on('click.zf.drilldown', function(e){
-          if (e.target === _this.$element[0] || $.contains(_this.$element[0], e.target)) { return; }
-          e.preventDefault();
+        $body.off('.zf.drilldown').on('click.zf.drilldown', function(ev) {
+          if (ev.target === _this.$element[0] || $.contains(_this.$element[0], ev.target)) { return; }
+          ev.preventDefault();
           _this._hideAll();
           $body.off('.zf.drilldown');
         });
@@ -3648,7 +3711,7 @@ class Drilldown extends Plugin {
    */
   _scrollTop() {
     var _this = this;
-    var $scrollTopElement = _this.options.scrollTopElement!=''?$(_this.options.scrollTopElement):_this.$element,
+    var $scrollTopElement = _this.options.scrollTopElement !== ''?$(_this.options.scrollTopElement):_this.$element,
         scrollPos = parseInt($scrollTopElement.offset().top+_this.options.scrollTopOffset, 10);
     $('html, body').stop(true).animate({ scrollTop: scrollPos }, _this.options.animationDuration, _this.options.animationEasing,function(){
       /**
@@ -3753,6 +3816,7 @@ class Drilldown extends Plugin {
   _hideAll() {
     var $elem = this.$element.find('.is-drilldown-submenu.is-active');
     $elem.addClass('is-closing');
+    $elem.parent().closest('ul').removeClass('invisible');
 
     if (this.options.autoHeight) {
       const calcHeight = $elem.parent().closest('ul').data('calcHeight');
@@ -3786,14 +3850,16 @@ class Drilldown extends Plugin {
     var _this = this;
     $elem.off('click.zf.drilldown');
     $elem.children('.js-drilldown-back')
-      .on('click.zf.drilldown', function(e){
-        // console.log('mouseup on back');
+      .on('click.zf.drilldown', function() {
         _this._hide($elem);
 
         // If there is a parent submenu, call show
         let parentSubMenu = $elem.parent('li').parent('ul').parent('li');
         if (parentSubMenu.length) {
           _this._show(parentSubMenu);
+        }
+        else {
+          _this.$currentMenu = _this.$element;
         }
       });
   }
@@ -3807,8 +3873,8 @@ class Drilldown extends Plugin {
     var _this = this;
     this.$menuItems.not('.is-drilldown-submenu-parent')
         .off('click.zf.drilldown')
-        .on('click.zf.drilldown', function(e){
-          setTimeout(function(){
+        .on('click.zf.drilldown', function() {
+          setTimeout(function() {
             _this._hideAll();
           }, 0);
       });
@@ -3858,7 +3924,7 @@ class Drilldown extends Plugin {
 
     // Reset drilldown
     var $expandedSubmenus = this.$element.find('li[aria-expanded="true"] > ul[data-submenu]');
-    $expandedSubmenus.each(function(index) {
+    $expandedSubmenus.each(function() {
       _this._setHideSubMenuClasses($(this));
     });
 
@@ -3867,7 +3933,7 @@ class Drilldown extends Plugin {
 
     // If target menu is root, focus first link & exit
     if ($elem.is('[data-drilldown]')) {
-      if (autoFocus === true) $elem.find('li[role="treeitem"] > a').first().focus();
+      if (autoFocus === true) $elem.find('li > a').first().focus();
       if (this.options.autoHeight) this.$wrapper.css('height', $elem.data('calcHeight'));
       return;
     }
@@ -3883,14 +3949,14 @@ class Drilldown extends Plugin {
         _this.$wrapper.css('height', $(this).data('calcHeight'));
       }
 
-      var isLastChild = index == $submenus.length - 1;
+      var isLastChild = index === $submenus.length - 1;
 
       // Add transitionsend listener to last child (root due to reverse order) to open target menu's first link
       // Last child makes sure the event gets always triggered even if going through several menus
       if (isLastChild === true) {
         $(this).one(transitionend($(this)), () => {
           if (autoFocus === true) {
-            $elem.find('li[role="treeitem"] > a').first().focus();
+            $elem.find('li > a').first().focus();
           }
         });
       }
@@ -3911,7 +3977,14 @@ class Drilldown extends Plugin {
     $elem.attr('aria-expanded', true);
 
     this.$currentMenu = $submenu;
-    $submenu.addClass('is-active').removeClass('invisible').attr('aria-hidden', false);
+
+    //hide drilldown parent menu when submenu is open
+    // this removes it from the dom so that the tab key will take the user to the next visible element
+    $elem.parent().closest('ul').addClass('invisible');
+
+    // add visible class to submenu to override invisible class above
+    $submenu.addClass('is-active visible').removeClass('invisible').attr('aria-hidden', false);
+
     if (this.options.autoHeight) {
       this.$wrapper.css({ height: $submenu.data('calcHeight') });
     }
@@ -3931,11 +4004,12 @@ class Drilldown extends Plugin {
    */
   _hide($elem) {
     if(this.options.autoHeight) this.$wrapper.css({height:$elem.parent().closest('ul').data('calcHeight')});
+    $elem.parent().closest('ul').removeClass('invisible');
     $elem.parent('li').attr('aria-expanded', false);
     $elem.attr('aria-hidden', true);
     $elem.addClass('is-closing')
          .one(transitionend($elem), function(){
-           $elem.removeClass('is-active is-closing');
+           $elem.removeClass('is-active is-closing visible');
            $elem.blur().addClass('invisible');
          });
     /**
@@ -3956,7 +4030,6 @@ class Drilldown extends Plugin {
 
     // Recalculate menu heights and total max height
     this.$submenus.add(this.$element).each(function(){
-      var numOfElems = $(this).children('li').length;
       var height = Box.GetDimensions(this).height;
 
       maxHeight = height > maxHeight ? height : maxHeight;
@@ -3967,7 +4040,7 @@ class Drilldown extends Plugin {
     });
 
     if (this.options.autoHeight)
-      result['height'] = this.$currentMenu.data('calcHeight');
+      result.height = this.$currentMenu.data('calcHeight');
     else
       result['min-height'] = `${maxHeight}px`;
 
@@ -3981,13 +4054,14 @@ class Drilldown extends Plugin {
    * @function
    */
   _destroy() {
+    $('body').off('.zf.drilldown');
     if(this.options.scrollTop) this.$element.off('.zf.drilldown',this._bindHandler);
     this._hideAll();
 	  this.$element.off('mutateme.zf.trigger');
     Nest.Burn(this.$element, 'drilldown');
     this.$element.unwrap()
                  .find('.js-drilldown-back, .is-submenu-parent-item').remove()
-                 .end().find('.is-active, .is-closing, .is-drilldown-submenu').removeClass('is-active is-closing is-drilldown-submenu')
+                 .end().find('.is-active, .is-closing, .is-drilldown-submenu').removeClass('is-active is-closing is-drilldown-submenu').off('transitionend otransitionend webkitTransitionEnd')
                  .end().find('[data-submenu]').removeAttr('aria-hidden tabindex role');
     this.$submenuAnchors.each(function() {
       $(this).off('.zf.drilldown');
@@ -4001,7 +4075,7 @@ class Drilldown extends Plugin {
       $link.removeAttr('tabindex');
       if($link.data('savedHref')){
         $link.attr('href', $link.data('savedHref')).removeData('savedHref');
-      }else{ return; }
+      }else { return; }
     });
   };
 }
@@ -4198,7 +4272,7 @@ class Positionable extends Plugin {
   }
 
   _alignmentsExhausted(position) {
-    return this.triedPositions[position] && this.triedPositions[position].length == ALIGNMENTS[position].length;
+    return this.triedPositions[position] && this.triedPositions[position].length === ALIGNMENTS[position].length;
   }
 
 
@@ -4361,7 +4435,7 @@ class Dropdown extends Positionable {
 
     if(this.options.parentClass){
       this.$parent = this.$element.parents('.' + this.options.parentClass);
-    }else{
+    }else {
       this.$parent = null;
     }
 
@@ -4496,8 +4570,7 @@ class Dropdown extends Positionable {
     }
     this.$anchors.add(this.$element).on('keydown.zf.dropdown', function(e) {
 
-      var $target = $(this),
-        visibleFocusableElements = Keyboard.findFocusable(_this.$element);
+      var $target = $(this);
 
       Keyboard.handleKey(e, 'Dropdown', {
         open: function() {
@@ -4612,7 +4685,7 @@ class Dropdown extends Positionable {
     if(this.$element.hasClass('is-open')){
       if(this.$anchors.data('hover')) return;
       this.close();
-    }else{
+    }else {
       this.open();
     }
   }
@@ -4855,7 +4928,7 @@ class DropdownMenu extends Plugin {
 
     // Handle Leaf element Clicks
     if(_this.options.closeOnClickInside){
-      this.$menuItems.on('click.zf.dropdownMenu', function(e) {
+      this.$menuItems.on('click.zf.dropdownMenu', function() {
         var $elem = $(this),
             hasSub = $elem.hasClass(parClass);
         if(!hasSub){
@@ -4864,8 +4937,10 @@ class DropdownMenu extends Plugin {
       });
     }
 
+    if (hasTouch && this.options.disableHoverOnTouch) this.options.disableHover = true;
+
     if (!this.options.disableHover) {
-      this.$menuItems.on('mouseenter.zf.dropdownMenu', function (e) {
+      this.$menuItems.on('mouseenter.zf.dropdownMenu', function () {
         var $elem = $(this),
           hasSub = $elem.hasClass(parClass);
 
@@ -4875,7 +4950,7 @@ class DropdownMenu extends Plugin {
             _this._show($elem.children('.is-dropdown-submenu'));
           }, _this.options.hoverDelay));
         }
-      }).on('mouseleave.zf.dropdownMenu', ignoreMousedisappear(function (e) {
+      }).on('mouseleave.zf.dropdownMenu', ignoreMousedisappear(function () {
         var $elem = $(this),
             hasSub = $elem.hasClass(parClass);
         if (hasSub && _this.options.autoclose) {
@@ -5063,7 +5138,7 @@ class DropdownMenu extends Plugin {
     if ($elem && $elem.length) {
       $toClose = $elem;
     } else if (typeof idx !== 'undefined') {
-      $toClose = this.$tabs.not(function(i, el) {
+      $toClose = this.$tabs.not(function(i) {
         return i === idx;
       });
     }
@@ -5122,6 +5197,13 @@ DropdownMenu.defaults = {
    * @default false
    */
   disableHover: false,
+  /**
+   * Disallows hover on touch devices
+   * @option
+   * @type {boolean}
+   * @default true
+   */
+  disableHoverOnTouch: true,
   /**
    * Allow a submenu to automatically close on a mouseleave event, if not clicked open.
    * @option
@@ -5246,13 +5328,13 @@ class Equalizer extends Plugin {
     if(this.options.equalizeOn){
       tooSmall = this._checkMQ();
       $(window).on('changed.zf.mediaquery', this._checkMQ.bind(this));
-    }else{
+    }else {
       this._events();
     }
     if((typeof tooSmall !== 'undefined' && tooSmall === false) || typeof tooSmall === 'undefined'){
       if(imgs.length){
         onImagesLoaded(imgs, this._reflow.bind(this));
-      }else{
+      }else {
         this._reflow();
       }
     }
@@ -5275,7 +5357,7 @@ class Equalizer extends Plugin {
    * function to handle $elements resizeme.zf.trigger, with bound this on _bindHandler.onResizeMeBound
    * @private
    */
-  _onResizeMe(e) {
+  _onResizeMe() {
     this._reflow();
   }
 
@@ -5295,7 +5377,7 @@ class Equalizer extends Plugin {
     this._pauseEvents();
     if(this.hasNested){
       this.$element.on('postequalized.zf.equalizer', this._bindHandler.onPostEqualizedBound);
-    }else{
+    }else {
       this.$element.on('resizeme.zf.trigger', this._bindHandler.onResizeMeBound);
 	  this.$element.on('mutateme.zf.trigger', this._bindHandler.onResizeMeBound);
     }
@@ -5313,7 +5395,7 @@ class Equalizer extends Plugin {
         this._pauseEvents();
         this.$watched.css('height', 'auto');
       }
-    }else{
+    }else {
       if(!this.isOn){
         this._events();
       }
@@ -5342,7 +5424,7 @@ class Equalizer extends Plugin {
     }
     if (this.options.equalizeByRow) {
       this.getHeightsByRow(this.applyHeightByRow.bind(this));
-    }else{
+    }else {
       this.getHeights(this.applyHeight.bind(this));
     }
   }
@@ -5387,7 +5469,7 @@ class Equalizer extends Plugin {
       this.$watched[i].style.height = 'auto';
       //maybe could use this.$watched[i].offsetTop
       var elOffsetTop = $(this.$watched[i]).offset().top;
-      if (elOffsetTop!=lastElTopOffset) {
+      if (elOffsetTop !== lastElTopOffset) {
         group++;
         groups[group] = [];
         lastElTopOffset=elOffsetTop;
@@ -5527,7 +5609,7 @@ class Interchange extends Plugin {
 
     // Triggers init is idempotent, just need to make sure it is initialized
     Triggers.init($);
-    
+
     this._init();
     this._events();
   }
@@ -5595,7 +5677,7 @@ class Interchange extends Plugin {
     if (typeof this.options.type === 'undefined')
       this.options.type = 'auto';
     else if (types.indexOf(this.options.type) === -1) {
-      console.log(`Warning: invalid value "${this.options.type}" for Interchange option "type"`);
+      console.warn(`Warning: invalid value "${this.options.type}" for Interchange option "type"`);
       this.options.type = 'auto';
     }
   }
@@ -5618,10 +5700,9 @@ class Interchange extends Plugin {
    * Checks the Interchange element for the provided media query + content pairings
    * @function
    * @private
-   * @param {Object} element - jQuery object that is an Interchange instance
    * @returns {Array} scenarios - Array of objects that have 'mq' and 'path' keys with corresponding keys
    */
-  _generateRules(element) {
+  _generateRules() {
     var rulesList = [];
     var rules;
 
@@ -5981,7 +6062,7 @@ class Magellan extends Plugin {
         });
     });
 
-    this._deepLinkScroll = function(e) {
+    this._deepLinkScroll = function() {
       if(_this.options.deepLinking) {
         _this.scrollToLoc(window.location.hash);
       }
@@ -6035,12 +6116,12 @@ class Magellan extends Plugin {
 
     let activeIdx;
     // Before the first point: no link
-    if(newScrollPos < this.points[0]);
+    if(newScrollPos < this.points[0] - this.options.offset - (isScrollingUp ? this.options.threshold : 0));
     // At the bottom of the page: last link
     else if(newScrollPos + this.winHeight === this.docHeight){ activeIdx = this.points.length - 1; }
     // Otherwhise, use the last visible link
-    else{
-      const visibleLinks = this.points.filter((p, i) => {
+    else {
+      const visibleLinks = this.points.filter((p) => {
         return (p - this.options.offset - (isScrollingUp ? this.options.threshold : 0)) <= newScrollPos;
       });
       activeIdx = visibleLinks.length ? visibleLinks.length - 1 : 0;
@@ -6052,7 +6133,7 @@ class Magellan extends Plugin {
     if(typeof activeIdx !== 'undefined'){
       this.$active = this.$links.filter('[href="#' + this.$targets.eq(activeIdx).data('magellan-target') + '"]');
       if (this.$active.length) activeHash = this.$active[0].getAttribute('href');
-    }else{
+    }else {
       this.$active = $();
     }
     const isNewActive = !(!this.$active.length && !$oldActive.length) && !this.$active.is($oldActive);
@@ -6071,10 +6152,10 @@ class Magellan extends Plugin {
         const url = activeHash ? activeHash : window.location.pathname + window.location.search;
         if(this.options.updateHistory){
           window.history.pushState({}, '', url);
-        }else{
+        }else {
           window.history.replaceState({}, '', url);
         }
-      }else{
+      }else {
         window.location.hash = activeHash;
       }
     }
@@ -6475,72 +6556,73 @@ class OffCanvas extends Plugin {
    * @function
    * @private
    */
-  _stopScrolling(event) {
+  _stopScrolling() {
     return false;
   }
 
   /**
-   * Tag the element given as context whether it can be scrolled up and down.
-   * Used to allow or prevent it to scroll. See `_stopScrollPropagation`.
-   *
-   * Taken and adapted from http://stackoverflow.com/questions/16889447/prevent-full-page-scrolling-ios
-   * Only really works for y, not sure how to extend to x or if we need to.
-   *
-   * @function
+   * Save current finger y-position
+   * @param event
    * @private
    */
   _recordScrollable(event) {
-    let elem = this; // called from event handler context with this as elem
-
-     // If the element is scrollable (content overflows), then...
-    if (elem.scrollHeight !== elem.clientHeight) {
-      // If we're at the top, scroll down one pixel to allow scrolling up
-      if (elem.scrollTop === 0) {
-        elem.scrollTop = 1;
-      }
-      // If we're at the bottom, scroll up one pixel to allow scrolling down
-      if (elem.scrollTop === elem.scrollHeight - elem.clientHeight) {
-        elem.scrollTop = elem.scrollHeight - elem.clientHeight - 1;
-      }
-    }
-    elem.allowUp = elem.scrollTop > 0;
-    elem.allowDown = elem.scrollTop < (elem.scrollHeight - elem.clientHeight);
-    elem.lastY = event.originalEvent.pageY;
+    const elem = this;
+    elem.lastY = event.touches[0].pageY;
   }
 
   /**
-   * Prevent the given event propagation if the element given as context can scroll.
-   * Used to preserve the element scrolling on mobile (`touchmove`) when the document
-   * scrolling is prevented. See https://git.io/zf-9707.
-   * @function
+   * Prevent further scrolling when it hits the edges
+   * @param event
    * @private
    */
-  _stopScrollPropagation(event) {
-    let elem = this; // called from event handler context with this as elem
-    let parent; // off-canvas elem if called from inner scrollbox
-    let up = event.pageY < elem.lastY;
-    let down = !up;
-    elem.lastY = event.pageY;
+  _preventDefaultAtEdges(event) {
+    const elem = this;
+    const _this = event.data;
+    const delta = elem.lastY - event.touches[0].pageY;
+    elem.lastY = event.touches[0].pageY;
 
-    if((up && elem.allowUp) || (down && elem.allowDown)) {
-      // It is not recommended to stop event propagation (the user cannot watch it),
-      // but in this case this is the only solution we have.
-      event.stopPropagation();
-
-      // If elem is inner scrollbox we are scrolling the outer off-canvas down/up once the box end has been reached
-      // This lets the user continue to touch move the off-canvas without the need to place the finger outside the scrollbox
-      if (elem.hasAttribute('data-off-canvas-scrollbox')) {
-        parent = elem.closest('[data-off-canvas], [data-off-canvas-scrollbox-outer]');
-        if (elem.scrollTop <= 1 && parent.scrollTop > 0) {
-          parent.scrollTop--;
-        } else if (elem.scrollTop >= elem.scrollHeight - elem.clientHeight - 1 && parent.scrollTop < parent.scrollHeight - parent.clientHeight) {
-          parent.scrollTop++;
-        }
-      }
-
-    } else {
+    if (!_this._canScroll(delta, elem)) {
       event.preventDefault();
     }
+  }
+
+  /**
+   * Handle continuous scrolling of scrollbox
+   * Don't bubble up to _preventDefaultAtEdges
+   * @param event
+   * @private
+   */
+  _scrollboxTouchMoved(event) {
+    const elem = this;
+    const _this = event.data;
+    const parent = elem.closest('[data-off-canvas], [data-off-canvas-scrollbox-outer]');
+    const delta = elem.lastY - event.touches[0].pageY;
+    parent.lastY = elem.lastY = event.touches[0].pageY;
+
+    event.stopPropagation();
+
+    if (!_this._canScroll(delta, elem)) {
+      if (!_this._canScroll(delta, parent)) {
+        event.preventDefault();
+      } else {
+        parent.scrollTop += delta;
+      }
+    }
+  }
+
+  /**
+   * Detect possibility of scrolling
+   * @param delta
+   * @param elem
+   * @returns boolean
+   * @private
+   */
+  _canScroll(delta, elem) {
+    const up = delta < 0;
+    const down = delta > 0;
+    const allowUp = elem.scrollTop > 0;
+    const allowDown = elem.scrollTop < elem.scrollHeight - elem.clientHeight;
+    return up && allowUp || down && allowDown;
   }
 
   /**
@@ -6582,9 +6664,9 @@ class OffCanvas extends Plugin {
     if (this.options.contentScroll === false) {
       $('body').addClass('is-off-canvas-open').on('touchmove', this._stopScrolling);
       this.$element.on('touchstart', this._recordScrollable);
-      this.$element.on('touchmove', this._stopScrollPropagation);
+      this.$element.on('touchmove', this, this._preventDefaultAtEdges);
       this.$element.on('touchstart', '[data-off-canvas-scrollbox]', this._recordScrollable);
-      this.$element.on('touchmove', '[data-off-canvas-scrollbox]', this._stopScrollPropagation);
+      this.$element.on('touchmove', '[data-off-canvas-scrollbox]', this, this._scrollboxTouchMoved);
     }
 
     if (this.options.contentOverlay === true) {
@@ -6642,7 +6724,7 @@ class OffCanvas extends Plugin {
    * @fires OffCanvas#close
    * @fires OffCanvas#closed
    */
-  close(cb) {
+  close() {
     if (!this.$element.hasClass('is-open') || this.isRevealed) { return; }
 
     /**
@@ -6669,7 +6751,7 @@ class OffCanvas extends Plugin {
 
 
     // Listen to transitionEnd: add class, re-enable scrolling and release focus when done.
-    this.$element.one(transitionend(this.$element), (e) => {
+    this.$element.one(transitionend(this.$element), () => {
 
       this.$element.addClass('is-closed');
       this._removeContentClasses();
@@ -6682,9 +6764,9 @@ class OffCanvas extends Plugin {
       if (this.options.contentScroll === false) {
         $('body').removeClass('is-off-canvas-open').off('touchmove', this._stopScrolling);
         this.$element.off('touchstart', this._recordScrollable);
-        this.$element.off('touchmove', this._stopScrollPropagation);
+        this.$element.off('touchmove', this._preventDefaultAtEdges);
         this.$element.off('touchstart', '[data-off-canvas-scrollbox]', this._recordScrollable);
-        this.$element.off('touchmove', '[data-off-canvas-scrollbox]', this._stopScrollPropagation);
+        this.$element.off('touchmove', '[data-off-canvas-scrollbox]', this._scrollboxTouchMoved);
       }
 
       if (this.options.trapFocus === true) {
@@ -7117,7 +7199,7 @@ class Orbit extends Plugin {
    */
   _reset() {
     // Don't do anything if there are no slides (first run)
-    if (typeof this.$slides == 'undefined') {
+    if (typeof this.$slides === 'undefined') {
       return;
     }
 
@@ -7437,7 +7519,7 @@ class ResponsiveMenu extends Plugin {
    * @param {jQuery} element - jQuery object to make into a dropdown menu.
    * @param {Object} options - Overrides to the default plugin settings.
    */
-  _setup(element, options) {
+  _setup(element) {
     this.$element = $(element);
     this.rules = this.$element.data('responsive-menu');
     this.currentMq = null;
@@ -7606,7 +7688,6 @@ class ResponsiveToggle extends Plugin {
    * @private
    */
   _events() {
-
     this._updateMqHandler = this._update.bind(this);
 
     $(window).on('changed.zf.mediaquery', this._updateMqHandler);
@@ -7737,7 +7818,7 @@ class Reveal extends Plugin {
     this.$anchor = $(`[data-open="${this.id}"]`).length ? $(`[data-open="${this.id}"]`) : $(`[data-toggle="${this.id}"]`);
     this.$anchor.attr({
       'aria-controls': this.id,
-      'aria-haspopup': true,
+      'aria-haspopup': 'dialog',
       'tabindex': 0
     });
 
@@ -7863,9 +7944,9 @@ class Reveal extends Plugin {
    * Handles modal methods on back/forward button clicks or any other event that triggers hashchange.
    * @private
    */
-  _handleState(e) {
+  _handleState() {
     if(window.location.hash === ( '#' + this.id) && !this.isActive){ this.open(); }
-    else{ this.close(); }
+    else { this.close(); }
   }
 
   /**
@@ -7885,7 +7966,7 @@ class Reveal extends Plugin {
   * @param {number} scrollTop - Scroll to restore, html "top" property by default (as set by `_disableScroll`)
   */
   _enableScroll(scrollTop) {
-    scrollTop = scrollTop || parseInt($("html").css("top"));
+    scrollTop = scrollTop || parseInt($("html").css("top"), 10);
     if ($(document).height() > $(window).height()) {
       $("html")
         .css("top", "");
@@ -8120,7 +8201,7 @@ class Reveal extends Plugin {
       // Get the current top before the modal is closed and restore the scroll after.
       // TODO: use component properties instead of HTML properties
       // See https://github.com/foundation/foundation-sites/pull/10786
-      var scrollTop = parseInt($("html").css("top"));
+      var scrollTop = parseInt($("html").css("top"), 10);
 
       if ($('.reveal:visible').length  === 0) {
         _this._removeGlobalClasses(); // also remove .is-reveal-open from the html element when there is no opened reveal
@@ -8336,6 +8417,7 @@ class Slider extends Plugin {
     this.$element = element;
     this.options = $.extend({}, Slider.defaults, this.$element.data(), options);
     this.className = 'Slider'; // ie9 back compat
+    this.initialized = false;
 
   // Touch and Triggers inits are idempotent, we just need to make sure it's initialied.
     Touch.init($);
@@ -8349,18 +8431,18 @@ class Slider extends Plugin {
         'ARROW_UP': 'increase',
         'ARROW_DOWN': 'decrease',
         'ARROW_LEFT': 'decrease',
-        'SHIFT_ARROW_RIGHT': 'increase_fast',
-        'SHIFT_ARROW_UP': 'increase_fast',
-        'SHIFT_ARROW_DOWN': 'decrease_fast',
-        'SHIFT_ARROW_LEFT': 'decrease_fast',
+        'SHIFT_ARROW_RIGHT': 'increaseFast',
+        'SHIFT_ARROW_UP': 'increaseFast',
+        'SHIFT_ARROW_DOWN': 'decreaseFast',
+        'SHIFT_ARROW_LEFT': 'decreaseFast',
         'HOME': 'min',
         'END': 'max'
       },
       'rtl': {
         'ARROW_LEFT': 'increase',
         'ARROW_RIGHT': 'decrease',
-        'SHIFT_ARROW_LEFT': 'increase_fast',
-        'SHIFT_ARROW_RIGHT': 'decrease_fast'
+        'SHIFT_ARROW_LEFT': 'increaseFast',
+        'SHIFT_ARROW_RIGHT': 'decreaseFast'
       }
     });
   }
@@ -8377,6 +8459,7 @@ class Slider extends Plugin {
     this.$handle = this.handles.eq(0);
     this.$input = this.inputs.length ? this.inputs.eq(0) : $(`#${this.$handle.attr('aria-controls')}`);
     this.$fill = this.$element.find('[data-slider-fill]').css(this.options.vertical ? 'height' : 'width', 0);
+
     if (this.options.disabled || this.$element.hasClass(this.options.disabledClass)) {
       this.options.disabled = true;
       this.$element.addClass(this.options.disabledClass);
@@ -8405,6 +8488,7 @@ class Slider extends Plugin {
     this.setHandles();
 
     this._events();
+    this.initialized = true;
   }
 
   setHandles() {
@@ -8544,7 +8628,7 @@ class Slider extends Plugin {
           //empty variable, will be used for min-height/width for fill bar
           dim,
           //percentage w/h of the handle compared to the slider bar
-          handlePct =  ~~(percent(handleDim, elemDim) * 100);
+          handlePct =  Math.floor(percent(handleDim, elemDim) * 100);
       //if left handle, the math is slightly different than if it's the right handle, and the left/top property needs to be changed for the fill bar
       if (isLeftHndl) {
         //left or top percentage value to apply to the fill bar.
@@ -8564,14 +8648,6 @@ class Slider extends Plugin {
       // assign the min-height/width to our css object
       css[`min-${hOrW}`] = `${dim}%`;
     }
-
-    this.$element.one('finished.zf.animate', function() {
-                    /**
-                     * Fires when the handle is done moving.
-                     * @event Slider#moved
-                     */
-                    _this.$element.trigger('moved.zf.slider', [$hndl]);
-                });
 
     //because we don't know exactly how the handle will be moved, check the amount of time it should take to move.
     var moveTime = this.$element.data('dragging') ? 1000/60 : this.options.moveTime;
@@ -8596,15 +8672,23 @@ class Slider extends Plugin {
       }
     });
 
-
-    /**
-     * Fires when the value has not been change for a given time.
-     * @event Slider#changed
-     */
-    clearTimeout(_this.timeout);
-    _this.timeout = setTimeout(function(){
-      _this.$element.trigger('changed.zf.slider', [$hndl]);
-    }, _this.options.changedDelay);
+    if (this.initialized) {
+      this.$element.one('finished.zf.animate', function() {
+        /**
+         * Fires when the handle is done moving.
+         * @event Slider#moved
+         */
+        _this.$element.trigger('moved.zf.slider', [$hndl]);
+      });
+      /**
+       * Fires when the value has not been change for a given time.
+       * @event Slider#changed
+       */
+      clearTimeout(_this.timeout);
+      _this.timeout = setTimeout(function(){
+        _this.$element.trigger('changed.zf.slider', [$hndl]);
+      }, _this.options.changedDelay);
+    }
   }
 
   /**
@@ -8717,7 +8801,7 @@ class Slider extends Plugin {
     var val,
       step = this.options.step,
       div = parseFloat(step/2),
-      left, prev_val, next_val;
+      left, previousVal, nextVal;
     if (!!$handle) {
       val = parseFloat($handle.attr('aria-valuenow'));
     }
@@ -8729,12 +8813,12 @@ class Slider extends Plugin {
     } else {
       left = step + (val % step);
     }
-    prev_val = val - left;
-    next_val = prev_val + step;
+    previousVal = val - left;
+    nextVal = previousVal + step;
     if (left === 0) {
       return val;
     }
-    val = val >= prev_val + div ? next_val : prev_val;
+    val = val >= previousVal + div ? nextVal : previousVal;
     return val;
   }
 
@@ -8770,7 +8854,7 @@ class Slider extends Plugin {
       // listen for the enter key and trigger a change
       // @see https://html.spec.whatwg.org/multipage/input.html#common-input-element-events
       this.inputs.off('keyup.zf.slider').on('keyup.zf.slider', function (e) {
-        if(e.keyCode == 13) handleChangeEvent.call(this, e);
+        if(e.keyCode === 13) handleChangeEvent.call(this, e);
       });
 
       this.inputs.off('change.zf.slider').on('change.zf.slider', handleChangeEvent);
@@ -8802,12 +8886,12 @@ class Slider extends Plugin {
 
           curHandle = $(e.currentTarget);
 
-          $body.on('mousemove.zf.slider', function(e) {
-            e.preventDefault();
-            _this._handleEvent(e, curHandle);
+          $body.on('mousemove.zf.slider', function(ev) {
+            ev.preventDefault();
+            _this._handleEvent(ev, curHandle);
 
-          }).on('mouseup.zf.slider', function(e) {
-            _this._handleEvent(e, curHandle);
+          }).on('mouseup.zf.slider', function(ev) {
+            _this._handleEvent(ev, curHandle);
 
             $handle.removeClass('is-dragging');
             _this.$fill.removeClass('is-dragging');
@@ -8825,7 +8909,7 @@ class Slider extends Plugin {
     $handle.off('keydown.zf.slider').on('keydown.zf.slider', function(e) {
       var _$handle = $(this),
           idx = _this.options.doubleSided ? _this.handles.index(_$handle) : 0,
-          oldValue = parseFloat(_this.inputs.eq(idx).val()),
+          oldValue = parseFloat($handle.attr('aria-valuenow')),
           newValue;
 
       // handle keyboard event with keyboard util
@@ -8836,10 +8920,10 @@ class Slider extends Plugin {
         increase: function() {
           newValue = oldValue + _this.options.step;
         },
-        decrease_fast: function() {
+        decreaseFast: function() {
           newValue = oldValue - _this.options.step * 10;
         },
-        increase_fast: function() {
+        increaseFast: function() {
           newValue = oldValue + _this.options.step * 10;
         },
         min: function() {
@@ -9075,7 +9159,7 @@ class Sticky extends Plugin {
     this.isStuck = false;
     this.onLoadListener = onLoad($(window), function () {
       //We calculate the container height to have correct values for anchor points offset calculation.
-      _this.containerHeight = _this.$element.css("display") == "none" ? 0 : _this.$element[0].getBoundingClientRect().height;
+      _this.containerHeight = _this.$element.css("display") === "none" ? 0 : _this.$element[0].getBoundingClientRect().height;
       _this.$container.css('height', _this.containerHeight);
       _this.elemHeight = _this.containerHeight;
       if (_this.options.anchor !== '') {
@@ -9102,8 +9186,8 @@ class Sticky extends Plugin {
    * @private
    */
   _parsePoints() {
-    var top = this.options.topAnchor == "" ? 1 : this.options.topAnchor,
-        btm = this.options.btmAnchor== "" ? document.documentElement.scrollHeight : this.options.btmAnchor,
+    var top = this.options.topAnchor === "" ? 1 : this.options.topAnchor,
+        btm = this.options.btmAnchor === "" ? document.documentElement.scrollHeight : this.options.btmAnchor,
         pts = [top, btm],
         breaks = {};
     for (var i = 0, len = pts.length; i < len && pts[i]; i++) {
@@ -9139,7 +9223,7 @@ class Sticky extends Plugin {
     if (this.canStick) {
       this.isOn = true;
       $(window).off(scrollListener)
-               .on(scrollListener, function(e) {
+               .on(scrollListener, function() {
                  if (_this.scrollCount === 0) {
                    _this.scrollCount = _this.options.checkEvery;
                    _this._setSizes(function() {
@@ -9153,16 +9237,16 @@ class Sticky extends Plugin {
     }
 
     this.$element.off('resizeme.zf.trigger')
-                 .on('resizeme.zf.trigger', function(e, el) {
+                 .on('resizeme.zf.trigger', function() {
                     _this._eventsHandler(id);
     });
 
-    this.$element.on('mutateme.zf.trigger', function (e, el) {
+    this.$element.on('mutateme.zf.trigger', function () {
         _this._eventsHandler(id);
     });
 
     if(this.$anchor) {
-      this.$anchor.on('mutateme.zf.trigger', function (e, el) {
+      this.$anchor.on('mutateme.zf.trigger', function () {
           _this._eventsHandler(id);
       });
     }
@@ -9291,11 +9375,11 @@ class Sticky extends Plugin {
 
     css[mrgn] = 0;
 
-    css['bottom'] = 'auto';
+    css.bottom = 'auto';
     if(isTop) {
-      css['top'] = 0;
+      css.top = 0;
     } else {
-      css['top'] = anchorPt;
+      css.top = anchorPt;
     }
 
     this.isStuck = false;
@@ -9323,9 +9407,9 @@ class Sticky extends Plugin {
     }
 
     var newElemWidth = this.$container[0].getBoundingClientRect().width,
-        comp = window.getComputedStyle(this.$container[0]),
-        pdngl = parseInt(comp['padding-left'], 10),
-        pdngr = parseInt(comp['padding-right'], 10);
+      comp = window.getComputedStyle(this.$container[0]),
+      pdngl = parseInt(comp['padding-left'], 10),
+      pdngr = parseInt(comp['padding-right'], 10);
 
     if (this.$anchor && this.$anchor.length) {
       this.anchorHeight = this.$anchor[0].getBoundingClientRect().height;
@@ -9341,7 +9425,7 @@ class Sticky extends Plugin {
     if (this.options.dynamicHeight || !this.containerHeight) {
       // Get the sticked element height and apply it to the container to "hold the place"
       var newContainerHeight = this.$element[0].getBoundingClientRect().height || this.containerHeight;
-      newContainerHeight = this.$element.css("display") == "none" ? 0 : newContainerHeight;
+      newContainerHeight = this.$element.css("display") === "none" ? 0 : newContainerHeight;
       this.$container.css('height', newContainerHeight);
       this.containerHeight = newContainerHeight;
     }
@@ -9649,7 +9733,7 @@ class Tabs extends Plugin {
         // Roll up a little to show the titles
         if (this.options.deepLinkSmudge) {
           var offset = this.$element.offset();
-          $('html, body').animate({ scrollTop: offset.top }, this.options.deepLinkSmudgeDelay);
+          $('html, body').animate({ scrollTop: offset.top - this.options.deepLinkSmudgeOffset}, this.options.deepLinkSmudgeDelay);
         }
 
         /**
@@ -9831,7 +9915,7 @@ class Tabs extends Plugin {
    * @function
    */
   _collapseTab($target) {
-    var $target_anchor = $target
+    var $targetAnchor = $target
       .removeClass(`${this.options.linkActiveClass}`)
       .find('[role="tab"]')
       .attr({
@@ -9839,7 +9923,7 @@ class Tabs extends Plugin {
         'tabindex': -1
       });
 
-    $(`#${$target_anchor.attr('aria-controls')}`)
+    $(`#${$targetAnchor.attr('aria-controls')}`)
       .removeClass(`${this.options.panelActiveClass}`)
       .attr({ 'aria-hidden': 'true' });
   }
@@ -9902,9 +9986,13 @@ class Tabs extends Plugin {
     var max = 0,
         _this = this; // Lock down the `this` value for the root tabs object
 
+    if (!this.$tabContent) {
+      return;
+    }
+
     this.$tabContent
       .find(`.${this.options.panelClass}`)
-      .css('height', '')
+      .css('min-height', '')
       .each(function() {
 
         var panel = $(this),
@@ -9925,7 +10013,7 @@ class Tabs extends Plugin {
 
         max = temp > max ? temp : max;
       })
-      .css('height', `${max}px`);
+      .css('min-height', `${max}px`);
   }
 
   /**
@@ -9980,6 +10068,14 @@ Tabs.defaults = {
    * @default 300
    */
   deepLinkSmudgeDelay: 300,
+
+  /**
+   * If `deepLinkSmudge` is enabled, animation offset from the top for the deep link adjustment
+   * @option
+   * @type {number}
+   * @default 0
+   */
+  deepLinkSmudgeOffset: 0,
 
   /**
    * If `deepLink` is enabled, update the browser history with the open tab
@@ -10109,7 +10205,7 @@ class Toggler extends Plugin {
     else {
       input = this.options.toggler;
       if (typeof input !== 'string' || !input.length) {
-        throw new Error(`The 'toogler' option containing the target class is required, got "${input}"`);
+        throw new Error(`The 'toggler' option containing the target class is required, got "${input}"`);
       }
       // Allow for a . at the beginning of the string
       this.className = input[0] === '.' ? input.slice(1) : input;
@@ -10371,7 +10467,6 @@ class Tooltip extends Positionable {
       'aria-hidden': false
     });
     _this.isActive = true;
-    // console.log(this.template);
     this.template.stop().hide().css('visibility', '').fadeIn(this.options.fadeInDuration, function() {
       //maybe do stuff?
     });
@@ -10388,7 +10483,6 @@ class Tooltip extends Positionable {
    * @function
    */
   hide() {
-    // console.log('hiding', this.$element.data('yeti-box'));
     var _this = this;
     this.template.stop().attr({
       'aria-hidden': true,
@@ -10412,7 +10506,6 @@ class Tooltip extends Positionable {
   _events() {
     const _this = this;
     const hasTouch = 'ontouchstart' in window || (typeof window.ontouchstart !== 'undefined');
-    const $template = this.template;
     var isFocus = false;
 
     // `disableForTouch: Fully disable the tooltip on touch devices
@@ -10420,14 +10513,14 @@ class Tooltip extends Positionable {
 
     if (!this.options.disableHover) {
       this.$element
-      .on('mouseenter.zf.tooltip', function(e) {
+      .on('mouseenter.zf.tooltip', function() {
         if (!_this.isActive) {
           _this.timeout = setTimeout(function() {
             _this.show();
           }, _this.options.hoverDelay);
         }
       })
-      .on('mouseleave.zf.tooltip', ignoreMousedisappear(function(e) {
+      .on('mouseleave.zf.tooltip', ignoreMousedisappear(function() {
         clearTimeout(_this.timeout);
         if (!isFocus || (_this.isClick && !_this.options.clickOpen)) {
           _this.hide();
@@ -10437,13 +10530,13 @@ class Tooltip extends Positionable {
 
     if (hasTouch) {
       this.$element
-      .on('tap.zf.tooltip touchend.zf.tooltip', function (e) {
+      .on('tap.zf.tooltip touchend.zf.tooltip', function () {
         _this.isActive ? _this.hide() : _this.show();
       });
     }
 
     if (this.options.clickOpen) {
-      this.$element.on('mousedown.zf.tooltip', function(e) {
+      this.$element.on('mousedown.zf.tooltip', function() {
         if (_this.isClick) ; else {
           _this.isClick = true;
           if ((_this.options.disableHover || !_this.$element.attr('tabindex')) && !_this.isActive) {
@@ -10452,7 +10545,7 @@ class Tooltip extends Positionable {
         }
       });
     } else {
-      this.$element.on('mousedown.zf.tooltip', function(e) {
+      this.$element.on('mousedown.zf.tooltip', function() {
         _this.isClick = true;
       });
     }
@@ -10464,7 +10557,7 @@ class Tooltip extends Positionable {
     });
 
     this.$element
-      .on('focus.zf.tooltip', function(e) {
+      .on('focus.zf.tooltip', function() {
         isFocus = true;
         if (_this.isClick) {
           // If we're not showing open on clicks, we need to pretend a click-launched focus isn't
@@ -10476,7 +10569,7 @@ class Tooltip extends Positionable {
         }
       })
 
-      .on('focusout.zf.tooltip', function(e) {
+      .on('focusout.zf.tooltip', function() {
         isFocus = false;
         _this.isClick = false;
         _this.hide();
@@ -10788,6 +10881,7 @@ class ResponsiveAccordionTabs extends Plugin{
           tmpPlugin.destroy();
         }
         catch(e) {
+          console.warn(`Warning: Problems getting Accordion/Tab options: ${e}`);
         }
       }
     }
@@ -10912,7 +11006,7 @@ class ResponsiveAccordionTabs extends Plugin{
    * @see Tabs.selectTab
    * @function
    */
-  open(_target) {
+  open() {
     if (this.currentRule && typeof this.currentRule.open === 'function') {
       return this.currentRule.open(this.currentPlugin, ...arguments);
     }
@@ -10924,7 +11018,7 @@ class ResponsiveAccordionTabs extends Plugin{
    * @see Accordion.up
    * @function
    */
-  close(_target) {
+  close() {
     if (this.currentRule && typeof this.currentRule.close === 'function') {
       return this.currentRule.close(this.currentPlugin, ...arguments);
     }
@@ -10936,7 +11030,7 @@ class ResponsiveAccordionTabs extends Plugin{
    * @see Accordion.toggle
    * @function
    */
-  toggle(_target) {
+  toggle() {
     if (this.currentRule && typeof this.currentRule.toggle === 'function') {
       return this.currentRule.toggle(this.currentPlugin, ...arguments);
     }
