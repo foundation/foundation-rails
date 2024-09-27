@@ -6,6 +6,9 @@
 /// @group functions
 ////
 
+// Patch to fix issue #12080
+$-zf-bp-value: null;
+
 /// Creates an inner box-shadow for only one side
 ///
 /// @param {Keyword} $side - Side the shadow is supposed to appear. Can be `top`, `left`, `right` or `bottom`.
@@ -44,28 +47,25 @@
   width: 0;
   height: 0;
 
-  border: inset $triangle-size;
+  border-style: solid;
+  border-width: $triangle-size;
 
   content: '';
 
   @if ($triangle-direction == down) {
     border-bottom-width: 0;
-    border-top-style: solid;
     border-color: $triangle-color transparent transparent;
   }
   @if ($triangle-direction == up) {
     border-top-width: 0;
-    border-bottom-style: solid;
     border-color: transparent transparent $triangle-color;
   }
   @if ($triangle-direction == right) {
     border-right-width: 0;
-    border-left-style: solid;
     border-color: transparent transparent transparent $triangle-color;
   }
   @if ($triangle-direction == left) {
     border-left-width: 0;
-    border-right-style: solid;
     border-color: transparent $triangle-color transparent transparent;
   }
 }
@@ -91,7 +91,7 @@
   $hover-shadow: ();
 
   // Spacing between bars is calculated based on the total height of the icon and the weight of each bar
-  $spacing: ($height - ($weight * $bars)) / ($bars - 1);
+  $spacing: divide($height - ($weight * $bars), $bars - 1);
 
   @if unit($spacing) == 'px' {
     $spacing: floor($spacing);
@@ -148,9 +148,9 @@
 @mixin background-triangle($color: $black) {
   $rgb: 'rgb%28#{round(red($color))}, #{round(green($color))}, #{round(blue($color))}%29';
 
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' width='32' height='24' viewBox='0 0 32 24'><polygon points='0,0 32,0 16,24' style='fill: #{$rgb}'></polygon></svg>");
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="32" height="24" viewBox="0 0 32 24"><polygon points="0,0 32,0 16,24" style="fill: #{$rgb}"></polygon></svg>');
 
-  @media screen and (min-width:0\0) {
+  @media screen and (min-width: 0\0) {
     @if lightness($color) < 60% {
       // White triangle
       background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAYCAYAAACbU/80AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAIpJREFUeNrEkckNgDAMBBfRkEt0ObRBBdsGXUDgmQfK4XhH2m8czQAAy27R3tsw4Qfe2x8uOO6oYLb6GlOor3GF+swURAOmUJ+RwtEJs9WvTGEYxBXqI1MQAZhCfUQKRzDMVj+TwrAIV6jvSUEkYAr1LSkcyTBb/V+KYfX7xAeusq3sLDtGH3kEGACPWIflNZfhRQAAAABJRU5ErkJggg==');
@@ -192,7 +192,7 @@
   @for $i from 2 through $max {
     &:nth-last-child(#{$i}):first-child,
     &:nth-last-child(#{$i}):first-child ~ #{$elem} {
-      width: percentage(1 / $i);
+      width: percentage(divide(1, $i));
     }
   }
 }
@@ -219,7 +219,7 @@
   height: 1px #{$important};
   padding: 0 #{$important};
   overflow: hidden #{$important};
-  clip: rect(0,0,0,0) #{$important};
+  clip: rect(0, 0, 0, 0) #{$important};
   white-space: nowrap #{$important};
   border: 0 #{$important};
 }
@@ -323,8 +323,7 @@
     }
     $-zf-size: $bp !global;
 
-    @if ($media-queries == true
-      or ($media-queries == 'for-lists' and $-breakpoints-is-a-list)) {
+    @if ($media-queries == true or ($media-queries == 'for-lists' and $-breakpoints-is-a-list)) {
       @include breakpoint($bp) {
         @content;
       }
