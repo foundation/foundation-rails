@@ -143,7 +143,11 @@ $maincontent-class: 'off-canvas-content' !default;
   $transition: $offcanvas-transition-length $offcanvas-transition-timing,
   $fixed: true
 ) {
-  @include disable-mouse-outline;
+  // Set the off-canvas z-index.
+  z-index: $offcanvas-push-zindex;
+  transition: transform $transition;
+  backface-visibility: hidden;
+  background: $background;
 
   @if $fixed == true {
     position: fixed;
@@ -152,18 +156,12 @@ $maincontent-class: 'off-canvas-content' !default;
     position: absolute;
   }
 
-  // Set the off-canvas z-index.
-  z-index: $offcanvas-push-zindex;
+  @include disable-mouse-outline;
 
   // Increase CSS specificity
   &.is-transition-push {
     z-index: $offcanvas-push-zindex;
   }
-
-  transition: transform $transition;
-  backface-visibility: hidden;
-
-  background: $background;
 
   // Hide inactive off-canvas within the content that have the same position
   &.is-closed {
@@ -196,6 +194,7 @@ $maincontent-class: 'off-canvas-content' !default;
     left: 0;
     height: 100%;
     overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
 
     @each $name, $size in $sizes {
       @include breakpoint($name) {
@@ -233,6 +232,7 @@ $maincontent-class: 'off-canvas-content' !default;
     right: 0;
     height: 100%;
     overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
 
     @each $name, $size in $sizes {
       @include breakpoint($name) {
@@ -270,6 +270,7 @@ $maincontent-class: 'off-canvas-content' !default;
     left: 0;
     width: 100%;
     overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
 
     @each $name, $size in $sizes {
       @include breakpoint($name) {
@@ -306,6 +307,7 @@ $maincontent-class: 'off-canvas-content' !default;
     left: 0;
     width: 100%;
     overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
 
     @each $name, $size in $sizes {
       @include breakpoint($name) {
@@ -383,10 +385,10 @@ $maincontent-class: 'off-canvas-content' !default;
 
 /// Adds styles that reveal an off-canvas panel.
 @mixin off-canvas-reveal(
-$position: left,
-$zindex: $offcanvas-reveal-zindex,
-$content: $maincontent-class,
-$breakpoint: small
+  $position: left,
+  $zindex: $offcanvas-reveal-zindex,
+  $content: $maincontent-class,
+  $breakpoint: small
 ) {
   transform: none;
   z-index: $zindex;
@@ -453,10 +455,10 @@ $breakpoint: small
     @include off-canvas-base;
 
     // Force position absolute for nested off-canvas because fixed doesn't work for push transition within the transform scope.
-    @at-root .#{$maincontent-class} & {
-      // NOTE: since overlap transition is currently forced if nested, there's no need to force position absolute until nested push transition is supported.
-      // position: absolute;
-    }
+    // @at-root .#{$maincontent-class} & {
+    //   // NOTE: since overlap transition is currently forced if nested, there's no need to force position absolute until nested push transition is supported.
+    //   position: absolute;
+    // }
   }
 
   // Off-canvas container with absolute position

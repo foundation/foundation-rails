@@ -50,10 +50,9 @@ $slider-transition: all 0.2s ease-in-out !default;
 
 /// Adds the general styles for the slider handles.
 @mixin slider-handle {
-  @include disable-mouse-outline;
-  @include vertical-center;
   left: 0;
   z-index: 1;
+  cursor: grab;
 
   display: inline-block;
   width: $slider-handle-width;
@@ -64,12 +63,16 @@ $slider-transition: all 0.2s ease-in-out !default;
   transition: $slider-transition;
   touch-action: manipulation;
 
+  @include vertical-center;
+  @include disable-mouse-outline;
+
   &:hover {
     background-color: scale-color($slider-handle-background, $lightness: -15%);
   }
 
   &.is-dragging {
     transition: all 0s linear;
+    cursor: grabbing;
   }
 }
 

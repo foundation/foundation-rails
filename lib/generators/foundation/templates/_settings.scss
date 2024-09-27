@@ -58,8 +58,9 @@
 //  53. Title Bar
 //  54. Tooltip
 //  55. Top Bar
-//  56. Xy Grid
+//  57. Xy Grid
 
+@use "sass:color";
 @import 'util/util';
 
 // 1. Global
@@ -69,11 +70,11 @@ $global-font-size: 100%;
 $global-width: rem-calc(1200);
 $global-lineheight: 1.5;
 $foundation-palette: (
-  primary: #1779ba,
-  secondary: #767676,
-  success: #3adb76,
-  warning: #ffae00,
-  alert: #cc4b37,
+  "primary": #1779ba,
+  "secondary": #767676,
+  "success": #3adb76,
+  "warning": #ffae00,
+  "alert": #cc4b37,
 );
 $light-gray: #e6e6e6;
 $medium-gray: #cacaca;
@@ -83,6 +84,7 @@ $white: #fefefe;
 $body-background: $white;
 $body-font-color: $black;
 $body-font-family: 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif;
+$body-safe-padding: false;
 $body-antialiased: true;
 $global-margin: 1rem;
 $global-padding: 1rem;
@@ -105,19 +107,20 @@ $print-hrefs: true;
 // 2. Breakpoints
 // --------------
 
+$-zf-size: null;
 $breakpoints: (
-  small: 0,
-  medium: 640px,
-  large: 1024px,
-  xlarge: 1200px,
-  xxlarge: 1440px,
+  "small": 0,
+  "medium": 640px,
+  "large": 1024px,
+  "xlarge": 1200px,
+  "xxlarge": 1440px,
 );
 $breakpoints-hidpi: (
-  hidpi-1: 1,
-  hidpi-1-5: 1.5,
-  hidpi-2: 2,
-  retina: 2,
-  hidpi-3: 3
+  "hidpi-1": 1,
+  "hidpi-1-5": 1.5,
+  "hidpi-2": 2,
+  "retina": 2,
+  "hidpi-3": 3
 );
 $print-breakpoint: large;
 $breakpoint-classes: (small medium large);
@@ -461,7 +464,7 @@ $input-background-focus: $white;
 $input-background-disabled: $light-gray;
 $input-border: 1px solid $medium-gray;
 $input-border-focus: 1px solid $dark-gray;
-$input-padding: $form-spacing / 2;
+$input-padding: $form-spacing * 0.5;
 $input-shadow: inset 0 1px 2px rgba($black, 0.1);
 $input-shadow-focus: 0 0 5px $medium-gray;
 $input-cursor-disabled: not-allowed;
@@ -691,8 +694,7 @@ $prototype-separator-margin-top: $global-margin;
 // --------------------
 
 $prototype-shadow-breakpoints: $global-prototype-breakpoints;
-$prototype-box-shadow: 0 2px 5px 0 rgba(0,0,0,.16),
-                       0 2px 10px 0 rgba(0,0,0,.12);
+$prototype-box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
 
 // 41. Prototype Sizing
 // --------------------
@@ -780,7 +782,9 @@ $slider-radius: $global-radius;
 // ----------
 
 $switch-background: $medium-gray;
+$switch-background-focus: scale-color($switch-background, $lightness: -10%);
 $switch-background-active: $primary-color;
+$switch-background-active-focus: scale-color($switch-background-active, $lightness: -15%);
 $switch-height: 2rem;
 $switch-height-tiny: 1.5rem;
 $switch-height-small: 1.75rem;
@@ -791,7 +795,7 @@ $switch-paddle-background: $white;
 $switch-paddle-offset: 0.25rem;
 $switch-paddle-radius: $global-radius;
 $switch-paddle-transition: all 0.25s ease-out;
-$switch-opacity-disabled: .5;
+$switch-opacity-disabled: 0.5;
 $switch-cursor-disabled: not-allowed;
 
 // 50. Table
@@ -802,15 +806,15 @@ $table-color-scale: 5%;
 $table-border: 1px solid smart-scale($table-background, $table-color-scale);
 $table-padding: rem-calc(8 10 10);
 $table-hover-scale: 2%;
-$table-row-hover: darken($table-background, $table-hover-scale);
-$table-row-stripe-hover: darken($table-background, $table-color-scale + $table-hover-scale);
+$table-row-hover: color.adjust($table-background, $lightness: -$table-hover-scale);
+$table-row-stripe-hover: color.adjust($table-background, $lightness: -($table-color-scale + $table-hover-scale));
 $table-is-striped: true;
 $table-striped-background: smart-scale($table-background, $table-color-scale);
 $table-stripe: even;
-$table-head-background: smart-scale($table-background, $table-color-scale / 2);
-$table-head-row-hover: darken($table-head-background, $table-hover-scale);
+$table-head-background: smart-scale($table-background, $table-color-scale * 0.5);
+$table-head-row-hover: color.adjust($table-head-background, $lightness: -$table-hover-scale);
 $table-foot-background: smart-scale($table-background, $table-color-scale);
-$table-foot-row-hover: darken($table-foot-background, $table-hover-scale);
+$table-foot-row-hover: color.adjust($table-foot-background, $lightness: -$table-hover-scale);
 $table-head-font-color: $body-font-color;
 $table-foot-font-color: $body-font-color;
 $show-header-for-stacked: false;
@@ -878,15 +882,15 @@ $topbar-title-spacing: 0.5rem 1rem 0.5rem 0;
 $topbar-input-width: 200px;
 $topbar-unstack-breakpoint: medium;
 
-// 56. Xy Grid
+// 57. Xy Grid
 // -----------
 
 $xy-grid: true;
 $grid-container: $global-width;
 $grid-columns: 12;
 $grid-margin-gutters: (
-  small: 20px,
-  medium: 30px
+  "small": 20px,
+  "medium": 30px
 );
 $grid-padding-gutters: $grid-margin-gutters;
 $grid-container-padding: $grid-padding-gutters;

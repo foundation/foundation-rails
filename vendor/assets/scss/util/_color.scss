@@ -2,9 +2,17 @@
 // https://get.foundation
 // Licensed under MIT Open Source
 
+@use "sass:color";
 @import 'math';
 
 $contrast-warnings: true !default;
+
+/// Patch to fix issue #12080
+$primary-color: null !default;
+$secondary-color: null !default;
+$warning-color: null !default;
+$alert-color: null !default;
+$success-color: null !default;
 
 ////
 /// @group functions
@@ -18,14 +26,18 @@ $contrast-warnings: true !default;
 @function color-luminance($color) {
   // Adapted from: https://github.com/LeaVerou/contrast-ratio/blob/gh-pages/color.js
   // Formula: http://www.w3.org/TR/2008/REC-WCAG20-20081211/#relativeluminancedef
-  $rgba: red($color), green($color), blue($color);
+  $red   : round(color.channel($color, "red", $space: rgb));
+  $green : round(color.channel($color, "green", $space: rgb));
+  $blue  : round(color.channel($color, "blue", $space: rgb));
+
+  $rgba: $red, $green, $blue;
   $rgba2: ();
 
   @for $i from 1 through 3 {
     $rgb: nth($rgba, $i);
-    $rgb: $rgb / 255;
+    $rgb: divide($rgb, 255);
 
-    $rgb: if($rgb < 0.03928, $rgb / 12.92, pow(($rgb + 0.055) / 1.055, 2.4));
+    $rgb: if($rgb < 0.03928, divide($rgb, 12.92), pow(divide($rgb + 0.055, 1.055), 2.4));
 
     $rgba2: append($rgba2, $rgb);
   }
@@ -44,13 +56,13 @@ $contrast-warnings: true !default;
   // Formula: http://www.w3.org/TR/2008/REC-WCAG20-20081211/#contrast-ratiodef
   $luminance1: color-luminance($color1) + 0.05;
   $luminance2: color-luminance($color2) + 0.05;
-  $ratio: $luminance1 / $luminance2;
+  $ratio: divide($luminance1, $luminance2);
 
   @if $luminance2 > $luminance1 {
-    $ratio: 1 / $ratio;
+    $ratio: divide(1, $ratio);
   }
 
-  $ratio: round($ratio * 10) / 10;
+  $ratio: round($ratio * 10) * 0.1;
 
   @return $ratio;
 }
@@ -75,7 +87,7 @@ $contrast-warnings: true !default;
   }
 
   @if ($contrast-warnings and $contrast < 3) {
-    @warn "Contrast ratio of #{$best} on #{$base} is pretty bad, just #{$contrast}";
+    @warn 'Contrast ratio of #{$best} on #{$base} is pretty bad, just #{$contrast}';
   }
 
   @return $best;
@@ -89,7 +101,7 @@ $contrast-warnings: true !default;
 ///
 /// @returns {Color} A scaled color.
 @function smart-scale($color, $scale: 5%, $threshold: 40%) {
-  @if lightness($color) > $threshold {
+  @if color.channel($color, "lightness", $space: hsl) > $threshold {
     $scale: -$scale;
   }
   @return scale-color($color, $lightness: $scale);

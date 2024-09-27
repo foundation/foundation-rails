@@ -44,7 +44,7 @@ $prototype-separator-margin-top: $global-margin !default;
   $top: $prototype-separator-margin-top
 ) {
   text-align: $align !important;
-	@include clearfix;
+  @include clearfix;
 
   &::after {
     @include position(relative);
@@ -63,9 +63,9 @@ $prototype-separator-margin-top: $global-margin !default;
 }
 
 @mixin foundation-prototype-separator {
-	.separator-center {
-		@include separator(center);
-	}
+  .separator-center {
+    @include separator(center);
+  }
 
   .separator-left {
     @include separator(left);
@@ -75,7 +75,7 @@ $prototype-separator-margin-top: $global-margin !default;
     @include separator(right);
   }
 
-	@if ($prototype-separator-breakpoints) {
+  @if ($prototype-separator-breakpoints) {
     // Loop through Responsive Breakpoints
     @each $size in $breakpoint-classes {
       @include breakpoint($size) {

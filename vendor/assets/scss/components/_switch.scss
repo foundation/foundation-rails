@@ -10,9 +10,17 @@
 /// @type Color
 $switch-background: $medium-gray !default;
 
+/// Background color of a switch on focus.
+/// @type Color
+$switch-background-focus: scale-color($switch-background, $lightness: -10%) !default;
+
 /// Background active color of a switch.
 /// @type Color
 $switch-background-active: $primary-color !default;
+
+/// Background active color of a switch on focus.
+/// @type Color
+$switch-background-active-focus: scale-color($switch-background-active, $lightness: -15%) !default;
 
 /// Height of a switch, with no class applied.
 /// @type Number
@@ -56,7 +64,7 @@ $switch-paddle-transition: all 0.25s ease-out !default;
 
 /// Opacity of a disabled switch.
 /// @type Number
-$switch-opacity-disabled: .5 !default;
+$switch-opacity-disabled: 0.5 !default;
 
 /// Cursor for a disabled switch.
 /// @type Cursor
@@ -140,6 +148,21 @@ $switch-cursor-disabled: not-allowed !default;
     }
   }
 
+
+  // Change the visual style when the switch is focused
+  input:focus-visible ~ & {
+    background: $switch-background-focus;
+
+    &::after {
+      background: $switch-paddle-background;
+    }
+  }
+
+  input:checked:focus-visible ~ & {
+    background: $switch-background-active-focus;
+  }
+
+
   // indicate a disabled switch
   input:disabled ~ & {
     cursor: $switch-cursor-disabled;
@@ -215,8 +238,8 @@ $switch-cursor-disabled: not-allowed !default;
 @mixin foundation-switch {
   // Container class
   .switch {
-    height: $switch-height;
     @include switch-container;
+    height: $switch-height;
   }
 
   // <input> element

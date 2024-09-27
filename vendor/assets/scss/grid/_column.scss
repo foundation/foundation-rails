@@ -27,14 +27,15 @@
   $columns: $grid-column-count,
   $gutters: $grid-column-gutter
 ) {
-  @include grid-column-size($columns);
   float: $global-left;
+
+  @include grid-column-size($columns);
 
   // Gutters
   @include grid-column-gutter($gutters: $gutters);
-
   // Position
   @include grid-col-pos(auto);
+
 }
 
 /// Creates a grid column row. This is the equivalent of adding `.row` and `.column` to the same element.

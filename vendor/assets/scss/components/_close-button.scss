@@ -92,11 +92,12 @@ $closebutton-color-hover: $black !default;
   $x: nth($closebutton-position, 1);
   $y: nth($closebutton-position, 2);
 
-  @include disable-mouse-outline;
   position: absolute;
   z-index: $closebutton-z-index;
   color: $closebutton-color;
   cursor: pointer;
+
+  @include disable-mouse-outline;
 
   &:hover,
   &:focus {
@@ -106,6 +107,9 @@ $closebutton-color-hover: $black !default;
 
 @mixin foundation-close-button {
   .close-button {
+    // Use by default the placeholder of the default size
+    @extend %zf-close-button--#{$closebutton-default-size};
+
     @include close-button;
 
     // Generate a placeholder and a class for each size
@@ -120,8 +124,5 @@ $closebutton-color-hover: $black !default;
         @extend %zf-close-button--#{$name};
       }
     }
-
-    // Use by default the placeholder of the default size
-    @extend %zf-close-button--#{$closebutton-default-size};
   }
 }
